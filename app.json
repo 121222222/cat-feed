@@ -1,0 +1,62 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/service/service",
+    "pages/message/message",
+    "pages/community/community",
+    "pages/mine/mine",
+    "pages/publish/publish",
+    "pages/my-needs/my-needs",
+    "pages/need-detail/need-detail",
+    "pages/accept-list/accept-list",
+    "pages/apply-feed/apply-feed",
+    "pages/my-applies/my-applies",
+    "pages/service-detail/service-detail",
+    "pages/chat/chat",
+    "pages/my-cats/my-cats",
+    "pages/add-cat/add-cat",
+    "pages/profile/profile",
+    "pages/auth/auth",
+    "pages/settings/settings",
+    "pages/help/help",
+    "pages/checkin/checkin"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#FF8C42",
+    "navigationBarTitleText": "喵邻互助",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#FFF8F0"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#999999",
+    "selectedColor": "#FF8C42",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/service/service",
+        "text": "喂养服务"
+      },
+      {
+        "pagePath": "pages/message/message",
+        "text": "消息"
+      },
+      {
+        "pagePath": "pages/community/community",
+        "text": "社区"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

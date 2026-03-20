@@ -1,0 +1,25 @@
+<view class="page-container">
+  <view class="help-container">
+    <view class="faq-list">
+      <view class="faq-item" wx:for="{{faqs}}" wx:key="id" bindtap="toggleFaq" data-id="{{item.id}}">
+        <view class="faq-question">
+          <text class="faq-icon">❓</text>
+          <text class="faq-q-text">{{item.question}}</text>
+          <text class="faq-arrow {{item.expanded ? 'expanded' : ''}}">›</text>
+        </view>
+        <view class="faq-answer" wx:if="{{item.expanded}}">
+          <text class="faq-a-text">{{item.answer}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="contact-card">
+      <text class="contact-title">💁 还有问题？</text>
+      <text class="contact-desc">如有其他问题，请联系平台管理员</text>
+      <view class="contact-info">
+        <text>📧 catfeed@company.com</text>
+        <text>📱 内部企微群：喵邻互助服务群</text>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,156 @@
+/* 我的需求页样式 */
+.filter-tabs {
+  display: flex;
+  background: #FFFFFF;
+  padding: 16rpx 20rpx;
+  gap: 12rpx;
+  overflow-x: auto;
+  white-space: nowrap;
+  border-bottom: 1rpx solid #F5EDE5;
+}
+
+.filter-tab {
+  display: inline-block;
+  padding: 12rpx 24rpx;
+  border-radius: 50rpx;
+  font-size: 24rpx;
+  color: #999;
+  background: #F5F5F5;
+  flex-shrink: 0;
+}
+
+.filter-tab.active {
+  background: #FFF2E6;
+  color: #FF8C42;
+  font-weight: 600;
+}
+
+.list-container {
+  padding: 20rpx 30rpx;
+}
+
+.order-card {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+}
+
+.order-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+  padding-bottom: 12rpx;
+  border-bottom: 1rpx solid #F5EDE5;
+}
+
+.order-id {
+  font-size: 22rpx;
+  color: #BBB;
+}
+
+.status-badge {
+  padding: 6rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+}
+
+.status-pending { background: #FFFBE6; color: #FAAD14; }
+.status-accepted { background: #E6F7FF; color: #1890FF; }
+.status-in_progress { background: #F0FFF0; color: #52C41A; }
+.status-completed { background: #F5F5F5; color: #999; }
+.status-cancelled { background: #FFF2F0; color: #FF4D4F; }
+
+.order-body {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.cat-mini-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+  background: #FFF2E6;
+  flex-shrink: 0;
+}
+
+.cat-mini-avatar image {
+  width: 100%;
+  height: 100%;
+}
+
+.order-info {
+  flex: 1;
+}
+
+.order-cat-name {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #2D2D2D;
+  margin-bottom: 6rpx;
+}
+
+.order-date, .order-dorm {
+  display: block;
+  font-size: 22rpx;
+  color: #999;
+  margin-bottom: 2rpx;
+}
+
+.order-reward {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #FF8C42;
+}
+
+.order-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12rpx;
+  border-top: 1rpx solid #F8F0E8;
+}
+
+.order-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+
+.mini-tag {
+  display: inline-block;
+  padding: 4rpx 14rpx;
+  background: #FFF2E6;
+  color: #FF8C42;
+  font-size: 20rpx;
+  border-radius: 6rpx;
+}
+
+.order-time {
+  font-size: 20rpx;
+  color: #CCC;
+}
+
+.fab {
+  position: fixed;
+  right: 40rpx;
+  bottom: 120rpx;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF8C42, #FF6B42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 30rpx rgba(255, 140, 66, 0.4);
+  z-index: 100;
+  color: #FFF;
+  font-size: 48rpx;
+}

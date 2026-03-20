@@ -1,0 +1,74 @@
+<view class="page-container">
+  <!-- 顶部Tab -->
+  <view class="comm-tabs">
+    <view class="comm-tab {{activeTab === 0 ? 'active' : ''}}" bindtap="switchTab" data-tab="0">平台规则</view>
+    <view class="comm-tab {{activeTab === 1 ? 'active' : ''}}" bindtap="switchTab" data-tab="1">猫咪交流</view>
+    <view class="comm-tab {{activeTab === 2 ? 'active' : ''}}" bindtap="switchTab" data-tab="2">失物招领</view>
+  </view>
+
+  <!-- 平台规则 -->
+  <view class="tab-content" wx:if="{{activeTab === 0}}">
+    <view class="rule-card" wx:for="{{rules}}" wx:key="id">
+      <view class="rule-header">
+        <text class="rule-icon">{{item.icon}}</text>
+        <text class="rule-title">{{item.title}}</text>
+      </view>
+      <text class="rule-content">{{item.content}}</text>
+      <text class="rule-time">{{item.time}}</text>
+    </view>
+  </view>
+
+  <!-- 猫咪交流 -->
+  <view class="tab-content" wx:if="{{activeTab === 1}}">
+    <view class="post-card" wx:for="{{posts}}" wx:key="id">
+      <view class="post-user">
+        <view class="avatar avatar-sm">
+          <image src="{{item.avatar}}" mode="aspectFill"></image>
+        </view>
+        <view class="post-user-info">
+          <text class="post-username">{{item.userName}}</text>
+          <text class="post-time">{{item.time}}</text>
+        </view>
+      </view>
+      <text class="post-content">{{item.content}}</text>
+      <view class="post-images" wx:if="{{item.images && item.images.length > 0}}">
+        <view class="post-img-wrap" wx:for="{{item.images}}" wx:for-item="img" wx:key="*this">
+          <image src="{{img}}" mode="aspectFill"></image>
+        </view>
+      </view>
+      <view class="post-actions">
+        <view class="post-action" bindtap="onLike" data-id="{{item.id}}">
+          <text>{{item.liked ? '❤️' : '🤍'}} {{item.likes}}</text>
+        </view>
+        <view class="post-action">
+          <text>💬 {{item.comments}}</text>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 发帖按钮 -->
+    <view class="fab" bindtap="onNewPost">✏️</view>
+  </view>
+
+  <!-- 失物招领 -->
+  <view class="tab-content" wx:if="{{activeTab === 2}}">
+    <view class="lost-card" wx:for="{{lostItems}}" wx:key="id">
+      <view class="lost-header">
+        <view class="lost-type-tag {{item.type === 'lost' ? 'tag-danger' : 'tag-success'}}">
+          {{item.type === 'lost' ? '寻找' : '招领'}}
+        </view>
+        <text class="lost-time">{{item.time}}</text>
+      </view>
+      <text class="lost-title">{{item.title}}</text>
+      <text class="lost-desc">{{item.description}}</text>
+      <view class="lost-footer">
+        <text class="lost-contact">📱 联系人：{{item.contact}}</text>
+        <text class="lost-location">📍 {{item.location}}</text>
+      </view>
+    </view>
+    
+    <view class="fab" bindtap="onNewLost">✏️</view>
+  </view>
+
+  <view style="height: 120rpx;"></view>
+</view>

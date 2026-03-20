@@ -1,0 +1,100 @@
+/* 我的猫咪页样式 */
+.cat-list {
+  padding: 20rpx 30rpx;
+}
+
+.cat-card-full {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+}
+
+.cat-card-header {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 16rpx;
+}
+
+.cat-avatar-lg {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+  background: #FFF2E6;
+  flex-shrink: 0;
+}
+
+.cat-avatar-lg image {
+  width: 100%;
+  height: 100%;
+}
+
+.cat-basic-info {
+  flex: 1;
+}
+
+.cat-name-lg {
+  display: block;
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #2D2D2D;
+  margin-bottom: 6rpx;
+}
+
+.cat-breed {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 10rpx;
+}
+
+.cat-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+
+.cat-tag {
+  display: inline-block;
+  padding: 4rpx 12rpx;
+  background: #FFF2E6;
+  color: #FF8C42;
+  font-size: 20rpx;
+  border-radius: 6rpx;
+}
+
+.cat-notes {
+  background: #FFF8F0;
+  border-radius: 12rpx;
+  padding: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.notes-label {
+  display: block;
+  font-size: 24rpx;
+  font-weight: 600;
+  color: #2D2D2D;
+  margin-bottom: 6rpx;
+}
+
+.notes-content {
+  display: block;
+  font-size: 24rpx;
+  color: #666;
+  line-height: 1.6;
+}
+
+.cat-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #F5EDE5;
+}
+
+.add-btn-wrap {
+  padding: 20rpx 30rpx;
+}

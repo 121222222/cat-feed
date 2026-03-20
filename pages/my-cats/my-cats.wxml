@@ -1,0 +1,31 @@
+<view class="page-container">
+  <view class="cat-list">
+    <view class="cat-card-full" wx:for="{{cats}}" wx:key="id">
+      <view class="cat-card-header">
+        <view class="cat-avatar-lg">
+          <image src="{{item.avatar}}" mode="aspectFill"></image>
+        </view>
+        <view class="cat-basic-info">
+          <text class="cat-name-lg">{{item.name}}</text>
+          <text class="cat-breed">{{item.breed}} · {{item.gender}} · {{item.age}}</text>
+          <view class="cat-tags">
+            <text class="cat-tag" wx:if="{{item.vaccinated}}">✅ 已接种疫苗</text>
+            <text class="cat-tag">{{item.character}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="cat-notes" wx:if="{{item.notes}}">
+        <text class="notes-label">📝 注意事项</text>
+        <text class="notes-content">{{item.notes}}</text>
+      </view>
+      <view class="cat-actions">
+        <view class="btn-outline btn-sm" bindtap="onEdit" data-id="{{item.id}}">编辑</view>
+        <view class="btn-sm" style="color:#FF4D4F;" bindtap="onDelete" data-id="{{item.id}}">删除</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="add-btn-wrap">
+    <view class="btn-primary btn-block" bindtap="goAddCat">+ 添加猫咪</view>
+  </view>
+</view>

@@ -1,0 +1,274 @@
+/* 发布需求页样式 */
+.form-container {
+  padding: 20rpx 30rpx 200rpx;
+}
+
+.form-section {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+}
+
+.form-section-title {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #2D2D2D;
+  margin-bottom: 20rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid #F5EDE5;
+}
+
+.form-section-icon {
+  font-size: 28rpx;
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #F8F0E8;
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+.form-item.column {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: #2D2D2D;
+  flex-shrink: 0;
+}
+
+.form-input {
+  text-align: right;
+  font-size: 28rpx;
+  color: #2D2D2D;
+  flex: 1;
+  margin-left: 20rpx;
+}
+
+.form-picker {
+  font-size: 28rpx;
+  color: #2D2D2D;
+}
+
+.form-picker.placeholder {
+  color: #CCCCCC;
+}
+
+.form-textarea {
+  width: 100%;
+  min-height: 120rpx;
+  font-size: 28rpx;
+  color: #2D2D2D;
+  margin-top: 12rpx;
+  padding: 16rpx;
+  background: #FFF8F0;
+  border-radius: 12rpx;
+  box-sizing: border-box;
+}
+
+.form-textarea.lg {
+  min-height: 200rpx;
+}
+
+.char-count {
+  display: block;
+  text-align: right;
+  font-size: 22rpx;
+  color: #BBB;
+  margin-top: 8rpx;
+}
+
+/* 计数器 */
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.counter-btn {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: 50%;
+  background: #FFF2E6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  color: #FF8C42;
+  font-weight: 700;
+}
+
+.counter-num {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #2D2D2D;
+  min-width: 40rpx;
+  text-align: center;
+}
+
+/* 服务选项 */
+.service-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.service-option {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 14rpx 24rpx;
+  border-radius: 50rpx;
+  background: #F5F5F5;
+  font-size: 26rpx;
+  color: #666;
+  border: 2rpx solid transparent;
+}
+
+.service-option.checked {
+  background: #FFF2E6;
+  color: #FF8C42;
+  border-color: #FF8C42;
+}
+
+.option-icon {
+  font-size: 24rpx;
+}
+
+.option-name {
+  font-size: 26rpx;
+}
+
+/* 报酬选项 */
+.reward-options {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 16rpx;
+}
+
+.reward-option {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  padding: 24rpx;
+  border-radius: 16rpx;
+  background: #F5F5F5;
+  font-size: 26rpx;
+  color: #666;
+  border: 2rpx solid transparent;
+}
+
+.reward-option.active {
+  background: #FFF2E6;
+  color: #FF8C42;
+  border-color: #FF8C42;
+}
+
+.reward-icon {
+  font-size: 28rpx;
+}
+
+/* 开关 */
+.switch-wrap {
+  display: flex;
+  align-items: center;
+}
+
+/* 猫咪照片上传 */
+.photo-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 16rpx;
+}
+
+.photo-tip {
+  font-size: 22rpx;
+  color: #BBB;
+}
+
+.photo-upload-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  width: 100%;
+}
+
+.photo-item {
+  position: relative;
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.photo-img {
+  width: 100%;
+  height: 100%;
+}
+
+.photo-delete {
+  position: absolute;
+  top: 6rpx;
+  right: 6rpx;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.5);
+  color: #FFF;
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.photo-add {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 16rpx;
+  border: 2rpx dashed #FFB380;
+  background: #FFF8F0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+}
+
+.photo-add-icon {
+  font-size: 48rpx;
+}
+
+.photo-add-text {
+  font-size: 22rpx;
+  color: #FF8C42;
+}
+
+/* 提交栏 */
+.submit-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx 30rpx;
+  background: #FFFFFF;
+  box-shadow: 0 -2rpx 20rpx rgba(0,0,0,0.05);
+  z-index: 100;
+}

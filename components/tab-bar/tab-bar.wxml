@@ -1,0 +1,25 @@
+<view class="tab-bar">
+  <view class="tab-item {{currentTab === 0 ? 'active' : ''}}" bindtap="switchTab" data-index="0" data-url="/pages/index/index">
+    <text class="tab-icon">🏠</text>
+    <text class="tab-text">首页</text>
+  </view>
+  <view class="tab-item {{currentTab === 1 ? 'active' : ''}}" bindtap="switchTab" data-index="1" data-url="/pages/service/service">
+    <text class="tab-icon">🐱</text>
+    <text class="tab-text">喂养服务</text>
+  </view>
+  <view class="tab-item {{currentTab === 2 ? 'active' : ''}}" bindtap="switchTab" data-index="2" data-url="/pages/message/message">
+    <view style="position:relative;">
+      <text class="tab-icon">💬</text>
+      <view class="tab-badge" wx:if="{{msgCount > 0}}">{{msgCount}}</view>
+    </view>
+    <text class="tab-text">消息</text>
+  </view>
+  <view class="tab-item {{currentTab === 3 ? 'active' : ''}}" bindtap="switchTab" data-index="3" data-url="/pages/community/community">
+    <text class="tab-icon">📋</text>
+    <text class="tab-text">社区</text>
+  </view>
+  <view class="tab-item {{currentTab === 4 ? 'active' : ''}}" bindtap="switchTab" data-index="4" data-url="/pages/mine/mine">
+    <text class="tab-icon">👤</text>
+    <text class="tab-text">我的</text>
+  </view>
+</view>

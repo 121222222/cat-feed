@@ -1,0 +1,46 @@
+<view class="page-container">
+  <!-- 消息类型Tab -->
+  <view class="msg-tabs">
+    <view class="msg-tab {{activeTab === 0 ? 'active' : ''}}" bindtap="switchTab" data-tab="0">
+      <text>全部</text>
+    </view>
+    <view class="msg-tab {{activeTab === 1 ? 'active' : ''}}" bindtap="switchTab" data-tab="1">
+      <text>服务对话</text>
+      <view class="tab-dot" wx:if="{{chatUnread > 0}}"></view>
+    </view>
+    <view class="msg-tab {{activeTab === 2 ? 'active' : ''}}" bindtap="switchTab" data-tab="2">
+      <text>系统通知</text>
+      <view class="tab-dot" wx:if="{{sysUnread > 0}}"></view>
+    </view>
+    <view class="msg-tab {{activeTab === 3 ? 'active' : ''}}" bindtap="switchTab" data-tab="3">
+      <text>公告</text>
+    </view>
+  </view>
+
+  <!-- 消息列表 -->
+  <view class="msg-list" wx:if="{{messages.length > 0}}">
+    <view class="msg-item" wx:for="{{messages}}" wx:key="id" bindtap="onMsgTap" data-item="{{item}}">
+      <view class="msg-avatar-wrap">
+        <view class="msg-avatar" style="background:{{item.avatarBg}}">
+          <text class="msg-avatar-icon">{{item.icon}}</text>
+        </view>
+        <view class="msg-unread-dot" wx:if="{{item.unread}}"></view>
+      </view>
+      <view class="msg-content">
+        <view class="msg-top">
+          <text class="msg-name">{{item.title}}</text>
+          <text class="msg-time">{{item.time}}</text>
+        </view>
+        <text class="msg-preview">{{item.preview}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{messages.length === 0}}">
+    <text class="empty-icon">📭</text>
+    <text class="empty-text">暂无消息</text>
+  </view>
+
+  <view style="height: 120rpx;"></view>
+</view>

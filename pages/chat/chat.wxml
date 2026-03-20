@@ -1,0 +1,22 @@
+<view class="chat-container">
+  <!-- 聊天消息 -->
+  <scroll-view scroll-y class="chat-messages" scroll-into-view="msg-{{messages.length - 1}}">
+    <view class="msg-item {{item.isMine ? 'mine' : 'other'}}" wx:for="{{messages}}" wx:key="index" id="msg-{{index}}">
+      <view class="msg-avatar" wx:if="{{!item.isMine}}">
+        <image src="/assets/images/avatar4.png" mode="aspectFill"></image>
+      </view>
+      <view class="msg-bubble {{item.isMine ? 'bubble-mine' : 'bubble-other'}}">
+        <text class="msg-text">{{item.text}}</text>
+      </view>
+      <view class="msg-avatar" wx:if="{{item.isMine}}">
+        <image src="/assets/images/default-avatar.png" mode="aspectFill"></image>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 输入栏 -->
+  <view class="chat-input-bar safe-bottom">
+    <input class="chat-input" placeholder="输入消息..." value="{{inputText}}" bindinput="onInput" confirm-type="send" bindconfirm="onSend" />
+    <view class="send-btn {{inputText ? 'active' : ''}}" bindtap="onSend">发送</view>
+  </view>
+</view>

@@ -1,0 +1,60 @@
+/* 设置页样式 */
+.settings-container {
+  padding: 20rpx 30rpx;
+}
+
+.menu-group {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 28rpx 24rpx;
+  border-bottom: 1rpx solid #F8F0E8;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-icon {
+  font-size: 28rpx;
+  margin-right: 16rpx;
+}
+
+.menu-text {
+  flex: 1;
+  font-size: 28rpx;
+  color: #2D2D2D;
+}
+
+.menu-right {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.menu-value {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.menu-arrow {
+  font-size: 32rpx;
+  color: #CCC;
+}
+
+.logout-btn {
+  margin-top: 60rpx;
+  padding: 24rpx;
+  text-align: center;
+  font-size: 30rpx;
+  color: #FF4D4F;
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+}

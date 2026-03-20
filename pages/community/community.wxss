@@ -1,0 +1,232 @@
+/* 社区页样式 */
+.comm-tabs {
+  display: flex;
+  background: #FFFFFF;
+  padding: 0 30rpx;
+  border-bottom: 1rpx solid #F5EDE5;
+}
+
+.comm-tab {
+  padding: 24rpx 24rpx;
+  font-size: 28rpx;
+  color: #999;
+  position: relative;
+}
+
+.comm-tab.active {
+  color: #FF8C42;
+  font-weight: 600;
+}
+
+.comm-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40rpx;
+  height: 6rpx;
+  background: #FF8C42;
+  border-radius: 3rpx;
+}
+
+.tab-content {
+  padding: 20rpx 30rpx;
+}
+
+/* 规则卡片 */
+.rule-card {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+}
+
+.rule-header {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.rule-icon {
+  font-size: 32rpx;
+}
+
+.rule-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #2D2D2D;
+}
+
+.rule-content {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.8;
+  white-space: pre-line;
+  margin-bottom: 12rpx;
+}
+
+.rule-time {
+  display: block;
+  font-size: 22rpx;
+  color: #BBB;
+}
+
+/* 帖子卡片 */
+.post-card {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+}
+
+.post-user {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 16rpx;
+}
+
+.post-user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.post-username {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #2D2D2D;
+}
+
+.post-time {
+  font-size: 22rpx;
+  color: #BBB;
+}
+
+.post-content {
+  display: block;
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.7;
+  white-space: pre-line;
+  margin-bottom: 16rpx;
+}
+
+.post-images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-bottom: 16rpx;
+}
+
+.post-img-wrap {
+  width: 200rpx;
+  height: 200rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.post-img-wrap image {
+  width: 100%;
+  height: 100%;
+}
+
+.post-actions {
+  display: flex;
+  gap: 40rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #F5EDE5;
+}
+
+.post-action {
+  font-size: 26rpx;
+  color: #999;
+}
+
+/* 失物招领 */
+.lost-card {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+}
+
+.lost-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12rpx;
+}
+
+.lost-type-tag {
+  display: inline-block;
+  padding: 4rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  font-weight: 600;
+}
+
+.tag-danger {
+  background: #FFF2F0;
+  color: #FF4D4F;
+}
+
+.tag-success {
+  background: #F0FFF0;
+  color: #52C41A;
+}
+
+.lost-time {
+  font-size: 22rpx;
+  color: #BBB;
+}
+
+.lost-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #2D2D2D;
+  margin-bottom: 8rpx;
+}
+
+.lost-desc {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+  line-height: 1.6;
+}
+
+.lost-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #F5EDE5;
+}
+
+.lost-contact, .lost-location {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.fab {
+  position: fixed;
+  right: 40rpx;
+  bottom: 200rpx;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF8C42, #FF6B42);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 30rpx rgba(255, 140, 66, 0.4);
+  z-index: 100;
+  font-size: 40rpx;
+}

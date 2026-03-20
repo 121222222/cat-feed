@@ -1,0 +1,75 @@
+/* 编辑资料页样式 */
+.form-container {
+  padding: 30rpx;
+}
+
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40rpx;
+}
+
+.edit-avatar {
+  position: relative;
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 12rpx;
+}
+
+.edit-avatar image {
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 50rpx;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+}
+
+.avatar-tip {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.form-section {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 12rpx 24rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #F8F0E8;
+}
+
+.form-item:last-child {
+  border-bottom: none;
+}
+
+.form-label {
+  font-size: 28rpx;
+  color: #2D2D2D;
+  flex-shrink: 0;
+}
+
+.form-input {
+  text-align: right;
+  font-size: 28rpx;
+  flex: 1;
+  margin-left: 20rpx;
+}

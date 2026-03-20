@@ -1,0 +1,85 @@
+/* 帮助中心样式 */
+.help-container {
+  padding: 20rpx 30rpx;
+}
+
+.faq-list {
+  margin-bottom: 30rpx;
+}
+
+.faq-item {
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  margin-bottom: 12rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(255, 140, 66, 0.06);
+}
+
+.faq-question {
+  display: flex;
+  align-items: center;
+  padding: 28rpx 24rpx;
+  gap: 12rpx;
+}
+
+.faq-icon {
+  font-size: 24rpx;
+  flex-shrink: 0;
+}
+
+.faq-q-text {
+  flex: 1;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #2D2D2D;
+}
+
+.faq-arrow {
+  font-size: 28rpx;
+  color: #CCC;
+  transition: transform 0.3s;
+  transform: rotate(0deg);
+}
+
+.faq-arrow.expanded {
+  transform: rotate(90deg);
+}
+
+.faq-answer {
+  padding: 0 24rpx 24rpx 60rpx;
+}
+
+.faq-a-text {
+  font-size: 26rpx;
+  color: #666;
+  line-height: 1.7;
+}
+
+.contact-card {
+  background: linear-gradient(135deg, #FFF2E6, #FFE4C4);
+  border-radius: 20rpx;
+  padding: 30rpx;
+}
+
+.contact-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #2D2D2D;
+  margin-bottom: 8rpx;
+}
+
+.contact-desc {
+  display: block;
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  font-size: 24rpx;
+  color: #FF8C42;
+}

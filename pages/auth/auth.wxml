@@ -1,0 +1,77 @@
+<view class="page-container">
+  <view class="auth-content">
+    <!-- 认证状态 -->
+    <view class="auth-status-card">
+      <view class="auth-icon-big">{{certified ? '✅' : '🪪'}}</view>
+      <text class="auth-status-text">{{certified ? '已完成认证' : '未认证'}}</text>
+      <text class="auth-status-hint">{{certified ? '您已通过员工身份认证' : '请完成以下认证步骤'}}</text>
+    </view>
+
+    <!-- 认证表单 -->
+    <view class="auth-form" wx:if="{{!certified}}">
+      <view class="form-section">
+        <view class="form-section-title">
+          <text>👤 员工信息</text>
+        </view>
+        <view class="form-item">
+          <text class="form-label">真实姓名</text>
+          <input class="form-input" placeholder="请输入真实姓名" />
+        </view>
+        <view class="form-item">
+          <text class="form-label">工号</text>
+          <input class="form-input" placeholder="请输入员工工号" />
+        </view>
+        <view class="form-item">
+          <text class="form-label">所属部门</text>
+          <input class="form-input" placeholder="请输入所属部门" />
+        </view>
+        <view class="form-item">
+          <text class="form-label">宿舍楼栋</text>
+          <input class="form-input" placeholder="请输入宿舍楼栋号" />
+        </view>
+      </view>
+
+      <view class="form-section">
+        <view class="form-section-title">
+          <text>🐱 养猫资质</text>
+        </view>
+        <view class="form-item">
+          <text class="form-label">养猫经验</text>
+          <input class="form-input" placeholder="如：3年养猫经验" />
+        </view>
+        <view class="form-item column">
+          <text class="form-label">自我介绍</text>
+          <textarea class="form-textarea" placeholder="简单介绍一下你和猫咪的故事"></textarea>
+        </view>
+      </view>
+
+      <view class="btn-primary btn-block mt-30" bindtap="onSubmit">提交认证</view>
+    </view>
+
+    <!-- 已认证信息 -->
+    <view class="certified-info" wx:if="{{certified}}">
+      <view class="info-card">
+        <view class="info-row">
+          <text class="info-label">姓名</text>
+          <text class="info-value">张三</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">工号</text>
+          <text class="info-value">EMP20250101</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">部门</text>
+          <text class="info-value">技术部</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">宿舍</text>
+          <text class="info-value">A栋302</text>
+        </view>
+        <view class="info-row">
+          <text class="info-label">认证时间</text>
+          <text class="info-value">2026-03-01</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

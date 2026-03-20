@@ -1,0 +1,41 @@
+<view class="page-container">
+  <view class="filter-tabs">
+    <view class="filter-tab {{filterStatus === '' ? 'active' : ''}}" bindtap="onFilter" data-status="">全部</view>
+    <view class="filter-tab {{filterStatus === 'reviewing' ? 'active' : ''}}" bindtap="onFilter" data-status="reviewing">待审核</view>
+    <view class="filter-tab {{filterStatus === 'approved' ? 'active' : ''}}" bindtap="onFilter" data-status="approved">已通过</view>
+    <view class="filter-tab {{filterStatus === 'in_progress' ? 'active' : ''}}" bindtap="onFilter" data-status="in_progress">服务中</view>
+    <view class="filter-tab {{filterStatus === 'completed' ? 'active' : ''}}" bindtap="onFilter" data-status="completed">已完成</view>
+  </view>
+
+  <view class="list-container">
+    <view class="apply-card" wx:for="{{filteredApplies}}" wx:key="id">
+      <view class="apply-header">
+        <text class="apply-id">申请 #{{item.id}}</text>
+        <view class="status-badge status-{{item.status}}">{{item.statusText}}</view>
+      </view>
+      <view class="apply-body">
+        <view class="apply-need-info">
+          <text class="apply-cat">🐱 {{item.catName}}</text>
+          <text class="apply-date">📅 {{item.startDate}} ~ {{item.endDate}}</text>
+          <text class="apply-dorm">📍 {{item.dormitory}}</text>
+          <text class="apply-owner">👤 需求方：{{item.ownerName}}</text>
+        </view>
+        <text class="apply-reward">{{item.reward}}</text>
+      </view>
+      <view class="apply-actions" wx:if="{{item.status === 'approved'}}">
+        <view class="btn-outline btn-sm" bindtap="onContact" data-name="{{item.ownerName}}">联系需求方</view>
+        <view class="btn-primary btn-sm" bindtap="onCheckin" data-id="{{item.id}}">打卡上门</view>
+      </view>
+      <view class="apply-actions" wx:if="{{item.status === 'in_progress'}}">
+        <view class="btn-outline btn-sm" bindtap="onUploadPhoto">上传照片</view>
+        <view class="btn-primary btn-sm" bindtap="onFinish" data-id="{{item.id}}">结束服务</view>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{filteredApplies.length === 0}}">
+      <text class="empty-icon">📋</text>
+      <text class="empty-text">暂无喂养申请</text>
+      <view class="btn-primary btn-sm mt-20" bindtap="goAcceptList">去接单</view>
+    </view>
+  </view>
+</view>

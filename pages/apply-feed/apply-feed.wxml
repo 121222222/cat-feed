@@ -1,0 +1,40 @@
+<view class="page-container">
+  <view class="form-container">
+    <!-- 需求信息概览 -->
+    <view class="need-summary card">
+      <view class="summary-header">
+        <text class="summary-title">📋 需求信息</text>
+      </view>
+      <view class="summary-body">
+        <text class="summary-cat">🐱 {{need.catName}} · {{need.catCount}}只</text>
+        <text class="summary-date">📅 {{need.startDate}} ~ {{need.endDate}}</text>
+        <text class="summary-dorm">📍 {{need.dormitory}}</text>
+        <text class="summary-reward">💰 {{need.reward}}</text>
+      </view>
+    </view>
+
+    <!-- 自我介绍 -->
+    <view class="card">
+      <text class="card-title">🙋 自我介绍</text>
+      <textarea class="form-textarea" placeholder="请介绍一下你的养猫经验，让需求方更放心" value="{{intro}}" bindinput="onIntroInput" maxlength="300"></textarea>
+      <text class="char-count">{{intro.length || 0}}/300</text>
+    </view>
+
+    <!-- 可提供的服务时间 -->
+    <view class="card">
+      <text class="card-title">⏰ 可服务时间</text>
+      <input class="form-input-full" placeholder="如：每天早8点和晚6点都可以" value="{{availableTime}}" bindinput="onTimeInput" />
+    </view>
+
+    <!-- 备注 -->
+    <view class="card">
+      <text class="card-title">📝 备注</text>
+      <textarea class="form-textarea" placeholder="其他想对需求方说的话（选填）" value="{{remark}}" bindinput="onRemarkInput" maxlength="200"></textarea>
+    </view>
+  </view>
+
+  <!-- 提交 -->
+  <view class="submit-bar safe-bottom">
+    <view class="btn-primary btn-block" bindtap="onSubmit">提交申请</view>
+  </view>
+</view>

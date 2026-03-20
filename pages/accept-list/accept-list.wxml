@@ -1,0 +1,66 @@
+<view class="page-container">
+  <!-- 筛选栏 -->
+  <view class="filter-bar">
+    <view class="filter-item" bindtap="showFilter" data-type="time">
+      <text>{{timeFilter || '时间'}}</text>
+      <text class="filter-arrow">▾</text>
+    </view>
+    <view class="filter-item" bindtap="showFilter" data-type="dorm">
+      <text>{{dormFilter || '宿舍区'}}</text>
+      <text class="filter-arrow">▾</text>
+    </view>
+    <view class="filter-item" bindtap="showFilter" data-type="count">
+      <text>{{countFilter || '猫咪数量'}}</text>
+      <text class="filter-arrow">▾</text>
+    </view>
+  </view>
+
+  <!-- 需求列表 -->
+  <view class="list-container">
+    <view class="need-card" wx:for="{{needs}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <view class="need-header">
+        <view class="need-user-info">
+          <view class="avatar avatar-sm">
+            <image src="{{item.userAvatar}}" mode="aspectFill"></image>
+          </view>
+          <view>
+            <text class="need-user-name">{{item.userName}}</text>
+            <text class="need-user-dorm">{{item.dormitory}}</text>
+          </view>
+        </view>
+        <text class="need-reward">💰 {{item.reward}}</text>
+      </view>
+      
+      <view class="need-content">
+        <view class="need-cat-row">
+          <view class="cat-mini-avatar">
+            <image src="{{item.catAvatar}}" mode="aspectFill"></image>
+          </view>
+          <view class="need-cat-detail">
+            <text class="cat-name">🐱 {{item.catName}} · {{item.catCount}}只</text>
+            <text class="cat-desc">{{item.description}}</text>
+          </view>
+        </view>
+      </view>
+      
+      <view class="need-meta-row">
+        <text class="meta-item">📅 {{item.startDate}} ~ {{item.endDate}}</text>
+        <text class="meta-item">⏰ {{item.timeSlot}}</text>
+      </view>
+      
+      <view class="need-service-row">
+        <text class="service-tag" wx:for="{{item.services}}" wx:for-item="s" wx:key="*this">{{s}}</text>
+      </view>
+      
+      <view class="need-action-row">
+        <text class="need-time">{{item.createTime}}</text>
+        <view class="btn-primary btn-sm" catchtap="onApply" data-id="{{item.id}}">申请喂养</view>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{needs.length === 0}}">
+      <text class="empty-icon">🔍</text>
+      <text class="empty-text">暂无可接单的需求</text>
+    </view>
+  </view>
+</view>

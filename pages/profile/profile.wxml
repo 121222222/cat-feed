@@ -1,0 +1,34 @@
+<view class="page-container">
+  <view class="form-container">
+    <view class="avatar-section" bindtap="onChangeAvatar">
+      <view class="edit-avatar">
+        <image src="{{userInfo.avatar}}" mode="aspectFill"></image>
+        <view class="avatar-overlay">
+          <text>📷</text>
+        </view>
+      </view>
+      <text class="avatar-tip">点击更换头像</text>
+    </view>
+
+    <view class="form-section">
+      <view class="form-item">
+        <text class="form-label">姓名</text>
+        <input class="form-input" value="{{userInfo.name}}" bindinput="onInput" data-field="name" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">宿舍号</text>
+        <input class="form-input" value="{{userInfo.dormitory}}" bindinput="onInput" data-field="dormitory" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">联系方式</text>
+        <input class="form-input" value="{{userInfo.phone}}" bindinput="onInput" data-field="phone" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">养猫经验</text>
+        <input class="form-input" value="{{userInfo.catExperience}}" bindinput="onInput" data-field="catExperience" />
+      </view>
+    </view>
+
+    <view class="btn-primary btn-block mt-30" bindtap="onSave">保存</view>
+  </view>
+</view>

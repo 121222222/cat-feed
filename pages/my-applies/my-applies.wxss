@@ -1,0 +1,102 @@
+/* 我的申请页样式 */
+.filter-tabs {
+  display: flex;
+  background: #FFFFFF;
+  padding: 16rpx 20rpx;
+  gap: 12rpx;
+  overflow-x: auto;
+  white-space: nowrap;
+  border-bottom: 1rpx solid #F5EDE5;
+}
+
+.filter-tab {
+  display: inline-block;
+  padding: 12rpx 24rpx;
+  border-radius: 50rpx;
+  font-size: 24rpx;
+  color: #999;
+  background: #F5F5F5;
+  flex-shrink: 0;
+}
+
+.filter-tab.active {
+  background: #FFF2E6;
+  color: #FF8C42;
+  font-weight: 600;
+}
+
+.list-container {
+  padding: 20rpx 30rpx;
+}
+
+.apply-card {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+}
+
+.apply-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+  padding-bottom: 12rpx;
+  border-bottom: 1rpx solid #F5EDE5;
+}
+
+.apply-id {
+  font-size: 22rpx;
+  color: #BBB;
+}
+
+.status-badge {
+  padding: 6rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+}
+
+.status-reviewing { background: #FFFBE6; color: #FAAD14; }
+.status-approved { background: #F0FFF0; color: #52C41A; }
+.status-in_progress { background: #E6F7FF; color: #1890FF; }
+.status-completed { background: #F5F5F5; color: #999; }
+
+.apply-body {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.apply-need-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+
+.apply-cat {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #2D2D2D;
+}
+
+.apply-date, .apply-dorm, .apply-owner {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.apply-reward {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #FF8C42;
+}
+
+.apply-actions {
+  display: flex;
+  gap: 16rpx;
+  padding-top: 16rpx;
+  border-top: 1rpx solid #F5EDE5;
+  justify-content: flex-end;
+}

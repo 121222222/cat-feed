@@ -1,0 +1,55 @@
+<view class="page-container">
+  <view class="settings-container">
+    <view class="menu-group">
+      <view class="menu-item">
+        <text class="menu-icon">🔐</text>
+        <text class="menu-text">修改密码</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item">
+        <text class="menu-icon">📱</text>
+        <text class="menu-text">绑定手机号</text>
+        <view class="menu-right">
+          <text class="menu-value">138****8888</text>
+          <text class="menu-arrow">›</text>
+        </view>
+      </view>
+      <view class="menu-item">
+        <text class="menu-icon">🔔</text>
+        <text class="menu-text">消息通知</text>
+        <switch checked="{{true}}" color="#FF8C42" />
+      </view>
+      <view class="menu-item">
+        <text class="menu-icon">🌙</text>
+        <text class="menu-text">免打扰时段</text>
+        <view class="menu-right">
+          <text class="menu-value">22:00 - 08:00</text>
+          <text class="menu-arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="menu-group mt-30">
+      <view class="menu-item">
+        <text class="menu-icon">📄</text>
+        <text class="menu-text">用户协议</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item">
+        <text class="menu-icon">🔒</text>
+        <text class="menu-text">隐私政策</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item">
+        <text class="menu-icon">ℹ️</text>
+        <text class="menu-text">关于喵邻互助</text>
+        <view class="menu-right">
+          <text class="menu-value">v1.0.0</text>
+          <text class="menu-arrow">›</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="logout-btn" bindtap="onLogout">退出登录</view>
+  </view>
+</view>

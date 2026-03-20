@@ -1,0 +1,175 @@
+<view class="page-container">
+  <view class="form-container">
+    <!-- 猫咪信息 -->
+    <view class="form-section">
+      <view class="form-section-title">
+        <text class="form-section-icon">🐱</text>
+        <text>猫咪信息</text>
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label">猫咪名字</text>
+        <input class="form-input" placeholder="请输入猫咪名字" value="{{form.catName}}" bindinput="onInput" data-field="catName" />
+      </view>
+
+      <view class="form-item">
+        <text class="form-label">猫咪品种</text>
+        <picker range="{{breedOptions}}" value="{{breedIndex}}" bindchange="onBreedChange">
+          <text class="form-picker {{form.catBreed ? '' : 'placeholder'}}">{{form.catBreed || '请选择猫咪品种'}}</text>
+        </picker>
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label">猫咪数量</text>
+        <view class="counter">
+          <view class="counter-btn" bindtap="onCountChange" data-delta="-1">-</view>
+          <text class="counter-num">{{form.catCount}}</text>
+          <view class="counter-btn" bindtap="onCountChange" data-delta="1">+</view>
+        </view>
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label">年龄</text>
+        <input class="form-input" placeholder="如：2岁" value="{{form.catAge}}" bindinput="onInput" data-field="catAge" />
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label">是否接种疫苗</text>
+        <view class="switch-wrap">
+          <switch checked="{{form.vaccinated}}" bindchange="onSwitchChange" data-field="vaccinated" color="#FF8C42" />
+        </view>
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label">性格特征</text>
+        <input class="form-input" placeholder="如：温顺亲人、胆小怕生" value="{{form.character}}" bindinput="onInput" data-field="character" />
+      </view>
+      
+      <view class="form-item column">
+        <text class="form-label">注意事项</text>
+        <textarea class="form-textarea" placeholder="请描述猫咪的特殊注意事项，如饮食禁忌、用药情况等" value="{{form.notes}}" bindinput="onInput" data-field="notes" maxlength="200"></textarea>
+      </view>
+
+      <!-- 猫咪照片上传 -->
+      <view class="form-item column">
+        <view class="photo-label-row">
+          <text class="form-label">猫咪照片</text>
+          <text class="photo-tip">最多9张，让喂养人更了解猫咪</text>
+        </view>
+        <view class="photo-upload-area">
+          <view class="photo-item" wx:for="{{catPhotos}}" wx:key="*this">
+            <image src="{{item}}" mode="aspectFill" class="photo-img" bindtap="previewPhoto" data-url="{{item}}"></image>
+            <view class="photo-delete" catchtap="deletePhoto" data-index="{{index}}">×</view>
+          </view>
+          <view class="photo-add" bindtap="chooseCatPhoto" wx:if="{{catPhotos.length < 9}}">
+            <text class="photo-add-icon">📷</text>
+            <text class="photo-add-text">添加照片</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 喂养时间 -->
+    <view class="form-section">
+      <view class="form-section-title">
+        <text class="form-section-icon">📅</text>
+        <text>喂养时间</text>
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label">开始日期</text>
+        <picker mode="date" value="{{form.startDate}}" bindchange="onDateChange" data-field="startDate">
+          <text class="form-picker {{form.startDate ? '' : 'placeholder'}}">{{form.startDate || '请选择开始日期'}}</text>
+        </picker>
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label">结束日期</text>
+        <picker mode="date" value="{{form.endDate}}" bindchange="onDateChange" data-field="endDate">
+          <text class="form-picker {{form.endDate ? '' : 'placeholder'}}">{{form.endDate || '请选择结束日期'}}</text>
+        </picker>
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label">每日时段</text>
+        <input class="form-input" placeholder="如：早晚各一次" value="{{form.timeSlot}}" bindinput="onInput" data-field="timeSlot" />
+      </view>
+    </view>
+
+    <!-- 服务要求 -->
+    <view class="form-section">
+      <view class="form-section-title">
+        <text class="form-section-icon">✅</text>
+        <text>服务要求</text>
+      </view>
+      
+      <view class="service-options">
+        <view class="service-option {{item.checked ? 'checked' : ''}}" 
+              wx:for="{{serviceOptions}}" wx:key="name" 
+              bindtap="toggleService" data-index="{{index}}">
+          <text class="option-icon">{{item.icon}}</text>
+          <text class="option-name">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 宿舍地址 -->
+    <view class="form-section">
+      <view class="form-section-title">
+        <text class="form-section-icon">📍</text>
+        <text>宿舍地址</text>
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label">宿舍楼栋</text>
+        <picker range="{{dormOptions}}" value="{{dormIndex}}" bindchange="onDormChange">
+          <text class="form-picker {{form.dormitory ? '' : 'placeholder'}}">{{form.dormitory || '请选择宿舍楼栋'}}</text>
+        </picker>
+      </view>
+      
+      <view class="form-item">
+        <text class="form-label">房间号</text>
+        <input class="form-input" placeholder="如：302" value="{{form.roomNo}}" bindinput="onInput" data-field="roomNo" />
+      </view>
+    </view>
+
+    <!-- 报酬设置 -->
+    <view class="form-section">
+      <view class="form-section-title">
+        <text class="form-section-icon">💰</text>
+        <text>报酬设置</text>
+      </view>
+      
+      <view class="reward-options">
+        <view class="reward-option {{form.rewardType === 'free' ? 'active' : ''}}" bindtap="setRewardType" data-type="free">
+          <text class="reward-icon">🤝</text>
+          <text>自愿（互助）</text>
+        </view>
+        <view class="reward-option {{form.rewardType === 'fixed' ? 'active' : ''}}" bindtap="setRewardType" data-type="fixed">
+          <text class="reward-icon">💵</text>
+          <text>固定金额</text>
+        </view>
+      </view>
+      
+      <view class="form-item" wx:if="{{form.rewardType === 'fixed'}}">
+        <text class="form-label">金额（元/天）</text>
+        <input class="form-input" type="digit" placeholder="请输入每天的报酬金额" value="{{form.rewardAmount}}" bindinput="onInput" data-field="rewardAmount" />
+      </view>
+    </view>
+
+    <!-- 需求描述 -->
+    <view class="form-section">
+      <view class="form-section-title">
+        <text class="form-section-icon">📝</text>
+        <text>需求描述</text>
+      </view>
+      <textarea class="form-textarea lg" placeholder="详细描述一下您的喂养需求，帮助喂养人更好地了解情况" value="{{form.description}}" bindinput="onInput" data-field="description" maxlength="500"></textarea>
+      <text class="char-count">{{form.description.length || 0}}/500</text>
+    </view>
+  </view>
+
+  <!-- 底部提交 -->
+  <view class="submit-bar safe-bottom">
+    <view class="btn-primary btn-block" bindtap="onSubmit">提交需求</view>
+  </view>
+</view>

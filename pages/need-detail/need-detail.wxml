@@ -1,0 +1,80 @@
+<view class="page-container">
+  <!-- 猫咪信息卡片 -->
+  <view class="cat-hero">
+    <view class="cat-hero-bg"></view>
+    <view class="cat-hero-content">
+      <view class="cat-big-avatar">
+        <image src="{{need.catAvatar}}" mode="aspectFill"></image>
+      </view>
+      <text class="cat-hero-name">{{need.catName}}</text>
+      <text class="cat-hero-info">{{need.catCount}}只 · {{need.dormitory}}</text>
+    </view>
+  </view>
+
+  <!-- 状态栏 -->
+  <view class="status-bar">
+    <view class="status-badge-lg status-{{need.status}}">
+      {{statusText}}
+    </view>
+    <text class="reward-lg">💰 {{need.reward}}</text>
+  </view>
+
+  <!-- 需求描述 -->
+  <view class="detail-card">
+    <text class="detail-title">📝 需求描述</text>
+    <text class="detail-text">{{need.description}}</text>
+  </view>
+
+  <!-- 喂养时间 -->
+  <view class="detail-card">
+    <text class="detail-title">📅 喂养时间</text>
+    <view class="detail-info-row">
+      <text class="info-label">日期范围</text>
+      <text class="info-value">{{need.startDate}} ~ {{need.endDate}}</text>
+    </view>
+    <view class="detail-info-row">
+      <text class="info-label">每日时段</text>
+      <text class="info-value">{{need.timeSlot}}</text>
+    </view>
+  </view>
+
+  <!-- 服务要求 -->
+  <view class="detail-card">
+    <text class="detail-title">✅ 服务要求</text>
+    <view class="service-tag-list">
+      <view class="service-tag" wx:for="{{need.services}}" wx:key="*this">
+        {{item}}
+      </view>
+    </view>
+  </view>
+
+  <!-- 需求方信息 -->
+  <view class="detail-card">
+    <text class="detail-title">👤 需求方信息</text>
+    <view class="user-info-row">
+      <view class="avatar">
+        <image src="{{need.userAvatar}}" mode="aspectFill"></image>
+      </view>
+      <view class="user-info-detail">
+        <text class="user-info-name">{{need.userName}}</text>
+        <text class="user-info-dorm">{{need.dormitory}}</text>
+      </view>
+      <view class="btn-outline btn-sm" bindtap="onContact">联系TA</view>
+    </view>
+  </view>
+
+  <!-- 底部操作 -->
+  <view class="bottom-bar safe-bottom" wx:if="{{need.status === 'pending' && !isOwner}}">
+    <view class="btn-primary btn-block" bindtap="onApply">申请喂养</view>
+  </view>
+  
+  <view class="bottom-bar safe-bottom" wx:if="{{isOwner && need.status === 'pending'}}">
+    <view class="btn-outline" style="flex:1;" bindtap="onCancel">取消需求</view>
+    <view class="btn-primary" style="flex:2;margin-left:20rpx;" bindtap="onEdit">编辑需求</view>
+  </view>
+
+  <view class="bottom-bar safe-bottom" wx:if="{{isOwner && need.status === 'accepted'}}">
+    <view class="btn-outline" style="flex:1;" bindtap="onContact">联系喂养人</view>
+    <view class="btn-primary" style="flex:2;margin-left:20rpx;" bindtap="onConfirm">确认服务</view>
+  </view>
+</view>

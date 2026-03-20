@@ -1,0 +1,49 @@
+<view class="page-container">
+  <view class="form-container">
+    <view class="photo-upload" bindtap="onChoosePhoto">
+      <image wx:if="{{form.avatar}}" src="{{form.avatar}}" mode="aspectFill" class="photo-preview"></image>
+      <view wx:else class="photo-placeholder">
+        <text class="photo-icon">📷</text>
+        <text class="photo-text">添加猫咪照片</text>
+      </view>
+    </view>
+
+    <view class="form-section">
+      <view class="form-item">
+        <text class="form-label">名字</text>
+        <input class="form-input" placeholder="猫咪的名字" value="{{form.name}}" bindinput="onInput" data-field="name" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">品种</text>
+        <input class="form-input" placeholder="如：中华田园猫、英短" value="{{form.breed}}" bindinput="onInput" data-field="breed" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">年龄</text>
+        <input class="form-input" placeholder="如：2岁" value="{{form.age}}" bindinput="onInput" data-field="age" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">性别</text>
+        <view class="gender-options">
+          <view class="gender-opt {{form.gender === '公' ? 'active' : ''}}" bindtap="setGender" data-gender="公">♂ 公</view>
+          <view class="gender-opt {{form.gender === '母' ? 'active' : ''}}" bindtap="setGender" data-gender="母">♀ 母</view>
+        </view>
+      </view>
+      <view class="form-item">
+        <text class="form-label">已接种疫苗</text>
+        <switch checked="{{form.vaccinated}}" bindchange="onSwitch" color="#FF8C42" />
+      </view>
+      <view class="form-item">
+        <text class="form-label">性格特征</text>
+        <input class="form-input" placeholder="如：温顺亲人" value="{{form.character}}" bindinput="onInput" data-field="character" />
+      </view>
+      <view class="form-item column">
+        <text class="form-label">注意事项</text>
+        <textarea class="form-textarea" placeholder="饮食禁忌、用药情况等" value="{{form.notes}}" bindinput="onInput" data-field="notes"></textarea>
+      </view>
+    </view>
+  </view>
+
+  <view class="submit-bar safe-bottom">
+    <view class="btn-primary btn-block" bindtap="onSave">保存</view>
+  </view>
+</view>

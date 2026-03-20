@@ -1,0 +1,95 @@
+/* 申请喂养页样式 */
+.form-container {
+  padding: 20rpx 30rpx 200rpx;
+}
+
+.card {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+}
+
+.card-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #2D2D2D;
+  margin-bottom: 16rpx;
+}
+
+.need-summary .summary-header {
+  margin-bottom: 16rpx;
+  padding-bottom: 12rpx;
+  border-bottom: 1rpx solid #F5EDE5;
+}
+
+.summary-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #2D2D2D;
+}
+
+.summary-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+
+.summary-cat {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #2D2D2D;
+}
+
+.summary-date, .summary-dorm {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.summary-reward {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #FF8C42;
+}
+
+.form-textarea {
+  width: 100%;
+  min-height: 160rpx;
+  font-size: 28rpx;
+  color: #2D2D2D;
+  padding: 16rpx;
+  background: #FFF8F0;
+  border-radius: 12rpx;
+  box-sizing: border-box;
+}
+
+.form-input-full {
+  width: 100%;
+  font-size: 28rpx;
+  color: #2D2D2D;
+  padding: 20rpx 16rpx;
+  background: #FFF8F0;
+  border-radius: 12rpx;
+  box-sizing: border-box;
+}
+
+.char-count {
+  display: block;
+  text-align: right;
+  font-size: 22rpx;
+  color: #BBB;
+  margin-top: 8rpx;
+}
+
+.submit-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx 30rpx;
+  background: #FFFFFF;
+  box-shadow: 0 -2rpx 20rpx rgba(0,0,0,0.05);
+  z-index: 100;
+}

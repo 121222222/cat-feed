@@ -1,0 +1,57 @@
+<view class="page-container">
+  <!-- 头部 -->
+  <view class="feeder-header">
+    <view class="feeder-bg"></view>
+    <view class="feeder-info-wrap">
+      <view class="feeder-avatar-big">
+        <image src="{{feeder.avatar}}" mode="aspectFill"></image>
+        <view class="cert-badge" wx:if="{{feeder.certified}}">✓</view>
+      </view>
+      <text class="feeder-name-big">{{feeder.name}}</text>
+      <text class="feeder-dorm-big">📍 {{feeder.dormitory}}</text>
+      <view class="feeder-stats">
+        <view class="stat-item">
+          <text class="stat-val">{{feeder.rating}}</text>
+          <text class="stat-lbl">评分</text>
+        </view>
+        <view class="stat-divider"></view>
+        <view class="stat-item">
+          <text class="stat-val">{{feeder.serviceCount}}</text>
+          <text class="stat-lbl">服务次数</text>
+        </view>
+        <view class="stat-divider"></view>
+        <view class="stat-item">
+          <text class="stat-val">{{feeder.experience}}</text>
+          <text class="stat-lbl">经验</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 简介 -->
+  <view class="detail-card">
+    <text class="card-title">📝 自我介绍</text>
+    <text class="card-content">{{feeder.intro}}</text>
+  </view>
+
+  <!-- 评价 -->
+  <view class="detail-card">
+    <text class="card-title">⭐ 服务评价</text>
+    <view class="review-item" wx:for="{{reviews}}" wx:key="index">
+      <view class="review-user">
+        <text class="review-name">{{item.name}}</text>
+        <view class="review-stars">
+          <text class="star" wx:for="{{item.stars}}" wx:for-item="s" wx:key="*this">⭐</text>
+        </view>
+      </view>
+      <text class="review-text">{{item.text}}</text>
+      <text class="review-time">{{item.time}}</text>
+    </view>
+  </view>
+
+  <!-- 底部操作 -->
+  <view class="bottom-bar safe-bottom">
+    <view class="btn-outline" style="flex:1;" bindtap="onContact">联系TA</view>
+    <view class="btn-primary" style="flex:2;margin-left:20rpx;" bindtap="onInvite">邀请喂养</view>
+  </view>
+</view>

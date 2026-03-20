@@ -1,0 +1,52 @@
+<view class="page-container">
+  <view class="checkin-content">
+    <!-- 打卡状态 -->
+    <view class="checkin-status-card">
+      <view class="checkin-circle {{isCheckedIn ? 'checked' : ''}}" bindtap="onCheckin">
+        <text class="checkin-icon">{{isCheckedIn ? '✅' : '🐾'}}</text>
+        <text class="checkin-text">{{isCheckedIn ? '已打卡' : '点击打卡'}}</text>
+      </view>
+      <text class="checkin-time" wx:if="{{checkinTime}}">打卡时间：{{checkinTime}}</text>
+      <text class="checkin-hint" wx:else>到达猫咪所在宿舍后，请点击打卡</text>
+    </view>
+
+    <!-- 服务任务 -->
+    <view class="task-card">
+      <text class="task-title">📋 今日服务任务</text>
+      <view class="task-list">
+        <view class="task-item" wx:for="{{tasks}}" wx:key="name" bindtap="toggleTask" data-index="{{index}}">
+          <view class="task-check {{item.done ? 'done' : ''}}">
+            <text>{{item.done ? '✓' : ''}}</text>
+          </view>
+          <text class="task-name {{item.done ? 'task-done' : ''}}">{{item.icon}} {{item.name}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 上传照片 -->
+    <view class="photo-card">
+      <text class="photo-title">📸 服务照片</text>
+      <text class="photo-hint">请拍摄服务过程照片，让需求方放心</text>
+      <view class="photo-grid">
+        <view class="photo-item" wx:for="{{photos}}" wx:key="index">
+          <image src="{{item}}" mode="aspectFill"></image>
+        </view>
+        <view class="photo-add" bindtap="onAddPhoto" wx:if="{{photos.length < 6}}">
+          <text class="photo-add-icon">+</text>
+          <text class="photo-add-text">添加照片</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 服务备注 -->
+    <view class="note-card">
+      <text class="note-title">📝 服务备注</text>
+      <textarea class="note-textarea" placeholder="记录一下今天的喂养情况吧~" value="{{note}}" bindinput="onNoteInput"></textarea>
+    </view>
+  </view>
+
+  <!-- 提交 -->
+  <view class="submit-bar safe-bottom">
+    <view class="btn-primary btn-block" bindtap="onSubmit">提交服务记录</view>
+  </view>
+</view>

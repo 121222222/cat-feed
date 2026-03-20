@@ -1,0 +1,140 @@
+<view class="page-container">
+  <!-- 用户信息头部 -->
+  <view class="profile-header">
+    <view class="profile-bg"></view>
+    <view class="profile-info">
+      <view class="profile-avatar-wrap">
+        <view class="avatar avatar-xl">
+          <image src="{{userInfo.avatar}}" mode="aspectFill"></image>
+        </view>
+        <view class="certified-icon" wx:if="{{userInfo.certified}}">✓</view>
+      </view>
+      <view class="profile-detail">
+        <view class="profile-name-row">
+          <text class="profile-name">{{userInfo.name}}</text>
+          <view class="certified-tag" wx:if="{{userInfo.certified}}">已认证</view>
+        </view>
+        <text class="profile-dorm">📍 {{userInfo.dormitory}}</text>
+        <view class="profile-stats">
+          <view class="stat-item">
+            <text class="stat-num">{{userInfo.rating}}</text>
+            <text class="stat-label">评分</text>
+          </view>
+          <view class="stat-divider"></view>
+          <view class="stat-item">
+            <text class="stat-num">{{userInfo.serviceCount}}</text>
+            <text class="stat-label">服务次数</text>
+          </view>
+          <view class="stat-divider"></view>
+          <view class="stat-item">
+            <text class="stat-num">{{catCount}}</text>
+            <text class="stat-label">我的猫咪</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 我的猫咪 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">🐱 我的猫咪</text>
+      <text class="section-more" bindtap="goMyCats">管理 ›</text>
+    </view>
+    <scroll-view scroll-x class="cat-scroll" wx:if="{{cats.length > 0}}">
+      <view class="cat-card" wx:for="{{cats}}" wx:key="id">
+        <view class="cat-card-avatar">
+          <image src="{{item.avatar}}" mode="aspectFill"></image>
+        </view>
+        <text class="cat-card-name">{{item.name}}</text>
+        <text class="cat-card-info">{{item.breed}} · {{item.age}}</text>
+      </view>
+      <view class="cat-card add-cat" bindtap="goAddCat">
+        <text class="add-icon">+</text>
+        <text class="add-text">添加猫咪</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 我的服务 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">📦 我的服务</text>
+    </view>
+    <view class="menu-group">
+      <view class="menu-item" bindtap="goMyNeeds">
+        <view class="menu-icon-wrap" style="background:#FFF2E6;">
+          <text class="menu-icon">📋</text>
+        </view>
+        <text class="menu-text">我的喂养订单（需求方）</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="goMyApplies">
+        <view class="menu-icon-wrap" style="background:#E6F7FF;">
+          <text class="menu-icon">🐾</text>
+        </view>
+        <text class="menu-text">我的喂养接单（服务方）</text>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 安全中心 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">🔒 安全中心</text>
+    </view>
+    <view class="menu-group">
+      <view class="menu-item" bindtap="goAuth">
+        <view class="menu-icon-wrap" style="background:#F0FFF0;">
+          <text class="menu-icon">🪪</text>
+        </view>
+        <text class="menu-text">身份认证</text>
+        <view class="menu-right">
+          <text class="menu-badge-success" wx:if="{{userInfo.certified}}">已认证</text>
+          <text class="menu-badge-warn" wx:else>未认证</text>
+          <text class="menu-arrow">›</text>
+        </view>
+      </view>
+      <view class="menu-item" bindtap="goRating">
+        <view class="menu-icon-wrap" style="background:#FFFBE6;">
+          <text class="menu-icon">⭐</text>
+        </view>
+        <text class="menu-text">服务评价</text>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 设置 -->
+  <view class="section">
+    <view class="section-header">
+      <text class="section-title">⚙️ 设置</text>
+    </view>
+    <view class="menu-group">
+      <view class="menu-item" bindtap="goProfile">
+        <view class="menu-icon-wrap" style="background:#FFF2E6;">
+          <text class="menu-icon">✏️</text>
+        </view>
+        <text class="menu-text">编辑资料</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="goSettings">
+        <view class="menu-icon-wrap" style="background:#E6F7FF;">
+          <text class="menu-icon">🔐</text>
+        </view>
+        <text class="menu-text">账号安全</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="goHelp">
+        <view class="menu-icon-wrap" style="background:#FFF2F0;">
+          <text class="menu-icon">❓</text>
+        </view>
+        <text class="menu-text">帮助中心</text>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <view style="height: 140rpx;"></view>
+</view>

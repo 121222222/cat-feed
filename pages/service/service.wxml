@@ -1,0 +1,176 @@
+<view class="page-container">
+  <!-- 顶部Tab切换 -->
+  <view class="service-tabs">
+    <view class="tab-item {{activeTab === 0 ? 'active' : ''}}" bindtap="switchTab" data-tab="0">
+      <text class="tab-icon-text">🙋</text>
+      <text class="tab-label">我要找人喂猫</text>
+      <view class="tab-indicator" wx:if="{{activeTab === 0}}"></view>
+    </view>
+    <view class="tab-item {{activeTab === 1 ? 'active' : ''}}" bindtap="switchTab" data-tab="1">
+      <text class="tab-icon-text">🐾</text>
+      <text class="tab-label">我要上门喂猫</text>
+      <view class="tab-indicator" wx:if="{{activeTab === 1}}"></view>
+    </view>
+  </view>
+
+  <!-- 分支A: 找人喂猫(需求方) -->
+  <view class="tab-content" wx:if="{{activeTab === 0}}">
+    <!-- 操作区 -->
+    <view class="action-area">
+      <view class="action-card" bindtap="goPublish">
+        <view class="action-icon-wrap gradient-orange">
+          <text class="action-icon">📝</text>
+        </view>
+        <view class="action-info">
+          <text class="action-title">发布喂养需求</text>
+          <text class="action-desc">填写猫咪信息，发布喂养需求</text>
+        </view>
+        <text class="action-arrow">›</text>
+      </view>
+      <view class="action-card" bindtap="goMyNeeds">
+        <view class="action-icon-wrap gradient-yellow">
+          <text class="action-icon">📋</text>
+        </view>
+        <view class="action-info">
+          <text class="action-title">我的喂养需求</text>
+          <text class="action-desc">查看已发布的需求和订单状态</text>
+        </view>
+        <text class="action-arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 我的需求快览 -->
+    <view class="section" wx:if="{{myNeeds.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">📋 需求快览</text>
+        <text class="section-more" bindtap="goMyNeeds">全部 ›</text>
+      </view>
+      <!-- 状态统计 -->
+      <view class="status-summary">
+        <view class="status-item" bindtap="goMyNeeds" data-status="pending">
+          <text class="status-num">{{statusCount.pending}}</text>
+          <text class="status-label">待接单</text>
+        </view>
+        <view class="status-item" bindtap="goMyNeeds" data-status="accepted">
+          <text class="status-num">{{statusCount.accepted}}</text>
+          <text class="status-label">已接单</text>
+        </view>
+        <view class="status-item" bindtap="goMyNeeds" data-status="in_progress">
+          <text class="status-num">{{statusCount.in_progress}}</text>
+          <text class="status-label">服务中</text>
+        </view>
+        <view class="status-item" bindtap="goMyNeeds" data-status="completed">
+          <text class="status-num">{{statusCount.completed}}</text>
+          <text class="status-label">已完成</text>
+        </view>
+      </view>
+
+      <!-- 最近需求 -->
+      <view class="need-card" wx:for="{{myNeeds}}" wx:key="id" bindtap="goNeedDetail" data-id="{{item.id}}">
+        <view class="flex-between">
+          <view class="flex" style="align-items:center;gap:12rpx;">
+            <view class="cat-mini-avatar">
+              <image src="{{item.catAvatar}}" mode="aspectFill"></image>
+            </view>
+            <view>
+              <text class="need-card-title">{{item.catName}} · {{item.catCount}}只</text>
+              <text class="need-card-date">{{item.startDate}} ~ {{item.endDate}}</text>
+            </view>
+          </view>
+          <view class="status-badge status-{{item.status}}">
+            {{item.statusText}}
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 空状态 -->
+    <view class="empty-state" wx:if="{{myNeeds.length === 0}}">
+      <text class="empty-icon">😺</text>
+      <text class="empty-text">还没有发布喂养需求</text>
+      <view class="btn-primary btn-sm mt-20" bindtap="goPublish">立即发布</view>
+    </view>
+  </view>
+
+  <!-- 分支B: 上门喂猫(服务方) -->
+  <view class="tab-content" wx:if="{{activeTab === 1}}">
+    <!-- 操作区 -->
+    <view class="action-area">
+      <view class="action-card" bindtap="goAcceptList">
+        <view class="action-icon-wrap gradient-green">
+          <text class="action-icon">🔍</text>
+        </view>
+        <view class="action-info">
+          <text class="action-title">可接单需求列表</text>
+          <text class="action-desc">筛选合适的喂养需求并接单</text>
+        </view>
+        <text class="action-arrow">›</text>
+      </view>
+      <view class="action-card" bindtap="goMyApplies">
+        <view class="action-icon-wrap gradient-blue">
+          <text class="action-icon">📦</text>
+        </view>
+        <view class="action-info">
+          <text class="action-title">我的喂养申请</text>
+          <text class="action-desc">查看申请状态和服务记录</text>
+        </view>
+        <text class="action-arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 待处理服务 -->
+    <view class="section" wx:if="{{myApplies.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">🐾 服务快览</text>
+        <text class="section-more" bindtap="goMyApplies">全部 ›</text>
+      </view>
+      <view class="apply-status-summary">
+        <view class="status-item" bindtap="goMyApplies" data-status="reviewing">
+          <text class="status-num">{{applyCount.reviewing}}</text>
+          <text class="status-label">待审核</text>
+        </view>
+        <view class="status-item" bindtap="goMyApplies" data-status="approved">
+          <text class="status-num">{{applyCount.approved}}</text>
+          <text class="status-label">已通过</text>
+        </view>
+        <view class="status-item" bindtap="goMyApplies" data-status="in_progress">
+          <text class="status-num">{{applyCount.in_progress}}</text>
+          <text class="status-label">服务中</text>
+        </view>
+        <view class="status-item" bindtap="goMyApplies" data-status="completed">
+          <text class="status-num">{{applyCount.completed}}</text>
+          <text class="status-label">已完成</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 推荐需求 -->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">🔥 热门需求</text>
+      </view>
+      <view class="need-card" wx:for="{{hotNeeds}}" wx:key="id" bindtap="goNeedDetail" data-id="{{item.id}}">
+        <view class="need-top">
+          <view class="need-user">
+            <view class="avatar avatar-sm">
+              <image src="{{item.userAvatar}}" mode="aspectFill"></image>
+            </view>
+            <text class="need-username">{{item.userName}}</text>
+          </view>
+          <text class="need-reward-text">💰 {{item.reward}}</text>
+        </view>
+        <text class="need-brief">{{item.description}}</text>
+        <view class="need-footer-info">
+          <text class="need-info-item">📅 {{item.startDate}} ~ {{item.endDate}}</text>
+          <text class="need-info-item">📍 {{item.dormitory}}</text>
+          <text class="need-info-item">🐱 {{item.catName}} · {{item.catCount}}只</text>
+        </view>
+        <view class="need-service-tags">
+          <text class="mini-tag" wx:for="{{item.services}}" wx:for-item="service" wx:key="*this">{{service}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view style="height: 120rpx;"></view>
+</view>

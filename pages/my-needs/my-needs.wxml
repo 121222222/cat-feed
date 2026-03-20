@@ -1,0 +1,45 @@
+<view class="page-container">
+  <!-- 筛选Tab -->
+  <view class="filter-tabs">
+    <view class="filter-tab {{filterStatus === '' ? 'active' : ''}}" bindtap="onFilter" data-status="">全部</view>
+    <view class="filter-tab {{filterStatus === 'pending' ? 'active' : ''}}" bindtap="onFilter" data-status="pending">待接单</view>
+    <view class="filter-tab {{filterStatus === 'accepted' ? 'active' : ''}}" bindtap="onFilter" data-status="accepted">已接单</view>
+    <view class="filter-tab {{filterStatus === 'completed' ? 'active' : ''}}" bindtap="onFilter" data-status="completed">已完成</view>
+    <view class="filter-tab {{filterStatus === 'cancelled' ? 'active' : ''}}" bindtap="onFilter" data-status="cancelled">已取消</view>
+  </view>
+
+  <!-- 需求列表 -->
+  <view class="list-container">
+    <view class="order-card" wx:for="{{filteredNeeds}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <view class="order-header">
+        <text class="order-id">订单 #{{item.id}}</text>
+        <view class="status-badge status-{{item.status}}">{{item.statusText}}</view>
+      </view>
+      <view class="order-body">
+        <view class="cat-mini-avatar">
+          <image src="{{item.catAvatar}}" mode="aspectFill"></image>
+        </view>
+        <view class="order-info">
+          <text class="order-cat-name">🐱 {{item.catName}} · {{item.catCount}}只</text>
+          <text class="order-date">📅 {{item.startDate}} ~ {{item.endDate}}</text>
+          <text class="order-dorm">📍 {{item.dormitory}}</text>
+        </view>
+        <text class="order-reward">{{item.reward}}</text>
+      </view>
+      <view class="order-footer">
+        <view class="order-tags">
+          <text class="mini-tag" wx:for="{{item.services}}" wx:for-item="s" wx:key="*this">{{s}}</text>
+        </view>
+        <text class="order-time">{{item.createTime}}</text>
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{filteredNeeds.length === 0}}">
+      <text class="empty-icon">📋</text>
+      <text class="empty-text">暂无相关需求</text>
+    </view>
+  </view>
+
+  <!-- 发布按钮 -->
+  <view class="fab" bindtap="goPublish">+</view>
+</view>

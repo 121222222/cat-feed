@@ -1,0 +1,273 @@
+/* 喂养服务页样式 */
+.service-tabs {
+  display: flex;
+  background: #FFFFFF;
+  padding: 20rpx 30rpx 0;
+  gap: 30rpx;
+  border-bottom: 1rpx solid #F5EDE5;
+}
+
+.service-tabs .tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 20rpx;
+  position: relative;
+}
+
+.tab-icon-text {
+  font-size: 36rpx;
+  margin-bottom: 6rpx;
+}
+
+.tab-label {
+  font-size: 26rpx;
+  color: #999;
+}
+
+.service-tabs .tab-item.active .tab-label {
+  color: #FF8C42;
+  font-weight: 600;
+}
+
+.tab-indicator {
+  position: absolute;
+  bottom: 0;
+  width: 60rpx;
+  height: 6rpx;
+  background: #FF8C42;
+  border-radius: 3rpx;
+}
+
+.tab-content {
+  padding: 20rpx 30rpx;
+}
+
+/* 操作区 */
+.action-area {
+  margin-bottom: 30rpx;
+}
+
+.action-card {
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 28rpx 24rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+}
+
+.action-icon-wrap {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+}
+
+.gradient-orange { background: linear-gradient(135deg, #FFB380, #FF8C42); }
+.gradient-yellow { background: linear-gradient(135deg, #FFE4A0, #FFD166); }
+.gradient-green { background: linear-gradient(135deg, #B7EB8F, #52C41A); }
+.gradient-blue { background: linear-gradient(135deg, #91D5FF, #1890FF); }
+
+.action-icon {
+  font-size: 36rpx;
+}
+
+.action-info {
+  flex: 1;
+}
+
+.action-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #2D2D2D;
+}
+
+.action-desc {
+  display: block;
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 4rpx;
+}
+
+.action-arrow {
+  font-size: 36rpx;
+  color: #CCC;
+}
+
+/* 状态统计 */
+.status-summary, .apply-status-summary {
+  display: flex;
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 24rpx 0;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+}
+
+.status-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 1rpx solid #F5EDE5;
+}
+
+.status-item:last-child {
+  border-right: none;
+}
+
+.status-num {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #FF8C42;
+  line-height: 1;
+  margin-bottom: 8rpx;
+}
+
+.status-label {
+  font-size: 22rpx;
+  color: #999;
+}
+
+/* 需求卡片(服务页) */
+.need-card {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+}
+
+.cat-mini-avatar {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+  background: #FFF2E6;
+}
+
+.cat-mini-avatar image {
+  width: 100%;
+  height: 100%;
+}
+
+.need-card-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #2D2D2D;
+}
+
+.need-card-date {
+  display: block;
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 4rpx;
+}
+
+.status-badge {
+  padding: 6rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+}
+
+.status-pending { background: #FFFBE6; color: #FAAD14; }
+.status-accepted { background: #E6F7FF; color: #1890FF; }
+.status-in_progress { background: #F0FFF0; color: #52C41A; }
+.status-completed { background: #F5F5F5; color: #999; }
+.status-cancelled { background: #FFF2F0; color: #FF4D4F; }
+.status-reviewing { background: #FFFBE6; color: #FAAD14; }
+.status-approved { background: #F0FFF0; color: #52C41A; }
+
+/* 热门需求 */
+.need-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12rpx;
+}
+
+.need-user {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.need-username {
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.need-reward-text {
+  font-size: 26rpx;
+  color: #FF8C42;
+  font-weight: 600;
+}
+
+.need-brief {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 12rpx;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.need-footer-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+  margin-bottom: 12rpx;
+}
+
+.need-info-item {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.need-service-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+
+.section {
+  margin-bottom: 20rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #2D2D2D;
+}
+
+.section-more {
+  font-size: 24rpx;
+  color: #FF8C42;
+}
+
+.mini-tag {
+  display: inline-block;
+  padding: 4rpx 14rpx;
+  background: #FFF2E6;
+  color: #FF8C42;
+  font-size: 20rpx;
+  border-radius: 6rpx;
+}
