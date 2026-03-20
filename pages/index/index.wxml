@@ -27,7 +27,7 @@
       <view class="entry-left">
         <view class="entry-icon-circle need-circle">🙋</view>
         <view class="entry-info">
-          <text class="entry-title">我要找人喂猫</text>
+          <text class="entry-title">找鹅喂猫</text>
           <text class="entry-desc">一键发布喂养需求</text>
         </view>
       </view>
@@ -39,7 +39,7 @@
       <view class="entry-left">
         <view class="entry-icon-circle feed-circle">🐾</view>
         <view class="entry-info">
-          <text class="entry-title">我要上门喂猫</text>
+          <text class="entry-title">鹅要上门</text>
           <text class="entry-desc">一键接单帮忙喂猫</text>
         </view>
       </view>
