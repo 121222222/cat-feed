@@ -39,7 +39,7 @@
 }
 
 .tab-bar-item.active .tab-icon-wrap {
-  background: #FFF2E6;
+  background: #FFEFE9;
 }
 
 .tab-icon-img {

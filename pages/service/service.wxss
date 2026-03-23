@@ -27,7 +27,7 @@
 }
 
 .service-tabs .tab-item.active .tab-label {
-  color: #FF8C42;
+  color: #FFBAA3;
   font-weight: 600;
 }
 
@@ -36,7 +36,7 @@
   bottom: 0;
   width: 60rpx;
   height: 6rpx;
-  background: #FF8C42;
+  background: #FFBAA3;
   border-radius: 3rpx;
 }
 
@@ -56,7 +56,7 @@
   border-radius: 20rpx;
   padding: 28rpx 24rpx;
   margin-bottom: 16rpx;
-  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+  box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
 }
 
 .action-icon-wrap {
@@ -69,7 +69,7 @@
   margin-right: 20rpx;
 }
 
-.gradient-orange { background: linear-gradient(135deg, #FFB380, #FF8C42); }
+.gradient-orange { background: linear-gradient(135deg, #FFD4C4, #FFBAA3); }
 .gradient-yellow { background: linear-gradient(135deg, #FFE4A0, #FFD166); }
 .gradient-green { background: linear-gradient(135deg, #B7EB8F, #52C41A); }
 .gradient-blue { background: linear-gradient(135deg, #91D5FF, #1890FF); }
@@ -108,7 +108,7 @@
   border-radius: 20rpx;
   padding: 24rpx 0;
   margin-bottom: 20rpx;
-  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+  box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
 }
 
 .status-item {
@@ -126,7 +126,7 @@
 .status-num {
   font-size: 40rpx;
   font-weight: 700;
-  color: #FF8C42;
+  color: #FFBAA3;
   line-height: 1;
   margin-bottom: 8rpx;
 }
@@ -142,7 +142,7 @@
   border-radius: 20rpx;
   padding: 24rpx;
   margin-bottom: 16rpx;
-  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+  box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
 }
 
 .cat-mini-avatar {
@@ -150,7 +150,7 @@
   height: 60rpx;
   border-radius: 12rpx;
   overflow: hidden;
-  background: #FFF2E6;
+  background: #FFEFE9;
 }
 
 .cat-mini-avatar image {
@@ -208,7 +208,7 @@
 
 .need-reward-text {
   font-size: 26rpx;
-  color: #FF8C42;
+  color: #FFBAA3;
   font-weight: 600;
 }
 
@@ -260,14 +260,14 @@
 
 .section-more {
   font-size: 24rpx;
-  color: #FF8C42;
+  color: #FFBAA3;
 }
 
 .mini-tag {
   display: inline-block;
   padding: 4rpx 14rpx;
-  background: #FFF2E6;
-  color: #FF8C42;
+  background: #FFEFE9;
+  color: #FFBAA3;
   font-size: 20rpx;
   border-radius: 6rpx;
 }

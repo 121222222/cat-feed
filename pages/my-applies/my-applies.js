@@ -62,7 +62,7 @@ Page({
     wx.showModal({
       title: '确认结束',
       content: '确定结束本次喂养服务吗？',
-      confirmColor: '#FF8C42',
+      confirmColor: '#FFBAA3',
       success: (res) => {
         if (res.confirm) {
           wx.showToast({ title: '服务已结束', icon: 'success' });

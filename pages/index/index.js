@@ -13,9 +13,14 @@ Page({
   },
 
   onLoad() {
+    // 检查登录状态
+    if (!app.globalData.isLoggedIn) {
+      wx.redirectTo({ url: '/pages/login/login' });
+      return;
+    }
     this.setData({
       userInfo: app.globalData.mockUser,
-      needs: app.globalData.mockNeeds.filter(n => n.status === 'pending'),
+      needs: app.globalData.mockNeeds.slice(0, 4),
       feeders: app.globalData.mockFeeders
     });
   },
@@ -48,7 +53,7 @@ Page({
   },
 
   goMoreNeeds() {
-    wx.switchTab({ url: '/pages/service/service' });
+    wx.navigateTo({ url: '/pages/all-needs/all-needs' });
   },
 
   goMoreFeeders() {

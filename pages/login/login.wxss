@@ -1,0 +1,553 @@
+/* 登录页面样式 */
+.login-page {
+  min-height: 100vh;
+  background: #FFF7F4;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ========== 顶部橙色区域 ========== */
+.login-top {
+  position: relative;
+}
+
+.top-bg {
+  background: linear-gradient(135deg, #FFBAA3, #E8A48D, #FFD4C4);
+  padding: 120rpx 0 100rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 猫咪线条装饰 - 伸懒腰的猫轮廓 */
+.cat-line-deco {
+  position: absolute;
+  right: -20rpx;
+  top: 60rpx;
+  width: 400rpx;
+  height: 340rpx;
+  opacity: 0.15;
+  z-index: 0;
+}
+
+/* 尾巴 - 向上翘起的曲线 */
+.cl-tail {
+  position: absolute;
+  left: 20rpx;
+  top: 0;
+  width: 80rpx;
+  height: 120rpx;
+  border: 5rpx solid #FFFFFF;
+  border-right: none;
+  border-bottom: none;
+  border-radius: 80rpx 0 0 0;
+}
+
+/* 身体 - 拱起的弧形 */
+.cl-body {
+  position: absolute;
+  left: 20rpx;
+  top: 80rpx;
+  width: 200rpx;
+  height: 180rpx;
+  border: 5rpx solid #FFFFFF;
+  border-top: none;
+  border-radius: 0 0 50% 40%;
+}
+
+/* 脖子 - 连接头和身体的曲线 */
+.cl-neck {
+  position: absolute;
+  right: 80rpx;
+  top: 110rpx;
+  width: 90rpx;
+  height: 110rpx;
+  border: 5rpx solid #FFFFFF;
+  border-left: none;
+  border-bottom: none;
+  border-radius: 0 60rpx 0 0;
+}
+
+/* 头 - 圆形猫头 */
+.cl-head {
+  position: absolute;
+  right: 30rpx;
+  top: 180rpx;
+  width: 100rpx;
+  height: 90rpx;
+  border: 5rpx solid #FFFFFF;
+  border-radius: 50%;
+}
+
+/* 左耳 */
+.cl-ear-l {
+  position: absolute;
+  right: 98rpx;
+  top: 158rpx;
+  width: 26rpx;
+  height: 26rpx;
+  border: 5rpx solid #FFFFFF;
+  border-right: none;
+  border-bottom: none;
+  transform: rotate(30deg) skewX(-10deg);
+}
+
+/* 右耳 */
+.cl-ear-r {
+  position: absolute;
+  right: 44rpx;
+  top: 158rpx;
+  width: 26rpx;
+  height: 26rpx;
+  border: 5rpx solid #FFFFFF;
+  border-left: none;
+  border-bottom: none;
+  transform: rotate(-30deg) skewX(10deg);
+}
+
+/* 装饰小元素 */
+.deco-paw {
+  position: absolute;
+  font-size: 36rpx;
+  opacity: 0.2;
+}
+
+.paw1 {
+  top: 80rpx;
+  left: 60rpx;
+  transform: rotate(-30deg);
+}
+
+.paw2 {
+  top: 160rpx;
+  right: 80rpx;
+  transform: rotate(20deg);
+}
+
+.paw3 {
+  bottom: 120rpx;
+  left: 120rpx;
+  transform: rotate(45deg);
+}
+
+.deco-fish {
+  position: absolute;
+  top: 100rpx;
+  right: 50rpx;
+  font-size: 40rpx;
+  opacity: 0.25;
+  transform: rotate(-15deg);
+}
+
+/* ========== CSS卡通黑猫 ========== */
+.cat-mascot {
+  position: relative;
+  width: 200rpx;
+  height: 240rpx;
+  margin-bottom: 20rpx;
+}
+
+/* 猫耳朵 */
+.cat-ear {
+  position: absolute;
+  top: 0;
+  width: 0;
+  height: 0;
+  border-left: 28rpx solid transparent;
+  border-right: 28rpx solid transparent;
+  border-bottom: 50rpx solid #2D2D2D;
+}
+
+.cat-ear-left {
+  left: 30rpx;
+  transform: rotate(-10deg);
+}
+
+.cat-ear-right {
+  right: 30rpx;
+  transform: rotate(10deg);
+}
+
+/* 猫头 */
+.cat-head {
+  position: absolute;
+  top: 35rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140rpx;
+  height: 120rpx;
+  background: #2D2D2D;
+  border-radius: 50% 50% 45% 45%;
+}
+
+/* 猫眼睛 */
+.cat-eye {
+  position: absolute;
+  top: 38rpx;
+  width: 28rpx;
+  height: 28rpx;
+  background: #FFFFFF;
+  border-radius: 50%;
+}
+
+.cat-eye::after {
+  content: '';
+  position: absolute;
+  top: 8rpx;
+  left: 8rpx;
+  width: 14rpx;
+  height: 14rpx;
+  background: #2D2D2D;
+  border-radius: 50%;
+}
+
+.cat-eye-left {
+  left: 25rpx;
+}
+
+.cat-eye-right {
+  right: 25rpx;
+}
+
+/* 胡须 */
+.whisker {
+  position: absolute;
+  top: 75rpx;
+  width: 36rpx;
+  height: 2rpx;
+  background: #FFFFFF;
+}
+
+.whisker-left-1 {
+  left: -10rpx;
+  transform: rotate(-10deg);
+}
+
+.whisker-left-2 {
+  left: -8rpx;
+  top: 82rpx;
+  transform: rotate(10deg);
+}
+
+.whisker-right-1 {
+  right: -10rpx;
+  transform: rotate(10deg);
+}
+
+.whisker-right-2 {
+  right: -8rpx;
+  top: 82rpx;
+  transform: rotate(-10deg);
+}
+
+/* 猫鼻子 */
+.cat-nose {
+  position: absolute;
+  top: 68rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8rpx solid transparent;
+  border-right: 8rpx solid transparent;
+  border-top: 10rpx solid #FFBAA3;
+}
+
+/* 猫嘴巴 */
+.cat-mouth {
+  position: absolute;
+  top: 78rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24rpx;
+  height: 12rpx;
+  border-bottom: 3rpx solid #888;
+  border-radius: 0 0 50% 50%;
+}
+
+/* 猫身体 */
+.cat-body {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110rpx;
+  height: 110rpx;
+  background: #2D2D2D;
+  border-radius: 50% 50% 20rpx 20rpx;
+}
+
+/* 猫尾巴 */
+.cat-tail {
+  position: absolute;
+  bottom: 30rpx;
+  right: 10rpx;
+  width: 60rpx;
+  height: 80rpx;
+  border: 8rpx solid #2D2D2D;
+  border-left: none;
+  border-bottom: none;
+  border-radius: 0 60rpx 0 0;
+}
+
+/* APP品牌 */
+.app-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10rpx;
+  position: relative;
+  z-index: 1;
+}
+
+.app-name {
+  font-size: 52rpx;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: 8rpx;
+  text-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+}
+
+.app-slogan {
+  font-size: 24rpx;
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 10rpx;
+  letter-spacing: 4rpx;
+}
+
+/* 波浪形过渡 */
+.wave-divider {
+  height: 60rpx;
+  background: #FFF7F4;
+  margin-top: -30rpx;
+  border-radius: 50% 50% 0 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* ========== 登录表单区域 ========== */
+.login-form-area {
+  padding: 20rpx 60rpx 0;
+  position: relative;
+  z-index: 2;
+}
+
+/* 登录按钮通用 */
+.login-btn {
+  width: 100% !important;
+  height: 96rpx;
+  border-radius: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+  border: none;
+  font-size: 30rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  transition: all 0.2s ease;
+  margin: 0;
+  padding: 0;
+}
+
+.login-btn::after {
+  border: none;
+}
+
+.login-btn:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+}
+
+/* 微信登录按钮 */
+.wechat-btn {
+  background: linear-gradient(135deg, #FFBAA3, #E8A48D);
+  color: #FFFFFF;
+  box-shadow: 0 8rpx 30rpx rgba(255, 107, 66, 0.4);
+}
+
+.btn-icon {
+  font-size: 36rpx;
+}
+
+.btn-text {
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+/* 手机号登录区域 */
+.phone-login-section {
+  margin-top: 40rpx;
+}
+
+/* 分割线 */
+.divider-line {
+  display: flex;
+  align-items: center;
+  margin-bottom: 36rpx;
+}
+
+.line {
+  flex: 1;
+  height: 1rpx;
+  background: #E8DDD0;
+}
+
+.divider-text {
+  padding: 0 24rpx;
+  font-size: 24rpx;
+  color: #BBB;
+  white-space: nowrap;
+}
+
+/* 手机号输入框 */
+.phone-input-wrap {
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  border-radius: 48rpx;
+  padding: 0 32rpx;
+  height: 96rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
+  border: 2rpx solid #F5EDE5;
+  margin-bottom: 20rpx;
+}
+
+.input-prefix {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #2D2D2D;
+  flex-shrink: 0;
+}
+
+.input-divider {
+  width: 2rpx;
+  height: 36rpx;
+  background: #E8DDD0;
+  margin: 0 24rpx;
+  flex-shrink: 0;
+}
+
+.phone-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #2D2D2D;
+  height: 96rpx;
+}
+
+/* 验证码输入框 */
+.code-input-wrap {
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  border-radius: 48rpx;
+  padding: 0 8rpx 0 32rpx;
+  height: 96rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
+  border: 2rpx solid #F5EDE5;
+  margin-bottom: 30rpx;
+}
+
+.code-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #2D2D2D;
+  height: 96rpx;
+}
+
+.code-btn {
+  flex-shrink: 0;
+  padding: 16rpx 28rpx;
+  background: linear-gradient(135deg, #FFEFE9, #FFE0D6);
+  color: #FFBAA3;
+  font-size: 24rpx;
+  font-weight: 600;
+  border-radius: 40rpx;
+  white-space: nowrap;
+}
+
+.code-btn.disabled {
+  background: #F5F5F5;
+  color: #CCC;
+}
+
+/* 手机号登录按钮 */
+.phone-btn {
+  background: #FFFFFF;
+  color: #FFBAA3;
+  border: 3rpx solid #FFBAA3 !important;
+  box-shadow: none;
+  margin-top: 0;
+}
+
+/* 协议区域 */
+.agreement {
+  display: flex;
+  align-items: flex-start;
+  margin-top: 40rpx;
+  padding: 0 10rpx;
+}
+
+.checkbox-wrap {
+  flex-shrink: 0;
+  padding-top: 4rpx;
+  margin-right: 10rpx;
+}
+
+.checkbox {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 50%;
+  border: 2rpx solid #DDD;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20rpx;
+  color: #FFF;
+  transition: all 0.2s ease;
+}
+
+.checkbox.checked {
+  background: #FFBAA3;
+  border-color: #FFBAA3;
+}
+
+.agreement-text {
+  font-size: 22rpx;
+  color: #999;
+  line-height: 1.6;
+}
+
+.link {
+  color: #FFBAA3;
+}
+
+/* ========== 底部装饰 ========== */
+.bottom-deco {
+  position: fixed;
+  bottom: 40rpx;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 30rpx;
+  opacity: 0.15;
+}
+
+.paw-print {
+  font-size: 36rpx;
+}
+
+.paw-print:nth-child(1) {
+  transform: rotate(-20deg);
+}
+
+.paw-print:nth-child(2) {
+  transform: rotate(5deg) translateY(-10rpx);
+}
+
+.paw-print:nth-child(3) {
+  transform: rotate(25deg);
+}

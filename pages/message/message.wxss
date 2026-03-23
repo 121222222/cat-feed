@@ -15,7 +15,7 @@
 }
 
 .msg-tab.active {
-  color: #FF8C42;
+  color: #FFBAA3;
   font-weight: 600;
 }
 
@@ -27,7 +27,7 @@
   transform: translateX(-50%);
   width: 40rpx;
   height: 6rpx;
-  background: #FF8C42;
+  background: #FFBAA3;
   border-radius: 3rpx;
 }
 

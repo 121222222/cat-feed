@@ -6,7 +6,7 @@
 
 .profile-bg {
   height: 300rpx;
-  background: linear-gradient(135deg, #FF8C42, #FF6B42, #FFB380);
+  background: linear-gradient(135deg, #FFBAA3, #E8A48D, #FFD4C4);
   border-radius: 0 0 50rpx 50rpx;
 }
 
@@ -23,6 +23,23 @@
   margin-bottom: 16rpx;
 }
 
+.avatar-edit-icon {
+  position: absolute;
+  bottom: 6rpx;
+  left: 6rpx;
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: #FFBAA3;
+  color: #FFF;
+  font-size: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4rpx solid #FFF;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.15);
+}
+
 .avatar-xl {
   width: 160rpx;
   height: 160rpx;
@@ -30,7 +47,7 @@
   border: 6rpx solid #FFFFFF;
   box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.1);
   overflow: hidden;
-  background: #FFF2E6;
+  background: #FFEFE9;
 }
 
 .avatar-xl image {
@@ -96,7 +113,7 @@
   background: #FFFFFF;
   border-radius: 20rpx;
   padding: 24rpx 0;
-  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+  box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
 }
 
 .stat-item {
@@ -109,7 +126,7 @@
 .stat-num {
   font-size: 36rpx;
   font-weight: 700;
-  color: #FF8C42;
+  color: #FFBAA3;
   line-height: 1;
   margin-bottom: 8rpx;
 }
@@ -146,7 +163,7 @@
 
 .section-more {
   font-size: 24rpx;
-  color: #FF8C42;
+  color: #FFBAA3;
 }
 
 .cat-scroll {
@@ -163,7 +180,9 @@
   padding: 20rpx;
   margin-right: 16rpx;
   width: 180rpx;
-  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+  min-height: 220rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
+  box-sizing: border-box;
 }
 
 .cat-card-avatar {
@@ -171,13 +190,26 @@
   height: 100rpx;
   border-radius: 50%;
   overflow: hidden;
-  background: #FFF2E6;
+  background: #FFEFE9;
   margin-bottom: 10rpx;
+  position: relative;
 }
 
 .cat-card-avatar image {
   width: 100%;
   height: 100%;
+}
+
+.cat-card-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48rpx;
 }
 
 .cat-card-name {
@@ -193,21 +225,21 @@
 }
 
 .add-cat {
-  background: #FFF8F0;
-  border: 2rpx dashed #FFB380;
+  background: #FFF7F4;
+  border: 2rpx dashed #FFD4C4;
   justify-content: center;
 }
 
 .add-icon {
   font-size: 48rpx;
-  color: #FFB380;
+  color: #FFD4C4;
   line-height: 1;
   margin-bottom: 8rpx;
 }
 
 .add-text {
   font-size: 22rpx;
-  color: #FFB380;
+  color: #FFD4C4;
 }
 
 /* 菜单组 */
@@ -215,7 +247,7 @@
   background: #FFFFFF;
   border-radius: 20rpx;
   overflow: hidden;
-  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+  box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
 }
 
 .menu-item {

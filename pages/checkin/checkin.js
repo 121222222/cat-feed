@@ -56,7 +56,7 @@ Page({
     wx.showModal({
       title: '提交服务记录',
       content: `已完成 ${doneTasks.length} 项服务，确认提交？`,
-      confirmColor: '#FF8C42',
+      confirmColor: '#FFBAA3',
       success: (res) => {
         if (res.confirm) {
           wx.showToast({ title: '提交成功！', icon: 'success' });

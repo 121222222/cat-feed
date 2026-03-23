@@ -20,8 +20,8 @@
 }
 
 .filter-tab.active {
-  background: #FFF2E6;
-  color: #FF8C42;
+  background: #FFEFE9;
+  color: #FFBAA3;
   font-weight: 600;
 }
 
@@ -34,7 +34,7 @@
   border-radius: 20rpx;
   padding: 24rpx;
   margin-bottom: 16rpx;
-  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+  box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
 }
 
 .order-header {
@@ -76,7 +76,7 @@
   height: 80rpx;
   border-radius: 16rpx;
   overflow: hidden;
-  background: #FFF2E6;
+  background: #FFEFE9;
   flex-shrink: 0;
 }
 
@@ -107,7 +107,7 @@
 .order-reward {
   font-size: 28rpx;
   font-weight: 700;
-  color: #FF8C42;
+  color: #FFBAA3;
 }
 
 .order-footer {
@@ -127,8 +127,8 @@
 .mini-tag {
   display: inline-block;
   padding: 4rpx 14rpx;
-  background: #FFF2E6;
-  color: #FF8C42;
+  background: #FFEFE9;
+  color: #FFBAA3;
   font-size: 20rpx;
   border-radius: 6rpx;
 }
@@ -145,11 +145,11 @@
   width: 100rpx;
   height: 100rpx;
   border-radius: 50%;
-  background: linear-gradient(135deg, #FF8C42, #FF6B42);
+  background: linear-gradient(135deg, #FFBAA3, #E8A48D);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8rpx 30rpx rgba(255, 140, 66, 0.4);
+  box-shadow: 0 8rpx 30rpx rgba(255, 186, 163, 0.4);
   z-index: 100;
   color: #FFF;
   font-size: 48rpx;

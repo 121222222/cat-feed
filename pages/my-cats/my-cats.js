@@ -6,6 +6,15 @@ Page({
   },
 
   onLoad() {
+    this.loadCats();
+  },
+
+  onShow() {
+    // 每次返回时重新加载（添加/编辑猫咪后刷新）
+    this.loadCats();
+  },
+
+  loadCats() {
     this.setData({ cats: app.globalData.mockCats });
   },
 
@@ -24,8 +33,10 @@ Page({
       confirmColor: '#FF4D4F',
       success: (res) => {
         if (res.confirm) {
-          const cats = this.data.cats.filter(c => c.id !== e.currentTarget.dataset.id);
-          this.setData({ cats });
+          const id = e.currentTarget.dataset.id;
+          // 从全局数据中删除
+          app.globalData.mockCats = app.globalData.mockCats.filter(c => c.id !== id);
+          this.setData({ cats: app.globalData.mockCats });
           wx.showToast({ title: '已删除', icon: 'success' });
         }
       }

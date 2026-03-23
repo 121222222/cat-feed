@@ -20,8 +20,8 @@
 }
 
 .filter-tab.active {
-  background: #FFF2E6;
-  color: #FF8C42;
+  background: #FFEFE9;
+  color: #FFBAA3;
   font-weight: 600;
 }
 
@@ -34,7 +34,7 @@
   border-radius: 20rpx;
   padding: 24rpx;
   margin-bottom: 16rpx;
-  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+  box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
 }
 
 .apply-header {
@@ -90,7 +90,7 @@
 .apply-reward {
   font-size: 28rpx;
   font-weight: 700;
-  color: #FF8C42;
+  color: #FFBAA3;
 }
 
 .apply-actions {

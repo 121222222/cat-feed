@@ -1,0 +1,109 @@
+<view class="login-page">
+  <!-- 顶部橙色背景区域 + 猫咪装饰 -->
+  <view class="login-top">
+    <view class="top-bg">
+      <!-- 猫咪线条装饰 -->
+      <view class="cat-line-deco">
+        <view class="cl-tail"></view>
+        <view class="cl-body"></view>
+        <view class="cl-neck"></view>
+        <view class="cl-head"></view>
+        <view class="cl-ear-l"></view>
+        <view class="cl-ear-r"></view>
+      </view>
+      <!-- 装饰小元素 -->
+      <view class="deco-paw paw1">🐾</view>
+      <view class="deco-paw paw2">🐾</view>
+      <view class="deco-paw paw3">🐾</view>
+      <view class="deco-fish">🐟</view>
+
+      <!-- 猫咪SVG图形（用CSS画的卡通黑猫） -->
+      <view class="cat-mascot">
+        <!-- 猫耳朵 -->
+        <view class="cat-ear cat-ear-left"></view>
+        <view class="cat-ear cat-ear-right"></view>
+        <!-- 猫头 -->
+        <view class="cat-head">
+          <view class="cat-eye cat-eye-left"></view>
+          <view class="cat-eye cat-eye-right"></view>
+          <!-- 胡须 -->
+          <view class="whisker whisker-left-1"></view>
+          <view class="whisker whisker-left-2"></view>
+          <view class="whisker whisker-right-1"></view>
+          <view class="whisker whisker-right-2"></view>
+          <view class="cat-nose"></view>
+          <view class="cat-mouth"></view>
+        </view>
+        <!-- 猫身体 -->
+        <view class="cat-body"></view>
+        <!-- 猫尾巴 -->
+        <view class="cat-tail"></view>
+      </view>
+
+      <!-- APP名称 -->
+      <view class="app-brand">
+        <text class="app-name">喵邻互助</text>
+        <text class="app-slogan">邻里互助 · 猫咪无忧</text>
+      </view>
+    </view>
+    <!-- 波浪形底部过渡 -->
+    <view class="wave-divider"></view>
+  </view>
+
+  <!-- 登录表单区域 -->
+  <view class="login-form-area">
+    <!-- 微信一键登录（主按钮） -->
+    <button class="login-btn wechat-btn" open-type="getUserInfo" bindgetuserinfo="onWechatLogin">
+      <text class="btn-icon">💬</text>
+      <text class="btn-text">微信一键登录</text>
+    </button>
+
+    <!-- 手机号登录 -->
+    <view class="phone-login-section">
+      <view class="divider-line">
+        <view class="line"></view>
+        <text class="divider-text">或使用手机号登录</text>
+        <view class="line"></view>
+      </view>
+
+      <view class="phone-input-wrap">
+        <text class="input-prefix">+86</text>
+        <view class="input-divider"></view>
+        <input class="phone-input" type="number" placeholder="请输入手机号" maxlength="11" value="{{phone}}" bindinput="onPhoneInput" />
+      </view>
+
+      <view class="code-input-wrap" wx:if="{{showCodeInput}}">
+        <input class="code-input" type="number" placeholder="请输入验证码" maxlength="6" value="{{code}}" bindinput="onCodeInput" />
+        <view class="code-btn {{codeCooldown > 0 ? 'disabled' : ''}}" bindtap="sendCode">
+          {{codeCooldown > 0 ? codeCooldown + 's' : '获取验证码'}}
+        </view>
+      </view>
+
+      <button class="login-btn phone-btn" wx:if="{{showCodeInput}}" bindtap="onPhoneLogin">
+        <text class="btn-text">登录</text>
+      </button>
+    </view>
+
+    <!-- 底部协议 -->
+    <view class="agreement">
+      <view class="checkbox-wrap" bindtap="toggleAgreement">
+        <view class="checkbox {{agreed ? 'checked' : ''}}">
+          <text wx:if="{{agreed}}">✓</text>
+        </view>
+      </view>
+      <text class="agreement-text">
+        登录即代表同意
+        <text class="link" bindtap="showUserAgreement">《用户协议》</text>
+        和
+        <text class="link" bindtap="showPrivacy">《隐私政策》</text>
+      </text>
+    </view>
+  </view>
+
+  <!-- 底部装饰猫爪印 -->
+  <view class="bottom-deco">
+    <text class="paw-print">🐾</text>
+    <text class="paw-print">🐾</text>
+    <text class="paw-print">🐾</text>
+  </view>
+</view>

@@ -1,0 +1,51 @@
+<view class="page-container">
+  <!-- 页面标题 -->
+  <view class="page-header">
+    <text class="page-header-icon">📋</text>
+    <text class="page-header-title">全部喂养需求</text>
+    <text class="page-header-count">共 {{needs.length}} 条</text>
+  </view>
+
+  <!-- 双列需求卡片 -->
+  <view class="need-grid">
+    <view class="need-grid-card" wx:for="{{needs}}" wx:key="id" bindtap="goNeedDetail" data-id="{{item.id}}">
+      <!-- 装饰圆点 -->
+      <view class="card-dot dot-tl"></view>
+      <view class="card-dot dot-tr"></view>
+      <view class="card-dot dot-bl"></view>
+      <view class="card-dot dot-br"></view>
+      <!-- 猫咪图片区域 -->
+      <view class="card-img-wrap">
+        <image class="card-cat-img" src="{{item.catAvatar}}" mode="aspectFill"></image>
+        <view class="card-img-placeholder">🐱</view>
+        <view class="card-status-badge {{item.status === 'pending' ? 'badge-pending' : 'badge-accepted'}}">
+          {{item.status === 'pending' ? '待接单' : '已接单'}}
+        </view>
+      </view>
+      <!-- 信息区域 -->
+      <view class="card-info">
+        <view class="card-name-row">
+          <text class="card-cat-name">{{item.catName}}</text>
+          <text class="card-reward">{{item.reward}}</text>
+        </view>
+        <text class="card-desc">{{item.startDate}} ~ {{item.endDate}}</text>
+        <view class="card-bottom-row">
+          <view class="card-user-info">
+            <image class="card-user-avatar" src="{{item.userAvatar}}" mode="aspectFill"></image>
+            <text class="card-user-name">{{item.userName}}</text>
+          </view>
+          <view class="card-paw-btn">🐾</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{needs.length === 0}}">
+    <text class="empty-icon">🔍</text>
+    <text class="empty-text">暂无喂养需求</text>
+  </view>
+
+  <!-- 底部安全距离 -->
+  <view style="height: 40rpx;"></view>
+</view>

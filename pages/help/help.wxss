@@ -12,7 +12,7 @@
   border-radius: 16rpx;
   margin-bottom: 12rpx;
   overflow: hidden;
-  box-shadow: 0 2rpx 12rpx rgba(255, 140, 66, 0.06);
+  box-shadow: 0 2rpx 12rpx rgba(255, 186, 163, 0.06);
 }
 
 .faq-question {
@@ -56,7 +56,7 @@
 }
 
 .contact-card {
-  background: linear-gradient(135deg, #FFF2E6, #FFE4C4);
+  background: linear-gradient(135deg, #FFEFE9, #FFE0D6);
   border-radius: 20rpx;
   padding: 30rpx;
 }
@@ -81,5 +81,5 @@
   flex-direction: column;
   gap: 8rpx;
   font-size: 24rpx;
-  color: #FF8C42;
+  color: #FFBAA3;
 }

@@ -28,7 +28,7 @@ Page({
     wx.showModal({
       title: '确认提交',
       content: '确定提交喂养申请吗？需求方确认后您将收到通知。',
-      confirmColor: '#FF8C42',
+      confirmColor: '#FFBAA3',
       success: (res) => {
         if (res.confirm) {
           wx.showToast({ title: '申请已提交！', icon: 'success' });

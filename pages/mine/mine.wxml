@@ -3,10 +3,11 @@
   <view class="profile-header">
     <view class="profile-bg"></view>
     <view class="profile-info">
-      <view class="profile-avatar-wrap">
+      <view class="profile-avatar-wrap" bindtap="onChangeAvatar">
         <view class="avatar avatar-xl">
           <image src="{{userInfo.avatar}}" mode="aspectFill"></image>
         </view>
+        <view class="avatar-edit-icon">📷</view>
         <view class="certified-icon" wx:if="{{userInfo.certified}}">✓</view>
       </view>
       <view class="profile-detail">
@@ -41,13 +42,14 @@
       <text class="section-title">🐱 我的猫咪</text>
       <text class="section-more" bindtap="goMyCats">管理 ›</text>
     </view>
-    <scroll-view scroll-x class="cat-scroll" wx:if="{{cats.length > 0}}">
+    <scroll-view scroll-x class="cat-scroll">
       <view class="cat-card" wx:for="{{cats}}" wx:key="id">
         <view class="cat-card-avatar">
           <image src="{{item.avatar}}" mode="aspectFill"></image>
+          <view class="cat-card-placeholder" wx:if="{{!item.avatar}}">🐱</view>
         </view>
         <text class="cat-card-name">{{item.name}}</text>
-        <text class="cat-card-info">{{item.breed}} · {{item.age}}</text>
+        <text class="cat-card-info">{{item.breed || '未设置'}} · {{item.age || '未设置'}}</text>
       </view>
       <view class="cat-card add-cat" bindtap="goAddCat">
         <text class="add-icon">+</text>

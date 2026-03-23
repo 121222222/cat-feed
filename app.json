@@ -19,19 +19,21 @@
     "pages/auth/auth",
     "pages/settings/settings",
     "pages/help/help",
-    "pages/checkin/checkin"
+    "pages/checkin/checkin",
+    "pages/login/login",
+    "pages/all-needs/all-needs"
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#FF8C42",
+    "navigationBarBackgroundColor": "#FFBAA3",
     "navigationBarTitleText": "喵邻互助",
     "navigationBarTextStyle": "white",
-    "backgroundColor": "#FFF8F0"
+    "backgroundColor": "#FFF7F4"
   },
   "tabBar": {
     "custom": true,
     "color": "#999999",
-    "selectedColor": "#FF8C42",
+    "selectedColor": "#FFBAA3",
     "backgroundColor": "#FFFFFF",
     "borderStyle": "black",
     "list": [

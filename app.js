@@ -7,7 +7,7 @@ App({
     mockUser: {
       id: 'u001',
       name: '张三',
-      avatar: '/assets/images/default-avatar.png',
+      avatar: 'https://placekitten.com/200/200',
       dormitory: 'A栋302',
       phone: '138****8888',
       certified: true,
@@ -25,7 +25,7 @@ App({
         gender: '公',
         vaccinated: true,
         character: '温顺亲人',
-        avatar: '/assets/images/cat1.png',
+        avatar: 'https://placekitten.com/300/300',
         notes: '每天喂两次，早晚各一次'
       },
       {
@@ -36,7 +36,7 @@ App({
         gender: '母',
         vaccinated: true,
         character: '活泼好动',
-        avatar: '/assets/images/cat2.png',
+        avatar: 'https://placekitten.com/301/301',
         notes: '需要陪玩，喜欢逗猫棒'
       }
     ],
@@ -46,9 +46,9 @@ App({
         id: 'n001',
         userId: 'u001',
         userName: '张三',
-        userAvatar: '/assets/images/default-avatar.png',
+        userAvatar: 'https://placekitten.com/100/100',
         catName: '橘座',
-        catAvatar: '/assets/images/cat1.png',
+        catAvatar: 'https://placekitten.com/400/400',
         catCount: 1,
         startDate: '2026-03-22',
         endDate: '2026-03-25',
@@ -64,9 +64,9 @@ App({
         id: 'n002',
         userId: 'u002',
         userName: '李四',
-        userAvatar: '/assets/images/avatar2.png',
+        userAvatar: 'https://placekitten.com/101/101',
         catName: '豆豆',
-        catAvatar: '/assets/images/cat3.png',
+        catAvatar: 'https://placekitten.com/401/401',
         catCount: 2,
         startDate: '2026-03-21',
         endDate: '2026-03-23',
@@ -82,9 +82,9 @@ App({
         id: 'n003',
         userId: 'u003',
         userName: '王五',
-        userAvatar: '/assets/images/avatar3.png',
+        userAvatar: 'https://placekitten.com/102/102',
         catName: '咪咪',
-        catAvatar: '/assets/images/cat4.png',
+        catAvatar: 'https://placekitten.com/402/402',
         catCount: 1,
         startDate: '2026-03-23',
         endDate: '2026-03-28',
@@ -95,6 +95,24 @@ App({
         status: 'accepted',
         description: '咪咪最近在吃药，需要细心的人帮忙喂药和照顾',
         createTime: '2026-03-19 16:40'
+      },
+      {
+        id: 'n004',
+        userId: 'u004',
+        userName: '赵六',
+        userAvatar: 'https://placekitten.com/103/103',
+        catName: '汤圆',
+        catAvatar: 'https://placekitten.com/403/403',
+        catCount: 1,
+        startDate: '2026-03-24',
+        endDate: '2026-03-26',
+        timeSlot: '早晚各一次',
+        services: ['喂食', '换水'],
+        dormitory: 'D栋405',
+        reward: '30元/天',
+        status: 'pending',
+        description: '临时出门两天，猫粮已备好，只需喂食换水',
+        createTime: '2026-03-20 08:00'
       }
     ],
     // 模拟喂养人
@@ -102,7 +120,7 @@ App({
       {
         id: 'f001',
         name: '小美',
-        avatar: '/assets/images/avatar4.png',
+        avatar: 'https://placekitten.com/201/201',
         dormitory: 'A栋201',
         rating: 4.9,
         serviceCount: 28,
@@ -113,7 +131,7 @@ App({
       {
         id: 'f002',
         name: '大壮',
-        avatar: '/assets/images/avatar5.png',
+        avatar: 'https://placekitten.com/202/202',
         dormitory: 'B栋308',
         rating: 4.7,
         serviceCount: 15,
@@ -124,7 +142,7 @@ App({
       {
         id: 'f003',
         name: '小花',
-        avatar: '/assets/images/avatar6.png',
+        avatar: 'https://placekitten.com/203/203',
         dormitory: 'C栋102',
         rating: 5.0,
         serviceCount: 8,
@@ -136,8 +154,27 @@ App({
   },
 
   onLaunch() {
-    // 模拟自动登录
+    // 检查登录状态，未登录则跳转到登录页
+    const isLoggedIn = wx.getStorageSync('isLoggedIn');
+    if (isLoggedIn) {
+      this.globalData.isLoggedIn = true;
+      this.globalData.userInfo = this.globalData.mockUser;
+    }
+  },
+
+  // 检查登录状态，未登录则跳转登录页
+  checkLogin() {
+    if (!this.globalData.isLoggedIn) {
+      wx.redirectTo({ url: '/pages/login/login' });
+      return false;
+    }
+    return true;
+  },
+
+  // 登录成功后调用
+  loginSuccess() {
     this.globalData.isLoggedIn = true;
     this.globalData.userInfo = this.globalData.mockUser;
+    wx.setStorageSync('isLoggedIn', true);
   }
 });

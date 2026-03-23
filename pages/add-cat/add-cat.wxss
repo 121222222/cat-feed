@@ -9,11 +9,11 @@
   border-radius: 50%;
   margin: 30rpx auto;
   overflow: hidden;
-  background: #FFF2E6;
+  background: #FFEFE9;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 4rpx dashed #FFB380;
+  border: 4rpx dashed #FFD4C4;
 }
 
 .photo-preview {
@@ -34,14 +34,14 @@
 
 .photo-text {
   font-size: 24rpx;
-  color: #FFB380;
+  color: #FFD4C4;
 }
 
 .form-section {
   background: #FFFFFF;
   border-radius: 20rpx;
   padding: 12rpx 24rpx;
-  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+  box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
 }
 
 .form-item {
@@ -80,7 +80,7 @@
   font-size: 28rpx;
   margin-top: 12rpx;
   padding: 16rpx;
-  background: #FFF8F0;
+  background: #FFF7F4;
   border-radius: 12rpx;
   box-sizing: border-box;
 }
@@ -99,9 +99,9 @@
 }
 
 .gender-opt.active {
-  background: #FFF2E6;
-  color: #FF8C42;
-  border: 1rpx solid #FF8C42;
+  background: #FFEFE9;
+  color: #FFBAA3;
+  border: 1rpx solid #FFBAA3;
 }
 
 .submit-bar {

@@ -6,7 +6,7 @@
 
 .cat-hero-bg {
   height: 280rpx;
-  background: linear-gradient(135deg, #FFB380, #FF8C42);
+  background: linear-gradient(135deg, #FFD4C4, #FFBAA3);
   border-radius: 0 0 50rpx 50rpx;
 }
 
@@ -22,7 +22,7 @@
   height: 180rpx;
   border-radius: 30rpx;
   overflow: hidden;
-  background: #FFF2E6;
+  background: #FFEFE9;
   border: 6rpx solid #FFF;
   box-shadow: 0 4rpx 20rpx rgba(0,0,0,0.1);
 }
@@ -63,7 +63,7 @@
 .reward-lg {
   font-size: 32rpx;
   font-weight: 700;
-  color: #FF8C42;
+  color: #FFBAA3;
 }
 
 /* 详情卡片 */
@@ -72,7 +72,7 @@
   border-radius: 20rpx;
   padding: 28rpx;
   margin: 0 30rpx 20rpx;
-  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+  box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
 }
 
 .detail-title {
@@ -117,8 +117,8 @@
 
 .service-tag {
   padding: 10rpx 24rpx;
-  background: #FFF2E6;
-  color: #FF8C42;
+  background: #FFEFE9;
+  color: #FFBAA3;
   font-size: 24rpx;
   border-radius: 50rpx;
 }

@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: #FFF8F0;
+  background: #FFF7F4;
 }
 
 .chat-messages {
@@ -28,7 +28,7 @@
   height: 64rpx;
   border-radius: 50%;
   overflow: hidden;
-  background: #FFF2E6;
+  background: #FFEFE9;
   flex-shrink: 0;
 }
 
@@ -54,7 +54,7 @@
 }
 
 .bubble-mine {
-  background: linear-gradient(135deg, #FF8C42, #FF6B42);
+  background: linear-gradient(135deg, #FFBAA3, #E8A48D);
   color: #FFFFFF;
   border-top-right-radius: 6rpx;
 }
@@ -94,6 +94,6 @@
 }
 
 .send-btn.active {
-  background: linear-gradient(135deg, #FF8C42, #FF6B42);
+  background: linear-gradient(135deg, #FFBAA3, #E8A48D);
   color: #FFFFFF;
 }

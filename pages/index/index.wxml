@@ -2,6 +2,15 @@
   <!-- 顶部渐变头部 -->
   <view class="header">
     <view class="header-bg">
+      <!-- 猫咪线条装饰 -->
+      <view class="cat-line-deco">
+        <view class="cl-tail"></view>
+        <view class="cl-body"></view>
+        <view class="cl-neck"></view>
+        <view class="cl-head"></view>
+        <view class="cl-ear-l"></view>
+        <view class="cl-ear-r"></view>
+      </view>
       <view class="header-content">
         <view class="greeting">
           <text class="greeting-emoji">🐱</text>
@@ -39,7 +48,7 @@
       <view class="entry-left">
         <view class="entry-icon-circle feed-circle">🐾</view>
         <view class="entry-info">
-          <text class="entry-title">鹅要上门</text>
+          <text class="entry-title">鹅想喂猫</text>
           <text class="entry-desc">一键接单帮忙喂猫</text>
         </view>
       </view>
@@ -60,7 +69,7 @@
     <text class="notice-more">查看</text>
   </view>
 
-  <!-- 最新喂养需求 -->
+  <!-- 最新喂养需求 - 双列卡片 -->
   <view class="section">
     <view class="section-header">
       <view class="section-title-wrap">
@@ -69,40 +78,35 @@
       </view>
       <text class="section-more" bindtap="goMoreNeeds">更多 ›</text>
     </view>
-    <view class="need-list">
-      <view class="need-card" wx:for="{{needs}}" wx:key="id" bindtap="goNeedDetail" data-id="{{item.id}}">
-        <view class="need-top">
-          <view class="need-user">
-            <view class="avatar avatar-sm">
-              <image src="{{item.userAvatar}}" mode="aspectFill"></image>
-            </view>
-            <text class="need-username">{{item.userName}}</text>
-            <text class="need-time">{{item.createTime}}</text>
-          </view>
-          <view class="need-status tag tag-{{item.status === 'pending' ? 'warning' : 'info'}}">
+    <view class="need-grid">
+      <view class="need-grid-card" wx:for="{{needs}}" wx:key="id" bindtap="goNeedDetail" data-id="{{item.id}}">
+        <!-- 装饰圆点 -->
+        <view class="card-dot dot-tl"></view>
+        <view class="card-dot dot-tr"></view>
+        <view class="card-dot dot-bl"></view>
+        <view class="card-dot dot-br"></view>
+        <!-- 猫咪图片区域 -->
+        <view class="card-img-wrap">
+          <image class="card-cat-img" src="{{item.catAvatar}}" mode="aspectFill" binderror="onImgError" data-idx="{{index}}"></image>
+          <view class="card-img-placeholder">🐱</view>
+          <view class="card-status-badge {{item.status === 'pending' ? 'badge-pending' : 'badge-accepted'}}">
             {{item.status === 'pending' ? '待接单' : '已接单'}}
           </view>
         </view>
-        <view class="need-body">
-          <view class="need-cat-info">
-            <view class="cat-avatar">
-              <image src="{{item.catAvatar}}" mode="aspectFill"></image>
+        <!-- 信息区域 -->
+        <view class="card-info">
+          <view class="card-name-row">
+            <text class="card-cat-name">{{item.catName}}</text>
+            <text class="card-reward">{{item.reward}}</text>
+          </view>
+          <text class="card-desc">{{item.startDate}} ~ {{item.endDate}}</text>
+          <view class="card-bottom-row">
+            <view class="card-user-info">
+              <image class="card-user-avatar" src="{{item.userAvatar}}" mode="aspectFill"></image>
+              <text class="card-user-name">{{item.userName}}</text>
             </view>
-            <view class="need-detail">
-              <text class="need-cat-name">🐱 {{item.catName}} · {{item.catCount}}只</text>
-              <text class="need-desc">{{item.description}}</text>
-            </view>
+            <view class="card-paw-btn">🐾</view>
           </view>
-        </view>
-        <view class="need-footer">
-          <view class="need-tags">
-            <text class="mini-tag" wx:for="{{item.services}}" wx:for-item="service" wx:key="*this">{{service}}</text>
-          </view>
-          <view class="need-meta">
-            <text class="need-date">📅 {{item.startDate}} ~ {{item.endDate}}</text>
-            <text class="need-reward text-primary">💰 {{item.reward}}</text>
-          </view>
-          <text class="need-dorm">📍 {{item.dormitory}}</text>
         </view>
       </view>
     </view>

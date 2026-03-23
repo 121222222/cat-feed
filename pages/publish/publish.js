@@ -140,7 +140,7 @@ Page({
     wx.showModal({
       title: '确认发布',
       content: `确认发布「${form.catName}」的喂养需求吗？`,
-      confirmColor: '#FF8C42',
+      confirmColor: '#FFBAA3',
       success: (res) => {
         if (res.confirm) {
           wx.showToast({ title: '发布成功！', icon: 'success' });

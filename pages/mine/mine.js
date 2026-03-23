@@ -8,6 +8,18 @@ Page({
   },
 
   onLoad() {
+    this.loadData();
+  },
+
+  onShow() {
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({ selected: 4 });
+    }
+    // 每次显示时重新加载数据（添加猫咪返回后刷新）
+    this.loadData();
+  },
+
+  loadData() {
     const userInfo = app.globalData.mockUser;
     const cats = app.globalData.mockCats;
     this.setData({
@@ -17,10 +29,17 @@ Page({
     });
   },
 
-  onShow() {
-    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-      this.getTabBar().setData({ selected: 4 });
-    }
+  onChangeAvatar() {
+    wx.chooseMedia({
+      count: 1,
+      mediaType: ['image'],
+      success: (res) => {
+        const avatarPath = res.tempFiles[0].tempFilePath;
+        this.setData({ 'userInfo.avatar': avatarPath });
+        // 同步到全局数据
+        app.globalData.mockUser.avatar = avatarPath;
+      }
+    });
   },
 
   goMyCats() {

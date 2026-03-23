@@ -2,7 +2,7 @@ Component({
   data: {
     selected: 0,
     color: "#999999",
-    selectedColor: "#FF8C42",
+    selectedColor: "#FFBAA3",
     msgCount: 3,
     list: [
       {

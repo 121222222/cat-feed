@@ -1,0 +1,217 @@
+/* 全部需求页样式 */
+.page-container {
+  min-height: 100vh;
+  background: #FFF7F4;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 页面顶部 */
+.page-header {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 30rpx 16rpx;
+  gap: 8rpx;
+}
+
+.page-header-icon {
+  font-size: 32rpx;
+}
+
+.page-header-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #2D2D2D;
+}
+
+.page-header-count {
+  font-size: 24rpx;
+  color: #999;
+  margin-left: 8rpx;
+}
+
+/* 双列需求卡片网格 */
+.need-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 0 30rpx;
+}
+
+.need-grid-card {
+  width: 48.5%;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 6rpx 24rpx rgba(255, 186, 163, 0.12);
+  position: relative;
+  margin-bottom: 20rpx;
+  box-sizing: border-box;
+}
+
+.need-grid-card:active {
+  opacity: 0.85;
+}
+
+/* 装饰圆点 */
+.card-dot {
+  position: absolute;
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background: #FFBAA3;
+  opacity: 0.35;
+  z-index: 1;
+}
+
+.dot-tl { top: 16rpx; left: 16rpx; }
+.dot-tr { top: 16rpx; right: 16rpx; }
+.dot-bl { bottom: 16rpx; left: 16rpx; width: 8rpx; height: 8rpx; }
+.dot-br { bottom: 16rpx; right: 16rpx; width: 8rpx; height: 8rpx; }
+
+/* 猫咪图片区域 */
+.card-img-wrap {
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
+  position: relative;
+  background: linear-gradient(135deg, #FFEFE9, #FFD9CE);
+  overflow: hidden;
+}
+
+.card-cat-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.card-img-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 100rpx;
+  z-index: 0;
+}
+
+.card-status-badge {
+  position: absolute;
+  top: 16rpx;
+  right: 16rpx;
+  padding: 4rpx 16rpx;
+  border-radius: 20rpx;
+  font-size: 20rpx;
+  font-weight: 500;
+  z-index: 2;
+}
+
+.badge-pending {
+  background: rgba(255, 186, 163, 0.9);
+  color: #FFFFFF;
+}
+
+.badge-accepted {
+  background: rgba(82, 196, 26, 0.85);
+  color: #FFFFFF;
+}
+
+/* 卡片信息区域 */
+.card-info {
+  padding: 16rpx 20rpx 20rpx;
+}
+
+.card-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6rpx;
+}
+
+.card-cat-name {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #2D2D2D;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 60%;
+}
+
+.card-reward {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: #FFBAA3;
+}
+
+.card-desc {
+  display: block;
+  font-size: 20rpx;
+  color: #999;
+  margin-bottom: 12rpx;
+}
+
+.card-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-user-info {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  overflow: hidden;
+}
+
+.card-user-avatar {
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: #FFEFE9;
+}
+
+.card-user-name {
+  font-size: 20rpx;
+  color: #999;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.card-paw-btn {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFBAA3, #E8A48D);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24rpx;
+  flex-shrink: 0;
+  box-shadow: 0 4rpx 12rpx rgba(255, 186, 163, 0.3);
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100rpx 0;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999;
+}

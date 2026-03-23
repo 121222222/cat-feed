@@ -1,23 +1,23 @@
 /**app.wxss - 全局暖色主题样式**/
 
-/* CSS变量 - 暖色主题 */
+/* CSS变量 - 粉色主题 */
 page {
-  --primary: #FF8C42;
-  --primary-light: #FFB380;
-  --primary-dark: #E67320;
-  --secondary: #FFD166;
-  --secondary-light: #FFE4A0;
+  --primary: #FFBAA3;
+  --primary-light: #FFD4C4;
+  --primary-dark: #E8A48D;
+  --secondary: #FFD9CE;
+  --secondary-light: #FFEDE6;
   --accent: #FF6B6B;
   --accent-light: #FF9E9E;
-  --bg-primary: #FFF8F0;
-  --bg-secondary: #FFF2E6;
+  --bg-primary: #FFF7F4;
+  --bg-secondary: #FFEFE9;
   --bg-card: #FFFFFF;
   --text-primary: #2D2D2D;
   --text-secondary: #666666;
   --text-hint: #999999;
   --text-white: #FFFFFF;
-  --border: #F0E0D0;
-  --shadow: rgba(255, 140, 66, 0.12);
+  --border: #F0E0D6;
+  --shadow: rgba(255, 186, 163, 0.12);
   --success: #52C41A;
   --warning: #FAAD14;
   --danger: #FF4D4F;
@@ -65,7 +65,7 @@ page {
   font-size: 30rpx;
   font-weight: 600;
   text-align: center;
-  box-shadow: 0 6rpx 20rpx rgba(255, 140, 66, 0.3);
+  box-shadow: 0 6rpx 20rpx rgba(255, 186, 163, 0.3);
 }
 
 .btn-primary:active {
@@ -321,11 +321,11 @@ page {
 
 /* 渐变背景 */
 .bg-gradient {
-  background: linear-gradient(135deg, var(--primary), #FF6B42);
+  background: linear-gradient(135deg, var(--primary), #E8A48D);
 }
 
 .bg-gradient-warm {
-  background: linear-gradient(135deg, #FFB380, #FF8C42, #FF6B42);
+  background: linear-gradient(135deg, #FFD4C4, #FFBAA3, #E8A48D);
 }
 
 /* 圆角图标容器 */
@@ -356,7 +356,7 @@ page {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 8rpx 30rpx rgba(255, 140, 66, 0.4);
+  box-shadow: 0 8rpx 30rpx rgba(255, 186, 163, 0.4);
   z-index: 100;
   color: #FFF;
   font-size: 48rpx;

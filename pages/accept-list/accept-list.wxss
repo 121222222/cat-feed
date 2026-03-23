@@ -5,6 +5,9 @@
   padding: 16rpx 30rpx;
   gap: 16rpx;
   border-bottom: 1rpx solid #F5EDE5;
+  position: relative;
+  z-index: 101;
+  flex-wrap: wrap;
 }
 
 .filter-item {
@@ -16,11 +19,76 @@
   background: #F5F5F5;
   font-size: 24rpx;
   color: #666;
+  transition: all 0.2s ease;
+}
+
+.filter-item:active {
+  opacity: 0.8;
+}
+
+.filter-active {
+  background: #FFEFE9;
+  color: #FFBAA3;
+  border: 1rpx solid #FFBAA3;
+}
+
+.filter-active .filter-arrow {
+  color: #FFBAA3;
+  transform: rotate(180deg);
 }
 
 .filter-arrow {
   font-size: 18rpx;
   color: #999;
+  transition: transform 0.2s ease;
+}
+
+/* 筛选下拉面板 */
+.filter-dropdown-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 99;
+}
+
+.filter-dropdown {
+  position: relative;
+  z-index: 100;
+  background: #FFFFFF;
+  margin: 0 30rpx;
+  border-radius: 0 0 20rpx 20rpx;
+  box-shadow: 0 8rpx 30rpx rgba(0, 0, 0, 0.1);
+  padding: 12rpx 0;
+  max-height: 500rpx;
+  overflow-y: auto;
+}
+
+.dropdown-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 24rpx 30rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.dropdown-option:active {
+  background: #FFF7F4;
+}
+
+.option-active {
+  color: #FFBAA3;
+  font-weight: 600;
+  background: #FFF7F4;
+}
+
+.option-check {
+  font-size: 28rpx;
+  color: #FFBAA3;
+  font-weight: 700;
 }
 
 .list-container {
@@ -32,7 +100,7 @@
   border-radius: 20rpx;
   padding: 24rpx;
   margin-bottom: 20rpx;
-  box-shadow: 0 4rpx 20rpx rgba(255, 140, 66, 0.08);
+  box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
 }
 
 .need-header {
@@ -64,7 +132,7 @@
 .need-reward {
   font-size: 28rpx;
   font-weight: 700;
-  color: #FF8C42;
+  color: #FFBAA3;
 }
 
 .need-content {
@@ -81,7 +149,7 @@
   height: 80rpx;
   border-radius: 16rpx;
   overflow: hidden;
-  background: #FFF2E6;
+  background: #FFEFE9;
   flex-shrink: 0;
 }
 
@@ -133,8 +201,8 @@
 .service-tag {
   display: inline-block;
   padding: 4rpx 14rpx;
-  background: #FFF2E6;
-  color: #FF8C42;
+  background: #FFEFE9;
+  color: #FFBAA3;
   font-size: 20rpx;
   border-radius: 6rpx;
 }
