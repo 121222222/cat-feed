@@ -99,7 +99,7 @@ Page({
   showUserAgreement() {
     wx.showModal({
       title: '用户协议',
-      content: '喵邻互助用户服务协议内容...',
+      content: '喵邻帮用户服务协议内容...',
       showCancel: false,
       confirmColor: '#FFBAA3'
     });
@@ -109,7 +109,7 @@ Page({
   showPrivacy() {
     wx.showModal({
       title: '隐私政策',
-      content: '喵邻互助隐私保护政策内容...',
+      content: '喵邻帮隐私保护政策内容...',
       showCancel: false,
       confirmColor: '#FFBAA3'
     });

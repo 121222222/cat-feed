@@ -42,7 +42,7 @@
       </view>
       <view class="menu-item">
         <text class="menu-icon">ℹ️</text>
-        <text class="menu-text">关于喵邻互助</text>
+        <text class="menu-text">关于喵邻帮</text>
         <view class="menu-right">
           <text class="menu-value">v1.0.0</text>
           <text class="menu-arrow">›</text>

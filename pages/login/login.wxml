@@ -42,7 +42,7 @@
 
       <!-- APP名称 -->
       <view class="app-brand">
-        <text class="app-name">喵邻互助</text>
+        <text class="app-name">喵邻帮</text>
         <text class="app-slogan">邻里互助 · 猫咪无忧</text>
       </view>
     </view>
