@@ -42,10 +42,6 @@
         "text": "首页"
       },
       {
-        "pagePath": "pages/service/service",
-        "text": "喂养服务"
-      },
-      {
         "pagePath": "pages/message/message",
         "text": "消息"
       },

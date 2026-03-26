@@ -243,6 +243,104 @@
 }
 
 /* 菜单组 */
+/* 需求快览 - 状态统计 */
+.status-summary {
+  display: flex;
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 24rpx 0;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
+}
+
+.status-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 1rpx solid #F5EDE5;
+}
+
+.status-item:last-child {
+  border-right: none;
+}
+
+.status-num {
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #FFBAA3;
+  line-height: 1;
+  margin-bottom: 8rpx;
+}
+
+.status-label {
+  font-size: 22rpx;
+  color: #999;
+}
+
+/* 需求卡片 */
+.need-card {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 24rpx;
+  margin-bottom: 16rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
+}
+
+.need-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.need-card-left {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.cat-mini-avatar {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 12rpx;
+  overflow: hidden;
+  background: #FFEFE9;
+}
+
+.cat-mini-avatar image {
+  width: 100%;
+  height: 100%;
+}
+
+.need-card-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #2D2D2D;
+}
+
+.need-card-date {
+  display: block;
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 4rpx;
+}
+
+.status-badge {
+  padding: 6rpx 16rpx;
+  border-radius: 8rpx;
+  font-size: 22rpx;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.status-pending { background: #FFFBE6; color: #FAAD14; }
+.status-accepted { background: #E6F7FF; color: #1890FF; }
+.status-in_progress { background: #F0FFF0; color: #52C41A; }
+.status-completed { background: #F5F5F5; color: #999; }
+.status-cancelled { background: #FFF2F0; color: #FF4D4F; }
+
+/* 菜单组 */
 .menu-group {
   background: #FFFFFF;
   border-radius: 20rpx;

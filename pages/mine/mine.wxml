@@ -36,6 +36,51 @@
     </view>
   </view>
 
+  <!-- 需求快览 -->
+  <view class="section" wx:if="{{myNeeds.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">📋 需求快览</text>
+      <text class="section-more" bindtap="goMyNeeds">全部 ›</text>
+    </view>
+    <!-- 状态统计 -->
+    <view class="status-summary">
+      <view class="status-item" bindtap="goMyNeeds">
+        <text class="status-num">{{statusCount.pending}}</text>
+        <text class="status-label">待接单</text>
+      </view>
+      <view class="status-item" bindtap="goMyNeeds">
+        <text class="status-num">{{statusCount.accepted}}</text>
+        <text class="status-label">已接单</text>
+      </view>
+      <view class="status-item" bindtap="goMyNeeds">
+        <text class="status-num">{{statusCount.in_progress}}</text>
+        <text class="status-label">服务中</text>
+      </view>
+      <view class="status-item" bindtap="goMyNeeds">
+        <text class="status-num">{{statusCount.completed}}</text>
+        <text class="status-label">已完成</text>
+      </view>
+    </view>
+
+    <!-- 最近需求 -->
+    <view class="need-card" wx:for="{{myNeeds}}" wx:key="id" bindtap="goNeedDetail" data-id="{{item.id}}">
+      <view class="need-card-row">
+        <view class="need-card-left">
+          <view class="cat-mini-avatar">
+            <image src="{{item.catAvatar}}" mode="aspectFill"></image>
+          </view>
+          <view>
+            <text class="need-card-title">{{item.catName}} · {{item.catCount}}只</text>
+            <text class="need-card-date">{{item.startDate}} ~ {{item.endDate}}</text>
+          </view>
+        </view>
+        <view class="status-badge status-{{item.status}}">
+          {{item.statusText}}
+        </view>
+      </view>
+    </view>
+  </view>
+
   <!-- 我的猫咪 -->
   <view class="section">
     <view class="section-header">

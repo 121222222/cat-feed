@@ -1,10 +1,13 @@
 const app = getApp();
+const util = require('../../utils/util.js');
 
 Page({
   data: {
     userInfo: {},
     cats: [],
-    catCount: 0
+    catCount: 0,
+    myNeeds: [],
+    statusCount: { pending: 0, accepted: 0, in_progress: 0, completed: 0 }
   },
 
   onLoad() {
@@ -13,7 +16,7 @@ Page({
 
   onShow() {
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
-      this.getTabBar().setData({ selected: 4 });
+      this.getTabBar().setData({ selected: 3 });
     }
     // 每次显示时重新加载数据（添加猫咪返回后刷新）
     this.loadData();
@@ -22,10 +25,26 @@ Page({
   loadData() {
     const userInfo = app.globalData.mockUser;
     const cats = app.globalData.mockCats;
+
+    // 加载我的需求数据
+    const needs = app.globalData.mockNeeds || [];
+    const myNeeds = needs.filter(n => n.userId === 'u001').map(n => ({
+      ...n,
+      statusText: util.getStatusText(n.status)
+    }));
+    const statusCount = {
+      pending: myNeeds.filter(n => n.status === 'pending').length,
+      accepted: myNeeds.filter(n => n.status === 'accepted').length,
+      in_progress: myNeeds.filter(n => n.status === 'in_progress').length,
+      completed: myNeeds.filter(n => n.status === 'completed').length
+    };
+
     this.setData({
       userInfo,
       cats,
-      catCount: cats.length
+      catCount: cats.length,
+      myNeeds,
+      statusCount
     });
   },
 
@@ -76,5 +95,10 @@ Page({
 
   goHelp() {
     wx.navigateTo({ url: '/pages/help/help' });
+  },
+
+  goNeedDetail(e) {
+    const id = e.currentTarget.dataset.id;
+    wx.navigateTo({ url: `/pages/need-detail/need-detail?id=${id}` });
   }
 });

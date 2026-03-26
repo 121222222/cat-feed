@@ -12,12 +12,6 @@ Component({
         selectedIconPath: "/assets/icons/home.png"
       },
       {
-        pagePath: "/pages/service/service",
-        text: "喂养服务",
-        iconPath: "/assets/icons/fish.png",
-        selectedIconPath: "/assets/icons/fish.png"
-      },
-      {
         pagePath: "/pages/message/message",
         text: "消息",
         iconPath: "/assets/icons/bell.png",
