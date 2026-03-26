@@ -1,175 +1,103 @@
 <view class="page-container">
   <view class="form-container">
-    <!-- 猫咪信息 -->
+    <!-- 照片上传区域 - 放在最顶部突出 -->
+    <view class="photo-section">
+      <view class="photo-upload-area">
+        <view class="photo-item" wx:for="{{photos}}" wx:key="*this">
+          <image src="{{item}}" mode="aspectFill" class="photo-img" bindtap="previewPhoto" data-url="{{item}}"></image>
+          <view class="photo-delete" catchtap="deletePhoto" data-index="{{index}}">×</view>
+        </view>
+        <view class="photo-add" bindtap="choosePhoto" wx:if="{{photos.length < 9}}">
+          <text class="photo-add-icon">📷</text>
+          <text class="photo-add-text">添加照片</text>
+          <text class="photo-count">{{photos.length}}/9</text>
+        </view>
+      </view>
+      <view class="photo-tips">
+        <text class="tip-icon">💡</text>
+        <text>添加清晰的猫咪照片，让分享更生动~</text>
+      </view>
+    </view>
+
+    <!-- 标题输入 -->
     <view class="form-section">
-      <view class="form-section-title">
-        <text class="form-section-icon">🐱</text>
-        <text>猫咪信息</text>
-      </view>
-      
-      <view class="form-item">
-        <text class="form-label">猫咪名字</text>
-        <input class="form-input" placeholder="请输入猫咪名字" value="{{form.catName}}" bindinput="onInput" data-field="catName" />
-      </view>
+      <input class="title-input" placeholder="给分享取个标题吧~" maxlength="30" value="{{form.title}}" bindinput="onInput" data-field="title" />
+      <text class="title-count">{{form.title.length || 0}}/30</text>
+    </view>
 
-      <view class="form-item">
-        <text class="form-label">猫咪品种</text>
-        <picker range="{{breedOptions}}" value="{{breedIndex}}" bindchange="onBreedChange">
-          <text class="form-picker {{form.catBreed ? '' : 'placeholder'}}">{{form.catBreed || '请选择猫咪品种'}}</text>
-        </picker>
-      </view>
-      
-      <view class="form-item">
-        <text class="form-label">猫咪数量</text>
-        <view class="counter">
-          <view class="counter-btn" bindtap="onCountChange" data-delta="-1">-</view>
-          <text class="counter-num">{{form.catCount}}</text>
-          <view class="counter-btn" bindtap="onCountChange" data-delta="1">+</view>
-        </view>
-      </view>
-      
-      <view class="form-item">
-        <text class="form-label">年龄</text>
-        <input class="form-input" placeholder="如：2岁" value="{{form.catAge}}" bindinput="onInput" data-field="catAge" />
-      </view>
-      
-      <view class="form-item">
-        <text class="form-label">是否接种疫苗</text>
-        <view class="switch-wrap">
-          <switch checked="{{form.vaccinated}}" bindchange="onSwitchChange" data-field="vaccinated" color="#FF8C42" />
-        </view>
-      </view>
-      
-      <view class="form-item">
-        <text class="form-label">性格特征</text>
-        <input class="form-input" placeholder="如：温顺亲人、胆小怕生" value="{{form.character}}" bindinput="onInput" data-field="character" />
-      </view>
-      
-      <view class="form-item column">
-        <text class="form-label">注意事项</text>
-        <textarea class="form-textarea" placeholder="请描述猫咪的特殊注意事项，如饮食禁忌、用药情况等" value="{{form.notes}}" bindinput="onInput" data-field="notes" maxlength="200"></textarea>
-      </view>
+    <!-- 内容输入 -->
+    <view class="form-section">
+      <textarea class="content-textarea" placeholder="分享你和猫咪的日常故事、养猫心得、趣事萌照...&#10;&#10;可以聊聊：&#10;· 猫咪今天做了什么可爱的事&#10;· 养猫的小技巧&#10;· 猫咪的健康日常" maxlength="1000" value="{{form.content}}" bindinput="onInput" data-field="content"></textarea>
+      <text class="content-count">{{form.content.length || 0}}/1000</text>
+    </view>
 
-      <!-- 猫咪照片上传 -->
-      <view class="form-item column">
-        <view class="photo-label-row">
-          <text class="form-label">猫咪照片</text>
-          <text class="photo-tip">最多9张，让喂养人更了解猫咪</text>
+    <!-- 分类选择 -->
+    <view class="form-section">
+      <view class="section-header">
+        <text class="section-icon">🏷️</text>
+        <text class="section-title">选择分类</text>
+      </view>
+      <view class="category-options">
+        <view class="category-option {{form.category === 'daily' ? 'active' : ''}}" bindtap="setCategory" data-cat="daily">
+          <text>🐾 日常</text>
         </view>
-        <view class="photo-upload-area">
-          <view class="photo-item" wx:for="{{catPhotos}}" wx:key="*this">
-            <image src="{{item}}" mode="aspectFill" class="photo-img" bindtap="previewPhoto" data-url="{{item}}"></image>
-            <view class="photo-delete" catchtap="deletePhoto" data-index="{{index}}">×</view>
-          </view>
-          <view class="photo-add" bindtap="chooseCatPhoto" wx:if="{{catPhotos.length < 9}}">
-            <text class="photo-add-icon">📷</text>
-            <text class="photo-add-text">添加照片</text>
-          </view>
+        <view class="category-option {{form.category === 'cute' ? 'active' : ''}}" bindtap="setCategory" data-cat="cute">
+          <text>😻 卖萌</text>
+        </view>
+        <view class="category-option {{form.category === 'food' ? 'active' : ''}}" bindtap="setCategory" data-cat="food">
+          <text>🍲 喂食</text>
+        </view>
+        <view class="category-option {{form.category === 'health' ? 'active' : ''}}" bindtap="setCategory" data-cat="health">
+          <text>💊 健康</text>
+        </view>
+        <view class="category-option {{form.category === 'tips' ? 'active' : ''}}" bindtap="setCategory" data-cat="tips">
+          <text>📖 养猫经验</text>
         </view>
       </view>
     </view>
 
-    <!-- 喂养时间 -->
+    <!-- 猫咪标签（可选） -->
     <view class="form-section">
-      <view class="form-section-title">
-        <text class="form-section-icon">📅</text>
-        <text>喂养时间</text>
+      <view class="section-header">
+        <text class="section-icon">🐱</text>
+        <text class="section-title">关联我的猫咪</text>
+        <text class="section-opt">（可选）</text>
       </view>
-      
-      <view class="form-item">
-        <text class="form-label">开始日期</text>
-        <picker mode="date" value="{{form.startDate}}" bindchange="onDateChange" data-field="startDate">
-          <text class="form-picker {{form.startDate ? '' : 'placeholder'}}">{{form.startDate || '请选择开始日期'}}</text>
-        </picker>
-      </view>
-      
-      <view class="form-item">
-        <text class="form-label">结束日期</text>
-        <picker mode="date" value="{{form.endDate}}" bindchange="onDateChange" data-field="endDate">
-          <text class="form-picker {{form.endDate ? '' : 'placeholder'}}">{{form.endDate || '请选择结束日期'}}</text>
-        </picker>
-      </view>
-      
-      <view class="form-item">
-        <text class="form-label">每日时段</text>
-        <input class="form-input" placeholder="如：早晚各一次" value="{{form.timeSlot}}" bindinput="onInput" data-field="timeSlot" />
-      </view>
-    </view>
-
-    <!-- 服务要求 -->
-    <view class="form-section">
-      <view class="form-section-title">
-        <text class="form-section-icon">✅</text>
-        <text>服务要求</text>
-      </view>
-      
-      <view class="service-options">
-        <view class="service-option {{item.checked ? 'checked' : ''}}" 
-              wx:for="{{serviceOptions}}" wx:key="name" 
-              bindtap="toggleService" data-index="{{index}}">
-          <text class="option-icon">{{item.icon}}</text>
-          <text class="option-name">{{item.name}}</text>
+      <view class="cat-options" wx:if="{{myCats.length > 0}}">
+        <view class="cat-option {{form.catId === item.id ? 'active' : ''}}" wx:for="{{myCats}}" wx:key="id" bindtap="selectCat" data-id="{{item.id}}" data-name="{{item.name}}">
+          <image class="cat-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+          <text>{{item.name}}</text>
+        </view>
+        <view class="cat-option {{!form.catId ? 'active' : ''}}" bindtap="selectCat" data-id="">
+          <text>不关联</text>
         </view>
       </view>
-    </view>
-
-    <!-- 宿舍地址 -->
-    <view class="form-section">
-      <view class="form-section-title">
-        <text class="form-section-icon">📍</text>
-        <text>宿舍地址</text>
-      </view>
-      
-      <view class="form-item">
-        <text class="form-label">宿舍楼栋</text>
-        <picker range="{{dormOptions}}" value="{{dormIndex}}" bindchange="onDormChange">
-          <text class="form-picker {{form.dormitory ? '' : 'placeholder'}}">{{form.dormitory || '请选择宿舍楼栋'}}</text>
-        </picker>
-      </view>
-      
-      <view class="form-item">
-        <text class="form-label">房间号</text>
-        <input class="form-input" placeholder="如：302" value="{{form.roomNo}}" bindinput="onInput" data-field="roomNo" />
+      <view class="no-cat-tip" wx:else>
+        <text>还没有添加猫咪，</text>
+        <text class="link" bindtap="goAddCat">去添加</text>
       </view>
     </view>
 
-    <!-- 报酬设置 -->
+    <!-- 话题标签 -->
     <view class="form-section">
-      <view class="form-section-title">
-        <text class="form-section-icon">💰</text>
-        <text>报酬设置</text>
+      <view class="section-header">
+        <text class="section-icon">#</text>
+        <text class="section-title">添加话题</text>
+        <text class="section-opt">（可选）</text>
       </view>
-      
-      <view class="reward-options">
-        <view class="reward-option {{form.rewardType === 'free' ? 'active' : ''}}" bindtap="setRewardType" data-type="free">
-          <text class="reward-icon">🤝</text>
-          <text>自愿（互助）</text>
-        </view>
-        <view class="reward-option {{form.rewardType === 'fixed' ? 'active' : ''}}" bindtap="setRewardType" data-type="fixed">
-          <text class="reward-icon">💵</text>
-          <text>固定金额</text>
+      <view class="topic-options">
+        <view class="topic-tag {{item.checked ? 'active' : ''}}" wx:for="{{topicOptions}}" wx:key="name" bindtap="toggleTopic" data-index="{{index}}">
+          <text>#{{item.name}}</text>
         </view>
       </view>
-      
-      <view class="form-item" wx:if="{{form.rewardType === 'fixed'}}">
-        <text class="form-label">金额（元/天）</text>
-        <input class="form-input" type="digit" placeholder="请输入每天的报酬金额" value="{{form.rewardAmount}}" bindinput="onInput" data-field="rewardAmount" />
-      </view>
-    </view>
-
-    <!-- 需求描述 -->
-    <view class="form-section">
-      <view class="form-section-title">
-        <text class="form-section-icon">📝</text>
-        <text>需求描述</text>
-      </view>
-      <textarea class="form-textarea lg" placeholder="详细描述一下您的喂养需求，帮助喂养人更好地了解情况" value="{{form.description}}" bindinput="onInput" data-field="description" maxlength="500"></textarea>
-      <text class="char-count">{{form.description.length || 0}}/500</text>
     </view>
   </view>
 
   <!-- 底部提交 -->
   <view class="submit-bar safe-bottom">
-    <view class="btn-primary btn-block" bindtap="onSubmit">提交需求</view>
+    <view class="submit-row">
+      <view class="btn-draft" bindtap="saveDraft">存草稿</view>
+      <view class="btn-primary btn-publish" bindtap="onSubmit">发布动态</view>
+    </view>
   </view>
 </view>

@@ -1,26 +1,31 @@
+const app = getApp();
+const db = require('../../utils/db.js');
+
 Page({
   data: {
     activeTab: 0,
+    helpFilter: 'all',
+    helpList: [],
     rules: [
       {
         id: 'r001',
-        icon: '📋',
-        title: '喂养服务须知',
-        content: '1. 喂养人需提前了解猫咪习性和注意事项\n2. 服务期间需按时上门并拍照打卡\n3. 如遇紧急情况请立即联系需求方\n4. 服务完成后双方需互相评价',
+        icon: '🐱',
+        title: '社区公约',
+        content: '1. 友善交流，尊重每一位猫友\n2. 发布真实内容，禁止虚假信息\n3. 互助自愿，诚信为本\n4. 保护隐私，未经同意不泄露他人信息\n5. 如有纠纷，请联系管理员处理',
         time: '2026-03-15 发布'
       },
       {
         id: 'r002',
-        icon: '🔒',
-        title: '安全协议',
-        content: '1. 仅限本公司员工使用，需实名认证\n2. 禁止泄露他人宿舍信息\n3. 服务过程中请注意人身安全\n4. 如发生纠纷请联系平台管理员处理',
+        icon: '🤝',
+        title: '互助须知',
+        content: '1. 互助为邻里间自愿行为\n2. 提前沟通好喂养细节和注意事项\n3. 建议拍照打卡，让猫主放心\n4. 如遇紧急情况请立即联系猫主\n5. 平台不参与任何金钱交易',
         time: '2026-03-10 发布'
       },
       {
         id: 'r003',
-        icon: '🏠',
-        title: '宿舍养猫规范',
-        content: '1. 养猫需向宿管登记备案\n2. 保持公共区域清洁卫生\n3. 猫咪需按时接种疫苗\n4. 做好猫咪绝育工作\n5. 不得影响其他住户休息',
+        icon: '📸',
+        title: '内容规范',
+        content: '1. 分享原创猫咪照片和故事\n2. 禁止发布广告和营销内容\n3. 不得发布血腥、虐待动物内容\n4. 尊重他人猫咪，未经同意勿转发\n5. 违规内容将被删除并警告',
         time: '2026-03-01 发布'
       }
     ],
@@ -41,7 +46,7 @@ Page({
         userName: '大壮',
         avatar: '/assets/images/avatar5.png',
         time: '5小时前',
-        content: '求助！我家猫最近不爱吃猫粮了，有没有推荐的牌子？目前吃的是XX牌',
+        content: '求助！我家猫最近不爱吃猫粮了，有没有推荐的牌子？',
         images: [],
         likes: 5,
         comments: 8,
@@ -58,37 +63,59 @@ Page({
         comments: 6,
         liked: false
       }
-    ],
-    lostItems: [
-      {
-        id: 'l001',
-        type: 'lost',
-        title: '寻找猫咪逗猫棒',
-        description: '红色羽毛逗猫棒，昨天在A栋楼下遛猫时不小心落下了',
-        contact: '张三 (A栋302)',
-        location: 'A栋楼下草坪',
-        time: '今天 14:30'
-      },
-      {
-        id: 'l002',
-        type: 'found',
-        title: '捡到猫咪项圈一个',
-        description: '蓝色铃铛项圈，在B栋洗衣房捡到，请失主联系我',
-        contact: '李四 (B栋105)',
-        location: 'B栋洗衣房',
-        time: '昨天 18:00'
-      }
     ]
+  },
+
+  onLoad() {
+    this.loadHelpList();
   },
 
   onShow() {
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 2 });
     }
+    // 刷新互助列表
+    if (this.data.activeTab === 0) {
+      this.loadHelpList();
+    }
+  },
+
+  async loadHelpList() {
+    try {
+      const filter = this.data.helpFilter === 'all' ? null : this.data.helpFilter;
+      const helpsRaw = await db.getHelps(filter);
+      const helpList = helpsRaw.map(h => ({
+        ...h,
+        id: h._id
+      }));
+      this.setData({ helpList });
+    } catch (err) {
+      console.error('加载互助列表失败:', err);
+    }
   },
 
   switchTab(e) {
-    this.setData({ activeTab: Number(e.currentTarget.dataset.tab) });
+    const tab = Number(e.currentTarget.dataset.tab);
+    this.setData({ activeTab: tab });
+    if (tab === 0) {
+      this.loadHelpList();
+    }
+  },
+
+  setHelpFilter(e) {
+    const filter = e.currentTarget.dataset.filter;
+    this.setData({ helpFilter: filter });
+    this.loadHelpList();
+  },
+
+  goPublishHelp(e) {
+    const type = e.currentTarget.dataset.type;
+    wx.navigateTo({ url: `/pages/publish-help/publish-help?type=${type}` });
+  },
+
+  goHelpDetail(e) {
+    const id = e.currentTarget.dataset.id;
+    wx.navigateTo({ url: `/pages/help-detail/help-detail?id=${id}` });
   },
 
   onLike(e) {
@@ -104,9 +131,5 @@ Page({
 
   onNewPost() {
     wx.showToast({ title: '发帖功能开发中', icon: 'none' });
-  },
-
-  onNewLost() {
-    wx.showToast({ title: '发布功能开发中', icon: 'none' });
   }
 });

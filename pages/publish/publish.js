@@ -4,34 +4,41 @@ const db = require('../../utils/db.js');
 Page({
   data: {
     form: {
-      catName: '',
-      catBreed: '',
-      catCount: 1,
-      catAge: '',
-      vaccinated: true,
-      character: '',
-      notes: '',
-      startDate: '',
-      endDate: '',
-      timeSlot: '',
-      dormitory: '',
-      roomNo: '',
-      rewardType: 'free',
-      rewardAmount: '',
-      description: ''
+      title: '',
+      content: '',
+      category: 'daily',
+      catId: '',
+      catName: ''
     },
-    catPhotos: [],
-    breedOptions: ['中华田园猫', '英国短毛猫', '美国短毛猫', '布偶猫', '暹罗猫', '波斯猫', '缅因猫', '苏格兰折耳猫', '俄罗斯蓝猫', '孟加拉猫', '橘猫', '三花猫', '黑猫', '白猫', '奶牛猫', '狸花猫', '其他'],
-    breedIndex: -1,
-    serviceOptions: [
-      { name: '喂食', icon: '🍲', checked: true },
-      { name: '换水', icon: '💧', checked: true },
-      { name: '铲屎', icon: '🧹', checked: false },
-      { name: '陪玩', icon: '🎾', checked: false },
-      { name: '喂药', icon: '💊', checked: false }
-    ],
-    dormOptions: ['1栋', '2栋', '3栋', '4栋', '5栋', '6栋', '7栋', '8栋', '9栋', '10栋'],
-    dormIndex: 0
+    photos: [],
+    myCats: [],
+    topicOptions: [
+      { name: '今日份可爱', checked: false },
+      { name: '猫咪日常', checked: false },
+      { name: '养猫心得', checked: false },
+      { name: '猫粮测评', checked: false },
+      { name: '猫咪健康', checked: false },
+      { name: '新手养猫', checked: false },
+      { name: '猫咪趣事', checked: false },
+      { name: '晒猫狂魔', checked: false }
+    ]
+  },
+
+  onLoad() {
+    this.loadMyCats();
+  },
+
+  async loadMyCats() {
+    try {
+      const catsRaw = await db.getMyCats();
+      const cats = catsRaw.map(c => ({
+        ...c,
+        id: c._id
+      }));
+      this.setData({ myCats: cats });
+    } catch (err) {
+      console.error('加载猫咪失败:', err);
+    }
   },
 
   onInput(e) {
@@ -39,54 +46,28 @@ Page({
     this.setData({ [`form.${field}`]: e.detail.value });
   },
 
-  onCountChange(e) {
-    const delta = Number(e.currentTarget.dataset.delta);
-    let count = this.data.form.catCount + delta;
-    if (count < 1) count = 1;
-    if (count > 10) count = 10;
-    this.setData({ 'form.catCount': count });
+  setCategory(e) {
+    this.setData({ 'form.category': e.currentTarget.dataset.cat });
   },
 
-  onSwitchChange(e) {
-    const field = e.currentTarget.dataset.field;
-    this.setData({ [`form.${field}`]: e.detail.value });
-  },
-
-  onDateChange(e) {
-    const field = e.currentTarget.dataset.field;
-    this.setData({ [`form.${field}`]: e.detail.value });
-  },
-
-  onDormChange(e) {
-    const idx = e.detail.value;
+  selectCat(e) {
+    const { id, name } = e.currentTarget.dataset;
     this.setData({
-      dormIndex: idx,
-      'form.dormitory': this.data.dormOptions[idx]
+      'form.catId': id || '',
+      'form.catName': name || ''
     });
   },
 
-  onBreedChange(e) {
-    const idx = e.detail.value;
-    this.setData({
-      breedIndex: idx,
-      'form.catBreed': this.data.breedOptions[idx]
-    });
-  },
-
-  toggleService(e) {
+  toggleTopic(e) {
     const index = e.currentTarget.dataset.index;
-    const key = `serviceOptions[${index}].checked`;
-    this.setData({ [key]: !this.data.serviceOptions[index].checked });
+    const key = `topicOptions[${index}].checked`;
+    this.setData({ [key]: !this.data.topicOptions[index].checked });
   },
 
-  setRewardType(e) {
-    this.setData({ 'form.rewardType': e.currentTarget.dataset.type });
-  },
-
-  // 选择猫咪照片
-  chooseCatPhoto() {
+  // 选择照片
+  choosePhoto() {
     const that = this;
-    const remainCount = 9 - this.data.catPhotos.length;
+    const remainCount = 9 - this.data.photos.length;
     if (remainCount <= 0) {
       wx.showToast({ title: '最多上传9张照片', icon: 'none' });
       return;
@@ -99,95 +80,120 @@ Page({
       success(res) {
         const newPhotos = res.tempFiles.map(f => f.tempFilePath);
         that.setData({
-          catPhotos: [...that.data.catPhotos, ...newPhotos]
+          photos: [...that.data.photos, ...newPhotos]
         });
       }
     });
   },
 
-  // 预览猫咪照片
+  // 预览照片
   previewPhoto(e) {
     const url = e.currentTarget.dataset.url;
     wx.previewImage({
       current: url,
-      urls: this.data.catPhotos
+      urls: this.data.photos
     });
   },
 
-  // 删除猫咪照片
+  // 删除照片
   deletePhoto(e) {
     const index = e.currentTarget.dataset.index;
-    const photos = this.data.catPhotos;
+    const photos = this.data.photos;
     photos.splice(index, 1);
-    this.setData({ catPhotos: photos });
+    this.setData({ photos });
+  },
+
+  goAddCat() {
+    wx.navigateTo({ url: '/pages/add-cat/add-cat' });
+  },
+
+  saveDraft() {
+    // 保存草稿到本地存储
+    const draft = {
+      form: this.data.form,
+      photos: this.data.photos,
+      topicOptions: this.data.topicOptions,
+      time: Date.now()
+    };
+    wx.setStorageSync('postDraft', draft);
+    wx.showToast({ title: '已保存草稿', icon: 'success' });
   },
 
   async onSubmit() {
-    const { form, serviceOptions, catPhotos } = this.data;
-    
-    if (!form.catName) {
-      wx.showToast({ title: '请输入猫咪名字', icon: 'none' }); return;
+    const { form, photos, topicOptions } = this.data;
+
+    // 校验
+    if (photos.length === 0) {
+      wx.showToast({ title: '请至少添加一张照片', icon: 'none' });
+      return;
     }
-    if (!form.startDate || !form.endDate) {
-      wx.showToast({ title: '请选择喂养时间', icon: 'none' }); return;
-    }
-    if (!form.dormitory) {
-      wx.showToast({ title: '请选择宿舍楼栋', icon: 'none' }); return;
+    if (!form.title.trim()) {
+      wx.showToast({ title: '请输入标题', icon: 'none' });
+      return;
     }
 
-    const services = serviceOptions.filter(s => s.checked).map(s => s.name);
-    if (services.length === 0) {
-      wx.showToast({ title: '请至少选择一项服务', icon: 'none' }); return;
-    }
+    const topics = topicOptions.filter(t => t.checked).map(t => t.name);
 
     wx.showModal({
       title: '确认发布',
-      content: `确认发布「${form.catName}」的喂养需求吗？`,
+      content: '确认发布这条动态吗？',
       confirmColor: '#FFBAA3',
       success: async (res) => {
         if (res.confirm) {
-          wx.showLoading({ title: '发布中...' });
+          wx.showLoading({ title: '发布中...', mask: true });
 
-          // 上传猫咪照片
-          let photoUrls = [];
-          for (let i = 0; i < catPhotos.length; i++) {
-            const fileID = await db.uploadImage(catPhotos[i], `needs/${Date.now()}-${i}.jpg`);
-            if (fileID) photoUrls.push(fileID);
-          }
+          try {
+            // 上传照片
+            let photoUrls = [];
+            for (let i = 0; i < photos.length; i++) {
+              wx.showLoading({ title: `上传图片 ${i + 1}/${photos.length}`, mask: true });
+              const fileID = await db.uploadImage(photos[i], `posts/${Date.now()}-${i}.jpg`);
+              if (fileID) photoUrls.push(fileID);
+            }
 
-          const userInfo = app.globalData.userInfo || {};
-          const reward = form.rewardType === 'free' ? '自愿' :
-                         form.rewardType === 'fixed' ? `${form.rewardAmount}元/天` : '面议';
+            if (photoUrls.length === 0) {
+              wx.hideLoading();
+              wx.showToast({ title: '图片上传失败', icon: 'none' });
+              return;
+            }
 
-          const needId = await db.addNeed({
-            userName: userInfo.name || '匿名',
-            userAvatar: userInfo.avatar || '',
-            catName: form.catName,
-            catBreed: form.catBreed,
-            catCount: form.catCount,
-            catAge: form.catAge,
-            vaccinated: form.vaccinated,
-            character: form.character,
-            notes: form.notes,
-            catPhotos: photoUrls,
-            catAvatar: photoUrls[0] || '',
-            startDate: form.startDate,
-            endDate: form.endDate,
-            timeSlot: form.timeSlot,
-            services: services,
-            dormitory: form.dormitory + (form.roomNo ? form.roomNo : ''),
-            reward: reward,
-            description: form.description
-          });
+            const userInfo = app.globalData.userInfo || {};
 
-          wx.hideLoading();
-          if (needId) {
-            wx.showToast({ title: '发布成功！', icon: 'success' });
-            setTimeout(() => {
-              wx.navigateBack();
-            }, 1500);
-          } else {
-            wx.showToast({ title: '发布失败', icon: 'none' });
+            // 创建动态（包含 userId 用于后续查询过滤）
+            const postId = await db.addPost({
+              title: form.title.trim(),
+              content: form.content.trim(),
+              images: photoUrls,
+              category: form.category,
+              catId: form.catId,
+              catName: form.catName,
+              topics: topics,
+              userId: userInfo._id || '',
+              userName: userInfo.name || '匿名',
+              userAvatar: userInfo.avatar || '',
+              imgRatio: 100 // 默认1:1，实际可以根据第一张图计算
+            });
+
+            wx.hideLoading();
+
+            if (postId) {
+              // 清除草稿
+              wx.removeStorageSync('postDraft');
+              wx.showToast({ title: '发布成功！', icon: 'success' });
+              setTimeout(() => {
+                wx.navigateBack();
+              }, 1500);
+            } else {
+              wx.showToast({ title: '发布失败，请检查posts集合是否创建', icon: 'none', duration: 3000 });
+            }
+          } catch (err) {
+            wx.hideLoading();
+            console.error('发布失败:', err);
+            wx.showModal({
+              title: '发布失败',
+              content: err.message || '请检查：1.是否已创建posts集合 2.集合权限是否正确',
+              showCancel: false
+            });
           }
         }
       }

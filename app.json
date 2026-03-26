@@ -1,32 +1,26 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/service/service",
     "pages/message/message",
     "pages/community/community",
     "pages/mine/mine",
     "pages/publish/publish",
-    "pages/my-needs/my-needs",
-    "pages/need-detail/need-detail",
-    "pages/accept-list/accept-list",
-    "pages/apply-feed/apply-feed",
-    "pages/my-applies/my-applies",
-    "pages/service-detail/service-detail",
-    "pages/chat/chat",
+    "pages/publish-help/publish-help",
+    "pages/post-detail/post-detail",
+    "pages/help-detail/help-detail",
     "pages/my-cats/my-cats",
     "pages/add-cat/add-cat",
     "pages/profile/profile",
     "pages/auth/auth",
     "pages/settings/settings",
     "pages/help/help",
-    "pages/checkin/checkin",
     "pages/login/login",
-    "pages/all-needs/all-needs"
+    "pages/my-posts/my-posts"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#FFBAA3",
-    "navigationBarTitleText": "喵邻帮",
+    "navigationBarTitleText": "喵圈",
     "navigationBarTextStyle": "white",
     "backgroundColor": "#FFF7F4"
   },

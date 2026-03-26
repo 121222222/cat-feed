@@ -1,0 +1,97 @@
+<view class="page-container">
+  <view class="form-container">
+    <!-- 类型选择 -->
+    <view class="type-section">
+      <view class="type-card {{form.type === 'need' ? 'active' : ''}}" bindtap="setType" data-type="need">
+        <view class="type-icon need-bg">🙋</view>
+        <view class="type-info">
+          <text class="type-title">我需要帮助</text>
+          <text class="type-desc">出差/假期，求帮忙喂猫</text>
+        </view>
+        <view class="type-check" wx:if="{{form.type === 'need'}}">✓</view>
+      </view>
+      <view class="type-card {{form.type === 'offer' ? 'active' : ''}}" bindtap="setType" data-type="offer">
+        <view class="type-icon offer-bg">🐾</view>
+        <view class="type-info">
+          <text class="type-title">我可以帮忙</text>
+          <text class="type-desc">有空帮邻居喂猫</text>
+        </view>
+        <view class="type-check" wx:if="{{form.type === 'offer'}}">✓</view>
+      </view>
+    </view>
+
+    <!-- 标题 -->
+    <view class="form-section">
+      <input class="title-input" placeholder="简要描述一下（如：五一假期求帮喂猫）" maxlength="30" value="{{form.title}}" bindinput="onInput" data-field="title" />
+    </view>
+
+    <!-- 详细描述 -->
+    <view class="form-section">
+      <textarea class="content-textarea" placeholder="详细说明情况，如：&#10;· 需要喂猫的时间段&#10;· 猫咪的性格和注意事项&#10;· 期望的帮助方式" maxlength="500" value="{{form.description}}" bindinput="onInput" data-field="description"></textarea>
+      <text class="char-count">{{form.description.length || 0}}/500</text>
+    </view>
+
+    <!-- 日期范围（仅求助类型显示） -->
+    <view class="form-section" wx:if="{{form.type === 'need'}}">
+      <view class="section-header">
+        <text class="section-icon">📅</text>
+        <text class="section-title">需要帮忙的时间</text>
+      </view>
+      <view class="date-row">
+        <picker mode="date" value="{{form.startDate}}" bindchange="onDateChange" data-field="startDate">
+          <view class="date-picker {{form.startDate ? '' : 'placeholder'}}">
+            {{form.startDate || '开始日期'}}
+          </view>
+        </picker>
+        <text class="date-separator">至</text>
+        <picker mode="date" value="{{form.endDate}}" bindchange="onDateChange" data-field="endDate">
+          <view class="date-picker {{form.endDate ? '' : 'placeholder'}}">
+            {{form.endDate || '结束日期'}}
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 关联猫咪（仅求助类型显示） -->
+    <view class="form-section" wx:if="{{form.type === 'need'}}">
+      <view class="section-header">
+        <text class="section-icon">🐱</text>
+        <text class="section-title">需要照顾的猫咪</text>
+      </view>
+      <view class="cat-options" wx:if="{{myCats.length > 0}}">
+        <view class="cat-option {{form.catId === item.id ? 'active' : ''}}" wx:for="{{myCats}}" wx:key="id" bindtap="selectCat" data-id="{{item.id}}" data-name="{{item.name}}" data-avatar="{{item.avatar}}">
+          <image class="cat-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
+          <text>{{item.name}}</text>
+        </view>
+      </view>
+      <view class="no-cat-tip" wx:else>
+        <text>还没有添加猫咪，</text>
+        <text class="link" bindtap="goAddCat">去添加</text>
+      </view>
+    </view>
+
+    <!-- 位置信息 -->
+    <view class="form-section">
+      <view class="section-header">
+        <text class="section-icon">📍</text>
+        <text class="section-title">所在位置</text>
+        <text class="section-opt">（选填，方便邻近的人看到）</text>
+      </view>
+      <input class="form-input" placeholder="如：3号楼附近" value="{{form.location}}" bindinput="onInput" data-field="location" />
+    </view>
+
+    <!-- 联系方式 -->
+    <view class="form-section">
+      <view class="section-header">
+        <text class="section-icon">📱</text>
+        <text class="section-title">联系方式</text>
+      </view>
+      <input class="form-input" placeholder="微信号或手机号，方便联系" value="{{form.contact}}" bindinput="onInput" data-field="contact" />
+    </view>
+  </view>
+
+  <!-- 底部提交 -->
+  <view class="submit-bar safe-bottom">
+    <view class="btn-primary btn-block" bindtap="onSubmit">发布互助</view>
+  </view>
+</view>

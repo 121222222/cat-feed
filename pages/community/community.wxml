@@ -1,24 +1,84 @@
 <view class="page-container">
   <!-- 顶部Tab -->
   <view class="comm-tabs">
-    <view class="comm-tab {{activeTab === 0 ? 'active' : ''}}" bindtap="switchTab" data-tab="0">平台规则</view>
-    <view class="comm-tab {{activeTab === 1 ? 'active' : ''}}" bindtap="switchTab" data-tab="1">猫咪交流</view>
-    <view class="comm-tab {{activeTab === 2 ? 'active' : ''}}" bindtap="switchTab" data-tab="2">失物招领</view>
+    <view class="comm-tab {{activeTab === 0 ? 'active' : ''}}" bindtap="switchTab" data-tab="0">🤝 互助</view>
+    <view class="comm-tab {{activeTab === 1 ? 'active' : ''}}" bindtap="switchTab" data-tab="1">💬 交流</view>
+    <view class="comm-tab {{activeTab === 2 ? 'active' : ''}}" bindtap="switchTab" data-tab="2">📋 公告</view>
   </view>
 
-  <!-- 平台规则 -->
+  <!-- 互助板块 -->
   <view class="tab-content" wx:if="{{activeTab === 0}}">
-    <view class="rule-card" wx:for="{{rules}}" wx:key="id">
-      <view class="rule-header">
-        <text class="rule-icon">{{item.icon}}</text>
-        <text class="rule-title">{{item.title}}</text>
+    <!-- 互助入口 -->
+    <view class="help-entry">
+      <view class="help-card help-need" bindtap="goPublishHelp" data-type="need">
+        <view class="help-icon-wrap need-bg">
+          <text class="help-icon">🙋</text>
+        </view>
+        <view class="help-info">
+          <text class="help-title">我需要帮助</text>
+          <text class="help-desc">出差/假期，求邻居帮忙喂猫</text>
+        </view>
+        <text class="help-arrow">›</text>
       </view>
-      <text class="rule-content">{{item.content}}</text>
-      <text class="rule-time">{{item.time}}</text>
+      <view class="help-card help-offer" bindtap="goPublishHelp" data-type="offer">
+        <view class="help-icon-wrap offer-bg">
+          <text class="help-icon">🐾</text>
+        </view>
+        <view class="help-info">
+          <text class="help-title">我可以帮忙</text>
+          <text class="help-desc">有空帮邻居喂猫，认识更多喵友</text>
+        </view>
+        <text class="help-arrow">›</text>
+      </view>
+    </view>
+
+    <!-- 分类筛选 -->
+    <view class="help-filter">
+      <view class="filter-item {{helpFilter === 'all' ? 'active' : ''}}" bindtap="setHelpFilter" data-filter="all">全部</view>
+      <view class="filter-item {{helpFilter === 'need' ? 'active' : ''}}" bindtap="setHelpFilter" data-filter="need">求助中</view>
+      <view class="filter-item {{helpFilter === 'offer' ? 'active' : ''}}" bindtap="setHelpFilter" data-filter="offer">可帮忙</view>
+    </view>
+
+    <!-- 互助列表 -->
+    <view class="help-list">
+      <view class="help-item" wx:for="{{helpList}}" wx:key="id" bindtap="goHelpDetail" data-id="{{item.id}}">
+        <view class="help-item-header">
+          <view class="help-type-tag {{item.type === 'need' ? 'tag-need' : 'tag-offer'}}">
+            {{item.type === 'need' ? '求助' : '可帮忙'}}
+          </view>
+          <text class="help-item-time">{{item.time}}</text>
+        </view>
+        <view class="help-item-user">
+          <image class="help-user-avatar" src="{{item.userAvatar}}" mode="aspectFill"></image>
+          <text class="help-user-name">{{item.userName}}</text>
+          <text class="help-user-loc" wx:if="{{item.location}}">📍{{item.location}}</text>
+        </view>
+        <text class="help-item-title">{{item.title}}</text>
+        <text class="help-item-desc">{{item.description}}</text>
+        <view class="help-item-tags" wx:if="{{item.dateRange}}">
+          <text class="help-date-tag">📅 {{item.dateRange}}</text>
+        </view>
+        <view class="help-item-footer">
+          <view class="help-cat-info" wx:if="{{item.catName}}">
+            <image class="help-cat-avatar" src="{{item.catAvatar}}" mode="aspectFill" wx:if="{{item.catAvatar}}"></image>
+            <text>{{item.catName}}</text>
+          </view>
+          <view class="help-action-btn">
+            <text>{{item.type === 'need' ? '我来帮忙' : '联系TA'}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 空状态 -->
+      <view class="empty-help" wx:if="{{helpList.length === 0}}">
+        <text class="empty-icon">🤝</text>
+        <text class="empty-text">暂无互助信息</text>
+        <text class="empty-sub">发布第一条互助信息吧~</text>
+      </view>
     </view>
   </view>
 
-  <!-- 猫咪交流 -->
+  <!-- 交流板块 -->
   <view class="tab-content" wx:if="{{activeTab === 1}}">
     <view class="post-card" wx:for="{{posts}}" wx:key="id">
       <view class="post-user">
@@ -50,24 +110,16 @@
     <view class="fab" bindtap="onNewPost">✏️</view>
   </view>
 
-  <!-- 失物招领 -->
+  <!-- 公告板块 -->
   <view class="tab-content" wx:if="{{activeTab === 2}}">
-    <view class="lost-card" wx:for="{{lostItems}}" wx:key="id">
-      <view class="lost-header">
-        <view class="lost-type-tag {{item.type === 'lost' ? 'tag-danger' : 'tag-success'}}">
-          {{item.type === 'lost' ? '寻找' : '招领'}}
-        </view>
-        <text class="lost-time">{{item.time}}</text>
+    <view class="rule-card" wx:for="{{rules}}" wx:key="id">
+      <view class="rule-header">
+        <text class="rule-icon">{{item.icon}}</text>
+        <text class="rule-title">{{item.title}}</text>
       </view>
-      <text class="lost-title">{{item.title}}</text>
-      <text class="lost-desc">{{item.description}}</text>
-      <view class="lost-footer">
-        <text class="lost-contact">📱 联系人：{{item.contact}}</text>
-        <text class="lost-location">📍 {{item.location}}</text>
-      </view>
+      <text class="rule-content">{{item.content}}</text>
+      <text class="rule-time">{{item.time}}</text>
     </view>
-    
-    <view class="fab" bindtap="onNewLost">✏️</view>
   </view>
 
   <view style="height: 120rpx;"></view>

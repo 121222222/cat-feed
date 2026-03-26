@@ -8,74 +8,27 @@
           <image src="{{userInfo.avatar}}" mode="aspectFill"></image>
         </view>
         <view class="avatar-edit-icon">📷</view>
-        <view class="certified-icon" wx:if="{{userInfo.certified}}">✓</view>
       </view>
       <view class="profile-detail">
         <view class="profile-name-row">
-          <text class="profile-name">{{userInfo.name}}</text>
-          <view class="certified-tag" wx:if="{{userInfo.certified}}">已认证</view>
+          <text class="profile-name">{{userInfo.name || '铲屎官'}}</text>
         </view>
-        <text class="profile-dorm">📍 {{userInfo.dormitory}}</text>
+        <text class="profile-dorm" wx:if="{{userInfo.dormitory}}">📍 {{userInfo.dormitory}}</text>
         <view class="profile-stats">
-          <view class="stat-item">
-            <text class="stat-num">{{userInfo.rating}}</text>
-            <text class="stat-label">评分</text>
+          <view class="stat-item" bindtap="goMyPosts">
+            <text class="stat-num">{{postCount || 0}}</text>
+            <text class="stat-label">动态</text>
           </view>
           <view class="stat-divider"></view>
           <view class="stat-item">
-            <text class="stat-num">{{userInfo.serviceCount}}</text>
-            <text class="stat-label">服务次数</text>
+            <text class="stat-num">{{likeCount || 0}}</text>
+            <text class="stat-label">获赞</text>
           </view>
           <view class="stat-divider"></view>
-          <view class="stat-item">
-            <text class="stat-num">{{catCount}}</text>
-            <text class="stat-label">我的猫咪</text>
+          <view class="stat-item" bindtap="goMyCats">
+            <text class="stat-num">{{catCount || 0}}</text>
+            <text class="stat-label">猫咪</text>
           </view>
-        </view>
-      </view>
-    </view>
-  </view>
-
-  <!-- 需求快览 -->
-  <view class="section" wx:if="{{myNeeds.length > 0}}">
-    <view class="section-header">
-      <text class="section-title">📋 需求快览</text>
-      <text class="section-more" bindtap="goMyNeeds">全部 ›</text>
-    </view>
-    <!-- 状态统计 -->
-    <view class="status-summary">
-      <view class="status-item" bindtap="goMyNeeds">
-        <text class="status-num">{{statusCount.pending}}</text>
-        <text class="status-label">待接单</text>
-      </view>
-      <view class="status-item" bindtap="goMyNeeds">
-        <text class="status-num">{{statusCount.accepted}}</text>
-        <text class="status-label">已接单</text>
-      </view>
-      <view class="status-item" bindtap="goMyNeeds">
-        <text class="status-num">{{statusCount.in_progress}}</text>
-        <text class="status-label">服务中</text>
-      </view>
-      <view class="status-item" bindtap="goMyNeeds">
-        <text class="status-num">{{statusCount.completed}}</text>
-        <text class="status-label">已完成</text>
-      </view>
-    </view>
-
-    <!-- 最近需求 -->
-    <view class="need-card" wx:for="{{myNeeds}}" wx:key="id" bindtap="goNeedDetail" data-id="{{item.id}}">
-      <view class="need-card-row">
-        <view class="need-card-left">
-          <view class="cat-mini-avatar">
-            <image src="{{item.catAvatar}}" mode="aspectFill"></image>
-          </view>
-          <view>
-            <text class="need-card-title">{{item.catName}} · {{item.catCount}}只</text>
-            <text class="need-card-date">{{item.startDate}} ~ {{item.endDate}}</text>
-          </view>
-        </view>
-        <view class="status-badge status-{{item.status}}">
-          {{item.statusText}}
         </view>
       </view>
     </view>
@@ -103,51 +56,31 @@
     </scroll-view>
   </view>
 
-  <!-- 我的服务 -->
+  <!-- 我的内容 -->
   <view class="section">
     <view class="section-header">
-      <text class="section-title">📦 我的服务</text>
+      <text class="section-title">📝 我的内容</text>
     </view>
     <view class="menu-group">
-      <view class="menu-item" bindtap="goMyNeeds">
+      <view class="menu-item" bindtap="goMyPosts">
         <view class="menu-icon-wrap" style="background:#FFF2E6;">
-          <text class="menu-icon">📋</text>
+          <text class="menu-icon">📷</text>
         </view>
-        <text class="menu-text">我的喂养订单（需求方）</text>
+        <text class="menu-text">我的动态</text>
         <text class="menu-arrow">›</text>
       </view>
-      <view class="menu-item" bindtap="goMyApplies">
-        <view class="menu-icon-wrap" style="background:#E6F7FF;">
-          <text class="menu-icon">🐾</text>
+      <view class="menu-item" bindtap="goMyHelps">
+        <view class="menu-icon-wrap" style="background:#E8F8E8;">
+          <text class="menu-icon">🤝</text>
         </view>
-        <text class="menu-text">我的喂养接单（服务方）</text>
+        <text class="menu-text">我的互助</text>
         <text class="menu-arrow">›</text>
       </view>
-    </view>
-  </view>
-
-  <!-- 安全中心 -->
-  <view class="section">
-    <view class="section-header">
-      <text class="section-title">🔒 安全中心</text>
-    </view>
-    <view class="menu-group">
-      <view class="menu-item" bindtap="goAuth">
-        <view class="menu-icon-wrap" style="background:#F0FFF0;">
-          <text class="menu-icon">🪪</text>
+      <view class="menu-item" bindtap="goMyLikes">
+        <view class="menu-icon-wrap" style="background:#FFF0ED;">
+          <text class="menu-icon">❤️</text>
         </view>
-        <text class="menu-text">身份认证</text>
-        <view class="menu-right">
-          <text class="menu-badge-success" wx:if="{{userInfo.certified}}">已认证</text>
-          <text class="menu-badge-warn" wx:else>未认证</text>
-          <text class="menu-arrow">›</text>
-        </view>
-      </view>
-      <view class="menu-item" bindtap="goRating">
-        <view class="menu-icon-wrap" style="background:#FFFBE6;">
-          <text class="menu-icon">⭐</text>
-        </view>
-        <text class="menu-text">服务评价</text>
+        <text class="menu-text">我的收藏</text>
         <text class="menu-arrow">›</text>
       </view>
     </view>

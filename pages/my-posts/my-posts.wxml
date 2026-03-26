@@ -1,0 +1,23 @@
+<view class="page-container">
+  <view class="post-list" wx:if="{{posts.length > 0}}">
+    <view class="post-item" wx:for="{{posts}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
+      <image class="post-cover" src="{{item.images[0]}}" mode="aspectFill"></image>
+      <view class="post-info">
+        <text class="post-title">{{item.title}}</text>
+        <view class="post-stats">
+          <text>❤️ {{item.likes || 0}}</text>
+          <text>💬 {{item.comments || 0}}</text>
+        </view>
+      </view>
+      <view class="post-delete" catchtap="deletePost" data-id="{{item.id}}">
+        <text>删除</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:else>
+    <text class="empty-icon">📷</text>
+    <text class="empty-text">还没有发布过动态</text>
+    <view class="empty-btn" bindtap="goPublish">去发布</view>
+  </view>
+</view>

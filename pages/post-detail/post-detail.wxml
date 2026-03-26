@@ -1,0 +1,66 @@
+<view class="page-container">
+  <!-- 作者信息 -->
+  <view class="author-section">
+    <image class="author-avatar" src="{{post.userAvatar}}" mode="aspectFill"></image>
+    <view class="author-info">
+      <text class="author-name">{{post.userName}}</text>
+      <text class="post-time">{{post.time || '刚刚'}}</text>
+    </view>
+    <view class="follow-btn" wx:if="{{!isOwner}}">+ 关注</view>
+  </view>
+
+  <!-- 图片轮播 -->
+  <swiper class="image-swiper" indicator-dots="{{post.images.length > 1}}" circular autoplay="{{false}}">
+    <swiper-item wx:for="{{post.images}}" wx:key="*this">
+      <image class="post-image" src="{{item}}" mode="widthFix" bindtap="previewImage" data-url="{{item}}"></image>
+    </swiper-item>
+  </swiper>
+  <view class="image-count" wx:if="{{post.images.length > 1}}">{{currentIndex + 1}}/{{post.images.length}}</view>
+
+  <!-- 内容区域 -->
+  <view class="content-section">
+    <text class="post-title">{{post.title}}</text>
+    <text class="post-content">{{post.content}}</text>
+    
+    <!-- 话题标签 -->
+    <view class="topic-tags" wx:if="{{post.topics && post.topics.length > 0}}">
+      <text class="topic-tag" wx:for="{{post.topics}}" wx:key="*this">#{{item}}</text>
+    </view>
+
+    <!-- 关联猫咪 -->
+    <view class="cat-info" wx:if="{{post.catName}}" bindtap="goCatDetail">
+      <image class="cat-avatar" src="{{post.catAvatar}}" mode="aspectFill" wx:if="{{post.catAvatar}}"></image>
+      <text class="cat-name">🐱 {{post.catName}}</text>
+    </view>
+  </view>
+
+  <!-- 互动栏 -->
+  <view class="action-bar">
+    <view class="action-item {{post.liked ? 'liked' : ''}}" bindtap="onLike">
+      <text class="action-icon">{{post.liked ? '❤️' : '🤍'}}</text>
+      <text class="action-text">{{post.likes || 0}}</text>
+    </view>
+    <view class="action-item">
+      <text class="action-icon">💬</text>
+      <text class="action-text">{{post.comments || 0}}</text>
+    </view>
+    <view class="action-item" bindtap="onShare">
+      <text class="action-icon">↗️</text>
+      <text class="action-text">分享</text>
+    </view>
+  </view>
+
+  <!-- 评论区域（简化） -->
+  <view class="comment-section">
+    <view class="section-title">评论 ({{post.comments || 0}})</view>
+    <view class="empty-comment" wx:if="{{!comments || comments.length === 0}}">
+      <text>暂无评论，快来抢沙发~</text>
+    </view>
+  </view>
+
+  <!-- 底部评论输入 -->
+  <view class="comment-bar safe-bottom">
+    <input class="comment-input" placeholder="说点什么..." value="{{commentText}}" bindinput="onCommentInput" />
+    <view class="send-btn" bindtap="sendComment">发送</view>
+  </view>
+</view>

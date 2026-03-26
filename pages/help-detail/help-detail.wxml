@@ -1,0 +1,62 @@
+<view class="page-container">
+  <!-- 类型标签 -->
+  <view class="type-banner {{help.type === 'need' ? 'need-banner' : 'offer-banner'}}">
+    <text class="type-text">{{help.type === 'need' ? '🙋 求助信息' : '🐾 可提供帮助'}}</text>
+  </view>
+
+  <!-- 发布者信息 -->
+  <view class="user-section">
+    <image class="user-avatar" src="{{help.userAvatar}}" mode="aspectFill"></image>
+    <view class="user-info">
+      <text class="user-name">{{help.userName}}</text>
+      <text class="user-location" wx:if="{{help.location}}">📍 {{help.location}}</text>
+    </view>
+    <text class="post-time">{{help.time || '刚刚'}}</text>
+  </view>
+
+  <!-- 主要内容 -->
+  <view class="content-section">
+    <text class="help-title">{{help.title}}</text>
+    <text class="help-desc">{{help.description}}</text>
+
+    <!-- 时间信息（求助类型） -->
+    <view class="info-card" wx:if="{{help.type === 'need' && help.dateRange}}">
+      <view class="info-item">
+        <text class="info-icon">📅</text>
+        <view class="info-content">
+          <text class="info-label">需要帮忙的时间</text>
+          <text class="info-value">{{help.dateRange}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 猫咪信息（求助类型） -->
+    <view class="cat-card" wx:if="{{help.type === 'need' && help.catName}}">
+      <view class="cat-header">
+        <text class="cat-title">🐱 需要照顾的猫咪</text>
+      </view>
+      <view class="cat-info">
+        <image class="cat-avatar" src="{{help.catAvatar}}" mode="aspectFill" wx:if="{{help.catAvatar}}"></image>
+        <text class="cat-name">{{help.catName}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 联系方式 -->
+  <view class="contact-section" wx:if="{{help.contact}}">
+    <view class="contact-header">
+      <text class="contact-icon">📱</text>
+      <text class="contact-title">联系方式</text>
+    </view>
+    <text class="contact-value">{{help.contact}}</text>
+    <view class="copy-btn" bindtap="copyContact">复制</view>
+  </view>
+
+  <!-- 底部操作 -->
+  <view class="action-bar safe-bottom">
+    <view class="btn-secondary" bindtap="onMessage">💬 私信</view>
+    <view class="btn-primary" bindtap="onContact">
+      {{help.type === 'need' ? '🙋 我来帮忙' : '📞 联系TA'}}
+    </view>
+  </view>
+</view>
