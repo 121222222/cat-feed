@@ -1,4 +1,4 @@
-const app = getApp();
+const db = require('../../utils/db.js');
 const util = require('../../utils/util.js');
 
 Page({
@@ -8,12 +8,16 @@ Page({
     filteredNeeds: []
   },
 
-  onLoad() {
-    const needs = app.globalData.mockNeeds.map(n => ({
+  async onLoad() {
+    wx.showLoading({ title: '加载中...' });
+    const needs = await db.getMyNeeds();
+    wx.hideLoading();
+    const mapped = needs.map(n => ({
       ...n,
+      id: n._id,
       statusText: util.getStatusText(n.status)
     }));
-    this.setData({ allNeeds: needs, filteredNeeds: needs });
+    this.setData({ allNeeds: mapped, filteredNeeds: mapped });
   },
 
   onFilter(e) {

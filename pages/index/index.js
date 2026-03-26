@@ -1,4 +1,5 @@
 const app = getApp();
+const db = require('../../utils/db.js');
 
 Page({
   data: {
@@ -18,17 +19,36 @@ Page({
       wx.redirectTo({ url: '/pages/login/login' });
       return;
     }
-    this.setData({
-      userInfo: app.globalData.mockUser,
-      needs: app.globalData.mockNeeds.slice(0, 4),
-      feeders: app.globalData.mockFeeders
-    });
+    this.loadData();
   },
 
   onShow() {
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 0 });
     }
+    // 刷新数据
+    if (app.globalData.isLoggedIn) {
+      this.loadData();
+    }
+  },
+
+  async loadData() {
+    wx.showLoading({ title: '加载中...' });
+    try {
+      const [needsRaw, userInfo] = await Promise.all([
+        db.getRecentNeeds(4),
+        this.getUserInfo()
+      ]);
+      const needs = needsRaw.map(n => ({ ...n, id: n._id }));
+      this.setData({ userInfo, needs });
+    } catch (err) {
+      console.error('首页加载失败:', err);
+    }
+    wx.hideLoading();
+  },
+
+  getUserInfo() {
+    return app.globalData.userInfo || {};
   },
 
   onSearchTap() {
@@ -66,8 +86,8 @@ Page({
   },
 
   onPullDownRefresh() {
-    setTimeout(() => {
+    this.loadData().then(() => {
       wx.stopPullDownRefresh();
-    }, 1000);
+    });
   }
 });

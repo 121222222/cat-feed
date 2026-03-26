@@ -1,3 +1,6 @@
+const app = getApp();
+const db = require('../../utils/db.js');
+
 Page({
   data: {
     form: {
@@ -119,8 +122,8 @@ Page({
     this.setData({ catPhotos: photos });
   },
 
-  onSubmit() {
-    const { form, serviceOptions } = this.data;
+  async onSubmit() {
+    const { form, serviceOptions, catPhotos } = this.data;
     
     if (!form.catName) {
       wx.showToast({ title: '请输入猫咪名字', icon: 'none' }); return;
@@ -141,12 +144,51 @@ Page({
       title: '确认发布',
       content: `确认发布「${form.catName}」的喂养需求吗？`,
       confirmColor: '#FFBAA3',
-      success: (res) => {
+      success: async (res) => {
         if (res.confirm) {
-          wx.showToast({ title: '发布成功！', icon: 'success' });
-          setTimeout(() => {
-            wx.navigateBack();
-          }, 1500);
+          wx.showLoading({ title: '发布中...' });
+
+          // 上传猫咪照片
+          let photoUrls = [];
+          for (let i = 0; i < catPhotos.length; i++) {
+            const fileID = await db.uploadImage(catPhotos[i], `needs/${Date.now()}-${i}.jpg`);
+            if (fileID) photoUrls.push(fileID);
+          }
+
+          const userInfo = app.globalData.userInfo || {};
+          const reward = form.rewardType === 'free' ? '自愿' :
+                         form.rewardType === 'fixed' ? `${form.rewardAmount}元/天` : '面议';
+
+          const needId = await db.addNeed({
+            userName: userInfo.name || '匿名',
+            userAvatar: userInfo.avatar || '',
+            catName: form.catName,
+            catBreed: form.catBreed,
+            catCount: form.catCount,
+            catAge: form.catAge,
+            vaccinated: form.vaccinated,
+            character: form.character,
+            notes: form.notes,
+            catPhotos: photoUrls,
+            catAvatar: photoUrls[0] || '',
+            startDate: form.startDate,
+            endDate: form.endDate,
+            timeSlot: form.timeSlot,
+            services: services,
+            dormitory: form.dormitory + (form.roomNo ? form.roomNo : ''),
+            reward: reward,
+            description: form.description
+          });
+
+          wx.hideLoading();
+          if (needId) {
+            wx.showToast({ title: '发布成功！', icon: 'success' });
+            setTimeout(() => {
+              wx.navigateBack();
+            }, 1500);
+          } else {
+            wx.showToast({ title: '发布失败', icon: 'none' });
+          }
         }
       }
     });

@@ -1,4 +1,4 @@
-const app = getApp();
+const db = require('../../utils/db.js');
 
 Page({
   data: {
@@ -19,9 +19,12 @@ Page({
     rewardOptions: ['自愿', '30元/天以内', '30-50元/天', '50-80元/天', '80元/天以上']
   },
 
-  onLoad() {
-    const allNeeds = app.globalData.mockNeeds.filter(n => n.status === 'pending');
-    this.setData({ allNeeds, needs: allNeeds });
+  async onLoad() {
+    wx.showLoading({ title: '加载中...' });
+    const pendingNeeds = await db.getPendingNeeds();
+    wx.hideLoading();
+    const mapped = pendingNeeds.map(n => ({ ...n, id: n._id }));
+    this.setData({ allNeeds: mapped, needs: mapped });
   },
 
   showFilter(e) {

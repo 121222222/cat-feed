@@ -41,7 +41,7 @@ Page({
   },
 
   // 微信登录
-  onWechatLogin(e) {
+  async onWechatLogin(e) {
     if (!this.data.agreed) {
       wx.showToast({ title: '请先同意用户协议和隐私政策', icon: 'none' });
       return;
@@ -50,19 +50,29 @@ Page({
     wx.showLoading({ title: '登录中...' });
     const app = getApp();
     
-    // 模拟登录
-    setTimeout(() => {
+    try {
+      await app.loginSuccess({
+        name: '微信用户',
+        avatar: '',
+        dormitory: '',
+        phone: '',
+        certified: false,
+        catExperience: ''
+      });
       wx.hideLoading();
-      app.loginSuccess();
       wx.showToast({ title: '登录成功', icon: 'success' });
       setTimeout(() => {
         wx.switchTab({ url: '/pages/index/index' });
       }, 1000);
-    }, 1500);
+    } catch (err) {
+      wx.hideLoading();
+      console.error('登录失败:', err);
+      wx.showToast({ title: '登录失败，请重试', icon: 'none' });
+    }
   },
 
   // 手机号登录
-  onPhoneLogin() {
+  async onPhoneLogin() {
     if (!this.data.agreed) {
       wx.showToast({ title: '请先同意用户协议和隐私政策', icon: 'none' });
       return;
@@ -79,15 +89,25 @@ Page({
     wx.showLoading({ title: '登录中...' });
     const app = getApp();
 
-    // 模拟登录
-    setTimeout(() => {
+    try {
+      await app.loginSuccess({
+        name: '用户',
+        avatar: '',
+        dormitory: '',
+        phone: this.data.phone,
+        certified: false,
+        catExperience: ''
+      });
       wx.hideLoading();
-      app.loginSuccess();
       wx.showToast({ title: '登录成功', icon: 'success' });
       setTimeout(() => {
         wx.switchTab({ url: '/pages/index/index' });
       }, 1000);
-    }, 1500);
+    } catch (err) {
+      wx.hideLoading();
+      console.error('登录失败:', err);
+      wx.showToast({ title: '登录失败，请重试', icon: 'none' });
+    }
   },
 
   // 切换协议勾选

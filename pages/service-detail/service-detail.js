@@ -1,5 +1,3 @@
-const app = getApp();
-
 Page({
   data: {
     feeder: {},
@@ -11,9 +9,21 @@ Page({
   },
 
   onLoad(options) {
+    // 喂养人详情暂时使用静态数据，后续可从云数据库加载
     const id = options.id;
-    const feeder = app.globalData.mockFeeders.find(f => f.id === id) || app.globalData.mockFeeders[0];
-    this.setData({ feeder });
+    this.setData({
+      feeder: {
+        id: id,
+        name: '暂无数据',
+        avatar: '',
+        dormitory: '',
+        rating: 5.0,
+        serviceCount: 0,
+        experience: '',
+        intro: '',
+        certified: false
+      }
+    });
   },
 
   onContact() {

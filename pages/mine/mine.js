@@ -1,4 +1,5 @@
 const app = getApp();
+const db = require('../../utils/db.js');
 const util = require('../../utils/util.js');
 
 Page({
@@ -18,20 +19,26 @@ Page({
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 3 });
     }
-    // 每次显示时重新加载数据（添加猫咪返回后刷新）
+    // 每次显示时重新加载数据
     this.loadData();
   },
 
-  loadData() {
-    const userInfo = app.globalData.mockUser;
-    const cats = app.globalData.mockCats;
+  async loadData() {
+    const userInfo = app.globalData.userInfo || {};
 
-    // 加载我的需求数据
-    const needs = app.globalData.mockNeeds || [];
-    const myNeeds = needs.filter(n => n.userId === 'u001').map(n => ({
+    // 并行加载猫咪和需求数据
+    const [catsRaw, needsList] = await Promise.all([
+      db.getMyCats(),
+      db.getMyNeeds()
+    ]);
+    const cats = catsRaw.map(c => ({ ...c, id: c._id }));
+
+    const myNeeds = needsList.map(n => ({
       ...n,
+      id: n._id,
       statusText: util.getStatusText(n.status)
     }));
+
     const statusCount = {
       pending: myNeeds.filter(n => n.status === 'pending').length,
       accepted: myNeeds.filter(n => n.status === 'accepted').length,
@@ -52,11 +59,21 @@ Page({
     wx.chooseMedia({
       count: 1,
       mediaType: ['image'],
-      success: (res) => {
+      success: async (res) => {
         const avatarPath = res.tempFiles[0].tempFilePath;
-        this.setData({ 'userInfo.avatar': avatarPath });
-        // 同步到全局数据
-        app.globalData.mockUser.avatar = avatarPath;
+        wx.showLoading({ title: '上传中...' });
+        // 上传到云存储
+        const fileID = await db.uploadImage(avatarPath, `avatars/${Date.now()}.jpg`);
+        wx.hideLoading();
+        if (fileID) {
+          this.setData({ 'userInfo.avatar': fileID });
+          // 同步到云数据库
+          const userId = app.globalData.userInfo._id;
+          if (userId) {
+            await db.updateUser(userId, { avatar: fileID });
+            app.globalData.userInfo.avatar = fileID;
+          }
+        }
       }
     });
   },

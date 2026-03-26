@@ -1,13 +1,15 @@
-const app = getApp();
+const db = require('../../utils/db.js');
 
 Page({
   data: {
     needs: []
   },
 
-  onLoad() {
-    const needs = app.globalData.mockNeeds || [];
-    this.setData({ needs });
+  async onLoad() {
+    wx.showLoading({ title: '加载中...' });
+    const needs = await db.getAllNeeds();
+    wx.hideLoading();
+    this.setData({ needs: needs.map(n => ({ ...n, id: n._id })) });
   },
 
   goNeedDetail(e) {

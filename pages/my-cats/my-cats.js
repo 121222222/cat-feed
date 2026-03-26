@@ -1,4 +1,4 @@
-const app = getApp();
+const db = require('../../utils/db.js');
 
 Page({
   data: {
@@ -14,8 +14,9 @@ Page({
     this.loadCats();
   },
 
-  loadCats() {
-    this.setData({ cats: app.globalData.mockCats });
+  async loadCats() {
+    const cats = await db.getMyCats();
+    this.setData({ cats: cats.map(c => ({ ...c, id: c._id })) });
   },
 
   goAddCat() {
@@ -31,13 +32,18 @@ Page({
       title: '确认删除',
       content: '确定要删除这只猫咪信息吗？',
       confirmColor: '#FF4D4F',
-      success: (res) => {
+      success: async (res) => {
         if (res.confirm) {
           const id = e.currentTarget.dataset.id;
-          // 从全局数据中删除
-          app.globalData.mockCats = app.globalData.mockCats.filter(c => c.id !== id);
-          this.setData({ cats: app.globalData.mockCats });
-          wx.showToast({ title: '已删除', icon: 'success' });
+          wx.showLoading({ title: '删除中...' });
+          const ok = await db.deleteCat(id);
+          wx.hideLoading();
+          if (ok) {
+            wx.showToast({ title: '已删除', icon: 'success' });
+            this.loadCats();
+          } else {
+            wx.showToast({ title: '删除失败', icon: 'none' });
+          }
         }
       }
     });

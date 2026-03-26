@@ -1,4 +1,4 @@
-const app = getApp();
+const db = require('../../utils/db.js');
 
 Page({
   data: {
@@ -8,10 +8,13 @@ Page({
     remark: ''
   },
 
-  onLoad(options) {
+  async onLoad(options) {
     const id = options.id;
-    const need = app.globalData.mockNeeds.find(n => n.id === id) || app.globalData.mockNeeds[0];
-    this.setData({ need });
+    if (!id) return;
+    const need = await db.getNeedById(id);
+    if (need) {
+      this.setData({ need: { ...need, id: need._id } });
+    }
   },
 
   onIntroInput(e) { this.setData({ intro: e.detail.value }); },
@@ -29,10 +32,23 @@ Page({
       title: '确认提交',
       content: '确定提交喂养申请吗？需求方确认后您将收到通知。',
       confirmColor: '#FFBAA3',
-      success: (res) => {
+      success: async (res) => {
         if (res.confirm) {
-          wx.showToast({ title: '申请已提交！', icon: 'success' });
-          setTimeout(() => wx.navigateBack(), 1500);
+          wx.showLoading({ title: '提交中...' });
+          const applyId = await db.addApply({
+            needId: this.data.need._id,
+            needTitle: this.data.need.catName,
+            intro: this.data.intro,
+            availableTime: this.data.availableTime,
+            remark: this.data.remark
+          });
+          wx.hideLoading();
+          if (applyId) {
+            wx.showToast({ title: '申请已提交！', icon: 'success' });
+            setTimeout(() => wx.navigateBack(), 1500);
+          } else {
+            wx.showToast({ title: '提交失败', icon: 'none' });
+          }
         }
       }
     });

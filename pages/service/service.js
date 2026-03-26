@@ -1,4 +1,5 @@
 const app = getApp();
+const db = require('../../utils/db.js');
 const util = require('../../utils/util.js');
 
 Page({
@@ -22,10 +23,15 @@ Page({
     this.loadData();
   },
 
-  loadData() {
-    const needs = app.globalData.mockNeeds;
-    const myNeeds = needs.filter(n => n.userId === 'u001').map(n => ({
+  async loadData() {
+    const [myNeedsList, hotNeedsList] = await Promise.all([
+      db.getMyNeeds(),
+      db.getPendingNeeds()
+    ]);
+
+    const myNeeds = myNeedsList.map(n => ({
       ...n,
+      id: n._id,
       statusText: util.getStatusText(n.status)
     }));
 
@@ -36,14 +42,14 @@ Page({
       completed: myNeeds.filter(n => n.status === 'completed').length
     };
 
-    const hotNeeds = needs.filter(n => n.status === 'pending');
+    const hotNeeds = hotNeedsList.map(n => ({ ...n, id: n._id }));
 
     this.setData({
       myNeeds,
       statusCount,
       hotNeeds,
       myApplies: [],
-      applyCount: { reviewing: 1, approved: 0, in_progress: 0, completed: 0 }
+      applyCount: { reviewing: 0, approved: 0, in_progress: 0, completed: 0 }
     });
   },
 
