@@ -8,6 +8,17 @@
   height: 300rpx;
   background: linear-gradient(135deg, #FFBAA3, #E8A48D, #FFD4C4);
   border-radius: 0 0 50rpx 50rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 自定义背景图片 */
+.profile-bg-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .profile-info {

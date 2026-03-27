@@ -5,121 +5,426 @@
   </view>
 
   <!-- 功能选项卡 -->
-  <view class="tab-bar">
-    <view class="tab-item {{activeTab === 'notice' ? 'active' : ''}}" bindtap="switchTab" data-tab="notice">
-      <text class="tab-icon">📢</text>
-      <text class="tab-text">系统通知</text>
-    </view>
-    <view class="tab-item {{activeTab === 'announcement' ? 'active' : ''}}" bindtap="switchTab" data-tab="announcement">
-      <text class="tab-icon">📋</text>
-      <text class="tab-text">社区公告</text>
-    </view>
-    <view class="tab-item {{activeTab === 'posts' ? 'active' : ''}}" bindtap="switchTab" data-tab="posts">
-      <text class="tab-icon">🗑️</text>
-      <text class="tab-text">帖子管理</text>
-    </view>
-  </view>
-
-  <!-- 系统通知发布 -->
-  <view class="content-section" wx:if="{{activeTab === 'notice'}}">
-    <view class="section-header">
-      <text class="section-title">发布系统通知</text>
-      <text class="section-desc">通知将发送给所有用户</text>
-    </view>
-    
-    <view class="form-group">
-      <text class="form-label">通知标题</text>
-      <input class="form-input" placeholder="如：重要通知、系统维护等" value="{{noticeTitle}}" bindinput="onNoticeTitleInput" maxlength="30" />
-    </view>
-    
-    <view class="form-group">
-      <text class="form-label">通知内容</text>
-      <textarea class="form-textarea" placeholder="输入通知内容..." value="{{noticeContent}}" bindinput="onNoticeContentInput" maxlength="500"></textarea>
-      <text class="char-count">{{noticeContent.length || 0}}/500</text>
-    </view>
-
-    <view class="btn-primary" bindtap="publishNotice">发布系统通知</view>
-  </view>
-
-  <!-- 社区公告发布 -->
-  <view class="content-section" wx:if="{{activeTab === 'announcement'}}">
-    <view class="section-header">
-      <text class="section-title">发布社区公告</text>
-      <text class="section-desc">公告将显示在社区交流顶部</text>
-    </view>
-    
-    <view class="form-group">
-      <text class="form-label">公告标题</text>
-      <input class="form-input" placeholder="如：社区活动、温馨提示等" value="{{announcementTitle}}" bindinput="onAnnouncementTitleInput" maxlength="30" />
-    </view>
-    
-    <view class="form-group">
-      <text class="form-label">公告内容</text>
-      <textarea class="form-textarea" placeholder="输入公告内容..." value="{{announcementContent}}" bindinput="onAnnouncementContentInput" maxlength="500"></textarea>
-      <text class="char-count">{{announcementContent.length || 0}}/500</text>
-    </view>
-
-    <view class="btn-primary" bindtap="publishAnnouncement">发布社区公告</view>
-
-    <!-- 已发布的公告列表 -->
-    <view class="list-section" wx:if="{{announcements.length > 0}}">
-      <view class="list-header">
-        <text class="list-title">已发布公告</text>
+  <scroll-view class="tab-scroll" scroll-x enable-flex>
+    <view class="tab-bar">
+      <view class="tab-item {{activeTab === 'dashboard' ? 'active' : ''}}" bindtap="switchTab" data-tab="dashboard">
+        <text class="tab-icon">📊</text>
+        <text class="tab-text">数据概览</text>
       </view>
-      <view class="list-item" wx:for="{{announcements}}" wx:key="id">
-        <view class="item-content">
-          <text class="item-title">{{item.title}}</text>
-          <text class="item-time">{{item.createTime}}</text>
-        </view>
-        <view class="item-actions">
-          <text class="action-btn delete" bindtap="deleteAnnouncement" data-id="{{item.id}}">删除</text>
-        </view>
+      <view class="tab-item {{activeTab === 'users' ? 'active' : ''}}" bindtap="switchTab" data-tab="users">
+        <text class="tab-icon">👥</text>
+        <text class="tab-text">用户管理</text>
+      </view>
+      <view class="tab-item {{activeTab === 'content' ? 'active' : ''}}" bindtap="switchTab" data-tab="content">
+        <text class="tab-icon">📝</text>
+        <text class="tab-text">内容管理</text>
+      </view>
+      <view class="tab-item {{activeTab === 'audit' ? 'active' : ''}}" bindtap="switchTab" data-tab="audit">
+        <text class="tab-icon">🔍</text>
+        <text class="tab-text">审核中心</text>
+      </view>
+      <view class="tab-item {{activeTab === 'cats' ? 'active' : ''}}" bindtap="switchTab" data-tab="cats">
+        <text class="tab-icon">🐱</text>
+        <text class="tab-text">猫咪管理</text>
+      </view>
+      <view class="tab-item {{activeTab === 'settings' ? 'active' : ''}}" bindtap="switchTab" data-tab="settings">
+        <text class="tab-icon">⚙️</text>
+        <text class="tab-text">系统设置</text>
       </view>
     </view>
+  </scroll-view>
+
+  <!-- 1. 数据概览 -->
+  <view class="content-section" wx:if="{{activeTab === 'dashboard'}}">
+    <view class="section-header">
+      <text class="section-title">数据概览</text>
+      <text class="section-desc">平台运营数据统计</text>
+    </view>
+
+    <!-- 核心数据卡片 -->
+    <view class="stats-grid">
+      <view class="stat-card orange">
+        <text class="stat-value">{{statistics.totalUsers}}</text>
+        <text class="stat-label">用户总数</text>
+        <text class="stat-sub">今日 +{{statistics.todayUsers}}</text>
+      </view>
+      <view class="stat-card blue">
+        <text class="stat-value">{{statistics.totalPosts}}</text>
+        <text class="stat-label">帖子总数</text>
+        <text class="stat-sub">今日 +{{statistics.todayPosts}}</text>
+      </view>
+      <view class="stat-card green">
+        <text class="stat-value">{{statistics.totalHelps}}</text>
+        <text class="stat-label">互助请求</text>
+        <text class="stat-sub">进行中 {{statistics.openHelps}}</text>
+      </view>
+      <view class="stat-card purple">
+        <text class="stat-value">{{statistics.totalCats}}</text>
+        <text class="stat-label">猫咪档案</text>
+        <text class="stat-sub">已登记</text>
+      </view>
+    </view>
+
+    <!-- 快捷操作 -->
+    <view class="quick-actions">
+      <text class="quick-title">快捷操作</text>
+      <view class="quick-grid">
+        <view class="quick-btn" bindtap="switchTab" data-tab="content">
+          <text class="quick-icon">📝</text>
+          <text class="quick-text">内容管理</text>
+        </view>
+        <view class="quick-btn" bindtap="switchTab" data-tab="audit">
+          <text class="quick-icon">🔍</text>
+          <text class="quick-text">审核中心</text>
+        </view>
+        <view class="quick-btn" bindtap="switchTab" data-tab="users">
+          <text class="quick-icon">👥</text>
+          <text class="quick-text">用户管理</text>
+        </view>
+        <view class="quick-btn" bindtap="publishNotice">
+          <text class="quick-icon">📢</text>
+          <text class="quick-text">发布通知</text>
+        </view>
+      </view>
+    </view>
   </view>
 
-  <!-- 帖子管理 -->
-  <view class="content-section" wx:if="{{activeTab === 'posts'}}">
+  <!-- 2. 用户管理 -->
+  <view class="content-section" wx:if="{{activeTab === 'users'}}">
     <view class="section-header">
-      <text class="section-title">帖子管理</text>
-      <text class="section-desc">审核和管理社区帖子</text>
+      <text class="section-title">用户管理</text>
+      <text class="section-desc">管理平台用户</text>
     </view>
 
     <view class="search-bar">
       <text class="search-icon">🔍</text>
-      <input class="search-input" placeholder="搜索帖子..." value="{{searchKeyword}}" bindinput="onSearchInput" bindconfirm="searchPosts" />
+      <input class="search-input" placeholder="搜索用户名..." value="{{userSearchKeyword}}" bindinput="onUserSearchInput" bindconfirm="searchUsers" />
     </view>
 
-    <view class="empty-state" wx:if="{{posts.length === 0}}">
-      <text class="empty-icon">📭</text>
-      <text class="empty-text">暂无帖子</text>
+    <view class="empty-state" wx:if="{{users.length === 0}}">
+      <text class="empty-icon">👥</text>
+      <text class="empty-text">暂无用户数据</text>
     </view>
 
-    <view class="post-list" wx:else>
-      <view class="post-item" wx:for="{{posts}}" wx:key="id">
-        <view class="post-header">
-          <image class="post-avatar" src="{{item.userAvatar || '/assets/icons/default-avatar.png'}}" mode="aspectFill"></image>
-          <view class="post-user-info">
-            <text class="post-username">{{item.userName || '匿名用户'}}</text>
-            <text class="post-time">{{item.createTime}}</text>
+    <view class="user-list" wx:else>
+      <view class="user-item" wx:for="{{users}}" wx:key="_id">
+        <image class="user-avatar" src="{{item.avatar || '/assets/icons/default-avatar.png'}}" mode="aspectFill"></image>
+        <view class="user-info">
+          <view class="user-name-row">
+            <text class="user-name">{{item.name || '未设置昵称'}}</text>
+            <text class="user-tag certified" wx:if="{{item.certified}}">已认证</text>
+            <text class="user-tag disabled" wx:if="{{item.disabled}}">已禁用</text>
           </view>
+          <text class="user-phone">{{item.phone || '未绑定手机'}}</text>
+          <text class="user-time">注册: {{item.createTimeStr}}</text>
         </view>
-        <view class="post-content">
-          <text class="post-text">{{item.content}}</text>
-          <view class="post-images" wx:if="{{item.images && item.images.length > 0}}">
-            <image class="post-img" wx:for="{{item.images}}" wx:for-item="img" wx:key="*this" src="{{img}}" mode="aspectFill"></image>
-          </view>
-        </view>
-        <view class="post-actions">
-          <view class="action-btn danger" bindtap="deletePost" data-id="{{item.id}}" data-index="{{index}}">
-            <text>🗑️ 删除帖子</text>
+        <view class="user-actions">
+          <view class="action-btn {{item.disabled ? 'enable' : 'disable'}}" bindtap="toggleUserStatus" data-id="{{item._id}}" data-disabled="{{item.disabled}}">
+            {{item.disabled ? '启用' : '禁用'}}
           </view>
         </view>
       </view>
     </view>
 
-    <view class="load-more" wx:if="{{hasMore}}" bindtap="loadMorePosts">
+    <view class="load-more" wx:if="{{usersHasMore}}" bindtap="loadMoreUsers">
       <text>加载更多</text>
+    </view>
+  </view>
+
+  <!-- 3. 内容管理 -->
+  <view class="content-section" wx:if="{{activeTab === 'content'}}">
+    <view class="section-header">
+      <text class="section-title">内容管理</text>
+      <text class="section-desc">管理帖子、互助、评论和话题</text>
+    </view>
+
+    <!-- 内容子Tab -->
+    <view class="sub-tabs">
+      <view class="sub-tab {{contentSubTab === 'posts' ? 'active' : ''}}" bindtap="switchContentTab" data-tab="posts">帖子</view>
+      <view class="sub-tab {{contentSubTab === 'helps' ? 'active' : ''}}" bindtap="switchContentTab" data-tab="helps">互助</view>
+      <view class="sub-tab {{contentSubTab === 'comments' ? 'active' : ''}}" bindtap="switchContentTab" data-tab="comments">评论</view>
+      <view class="sub-tab {{contentSubTab === 'topics' ? 'active' : ''}}" bindtap="switchContentTab" data-tab="topics">话题</view>
+    </view>
+
+    <!-- 帖子管理 -->
+    <block wx:if="{{contentSubTab === 'posts'}}">
+      <view class="search-bar">
+        <text class="search-icon">🔍</text>
+        <input class="search-input" placeholder="搜索帖子..." value="{{postSearchKeyword}}" bindinput="onPostSearchInput" bindconfirm="searchPosts" />
+      </view>
+
+      <view class="empty-state" wx:if="{{posts.length === 0}}">
+        <text class="empty-icon">📭</text>
+        <text class="empty-text">暂无帖子</text>
+      </view>
+
+      <view class="post-list" wx:else>
+        <view class="post-item" wx:for="{{posts}}" wx:key="_id">
+          <view class="post-header">
+            <image class="post-avatar" src="{{item.userAvatar || '/assets/icons/default-avatar.png'}}" mode="aspectFill"></image>
+            <view class="post-user-info">
+              <text class="post-username">{{item.userName || '匿名用户'}}</text>
+              <text class="post-time">{{item.createTimeStr}}</text>
+            </view>
+            <text class="post-top-tag" wx:if="{{item.isTop}}">置顶</text>
+          </view>
+          <view class="post-content">
+            <text class="post-text">{{item.content}}</text>
+            <view class="post-images" wx:if="{{item.images && item.images.length > 0}}">
+              <image class="post-img" wx:for="{{item.images}}" wx:for-item="img" wx:key="*this" src="{{img}}" mode="aspectFill"></image>
+            </view>
+          </view>
+          <view class="post-stats">
+            <text>👍 {{item.likes || 0}}</text>
+            <text>💬 {{item.comments || 0}}</text>
+            <text>👁️ {{item.views || 0}}</text>
+          </view>
+          <view class="post-actions">
+            <view class="action-btn primary" bindtap="togglePostTop" data-id="{{item._id}}" data-top="{{item.isTop}}">
+              {{item.isTop ? '取消置顶' : '置顶'}}
+            </view>
+            <view class="action-btn danger" bindtap="deletePost" data-id="{{item._id}}" data-index="{{index}}">
+              删除
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="load-more" wx:if="{{postsHasMore}}" bindtap="loadMorePosts">
+        <text>加载更多</text>
+      </view>
+    </block>
+
+    <!-- 互助管理 -->
+    <block wx:if="{{contentSubTab === 'helps'}}">
+      <view class="filter-tabs">
+        <view class="filter-tab {{helpFilter === 'all' ? 'active' : ''}}" bindtap="setHelpFilter" data-filter="all">全部</view>
+        <view class="filter-tab {{helpFilter === 'open' ? 'active' : ''}}" bindtap="setHelpFilter" data-filter="open">进行中</view>
+        <view class="filter-tab {{helpFilter === 'closed' ? 'active' : ''}}" bindtap="setHelpFilter" data-filter="closed">已完成</view>
+      </view>
+
+      <view class="empty-state" wx:if="{{helps.length === 0}}">
+        <text class="empty-icon">🤝</text>
+        <text class="empty-text">暂无互助请求</text>
+      </view>
+
+      <view class="help-list" wx:else>
+        <view class="help-item" wx:for="{{helps}}" wx:key="_id">
+          <view class="help-header">
+            <text class="help-type {{item.type}}">{{item.type === 'feed' ? '喂养' : item.type === 'foster' ? '寄养' : '其他'}}</text>
+            <text class="help-status {{item.status}}">{{item.status === 'open' ? '进行中' : '已完成'}}</text>
+          </view>
+          <text class="help-title">{{item.title}}</text>
+          <text class="help-desc">{{item.description}}</text>
+          <view class="help-footer">
+            <text class="help-time">{{item.createTimeStr}}</text>
+            <view class="help-actions">
+              <view class="action-btn warning" wx:if="{{item.status === 'open'}}" bindtap="closeHelp" data-id="{{item._id}}">关闭</view>
+              <view class="action-btn danger" bindtap="deleteHelp" data-id="{{item._id}}" data-index="{{index}}">删除</view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 评论管理 -->
+    <block wx:if="{{contentSubTab === 'comments'}}">
+      <view class="empty-state" wx:if="{{comments.length === 0}}">
+        <text class="empty-icon">💬</text>
+        <text class="empty-text">暂无评论</text>
+      </view>
+
+      <view class="comment-list" wx:else>
+        <view class="comment-item" wx:for="{{comments}}" wx:key="_id">
+          <view class="comment-header">
+            <image class="comment-avatar" src="{{item.userAvatar || '/assets/icons/default-avatar.png'}}" mode="aspectFill"></image>
+            <view class="comment-user">
+              <text class="comment-name">{{item.userName || '匿名'}}</text>
+              <text class="comment-time">{{item.createTimeStr}}</text>
+            </view>
+          </view>
+          <text class="comment-content">{{item.content}}</text>
+          <view class="comment-actions">
+            <view class="action-btn danger" bindtap="deleteComment" data-id="{{item._id}}" data-postid="{{item.postId}}" data-index="{{index}}">删除</view>
+          </view>
+        </view>
+      </view>
+    </block>
+
+    <!-- 话题管理 -->
+    <block wx:if="{{contentSubTab === 'topics'}}">
+      <view class="add-topic-row">
+        <input class="topic-input" placeholder="输入话题名称" value="{{newTopicName}}" bindinput="onTopicInput" />
+        <view class="add-topic-btn" bindtap="addTopic">添加</view>
+      </view>
+
+      <view class="empty-state" wx:if="{{topics.length === 0}}">
+        <text class="empty-icon">#</text>
+        <text class="empty-text">暂无话题</text>
+      </view>
+
+      <view class="topic-list" wx:else>
+        <view class="topic-item" wx:for="{{topics}}" wx:key="_id">
+          <text class="topic-name">#{{item.name}}</text>
+          <view class="action-btn danger small" bindtap="deleteTopic" data-id="{{item._id}}" data-index="{{index}}">删除</view>
+        </view>
+      </view>
+    </block>
+  </view>
+
+  <!-- 4. 审核中心 -->
+  <view class="content-section" wx:if="{{activeTab === 'audit'}}">
+    <view class="section-header">
+      <text class="section-title">审核中心</text>
+      <text class="section-desc">处理用户举报和内容审核</text>
+    </view>
+
+    <!-- 发布系统通知 -->
+    <view class="notice-card">
+      <view class="notice-header">
+        <text class="notice-title">📢 发布系统通知</text>
+      </view>
+      <view class="form-group">
+        <input class="form-input" placeholder="通知标题" value="{{noticeTitle}}" bindinput="onNoticeTitleInput" maxlength="30" />
+      </view>
+      <view class="form-group">
+        <textarea class="form-textarea" placeholder="通知内容..." value="{{noticeContent}}" bindinput="onNoticeContentInput" maxlength="500"></textarea>
+      </view>
+      <view class="btn-primary" bindtap="publishNotice">发布通知</view>
+    </view>
+
+    <!-- 举报列表 -->
+    <view class="report-section">
+      <view class="report-header">
+        <text class="report-title">📋 举报处理</text>
+        <view class="filter-tabs small">
+          <view class="filter-tab {{reportFilter === 'pending' ? 'active' : ''}}" bindtap="setReportFilter" data-filter="pending">待处理</view>
+          <view class="filter-tab {{reportFilter === 'handled' ? 'active' : ''}}" bindtap="setReportFilter" data-filter="handled">已处理</view>
+        </view>
+      </view>
+
+      <view class="empty-state" wx:if="{{reports.length === 0}}">
+        <text class="empty-icon">✅</text>
+        <text class="empty-text">暂无举报</text>
+      </view>
+
+      <view class="report-list" wx:else>
+        <view class="report-item" wx:for="{{reports}}" wx:key="_id">
+          <view class="report-info">
+            <text class="report-type">{{item.type === 'post' ? '帖子举报' : item.type === 'comment' ? '评论举报' : '用户举报'}}</text>
+            <text class="report-reason">原因: {{item.reason}}</text>
+            <text class="report-time">{{item.createTimeStr}}</text>
+          </view>
+          <view class="report-actions" wx:if="{{item.status === 'pending'}}">
+            <view class="action-btn success" bindtap="handleReport" data-id="{{item._id}}" data-result="ignore">忽略</view>
+            <view class="action-btn danger" bindtap="handleReport" data-id="{{item._id}}" data-result="delete">删除内容</view>
+          </view>
+          <text class="report-result" wx:else>处理结果: {{item.result === 'ignore' ? '已忽略' : '已删除'}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 5. 猫咪档案管理 -->
+  <view class="content-section" wx:if="{{activeTab === 'cats'}}">
+    <view class="section-header">
+      <text class="section-title">猫咪档案管理</text>
+      <text class="section-desc">管理已登记的猫咪档案</text>
+    </view>
+
+    <view class="search-bar">
+      <text class="search-icon">🔍</text>
+      <input class="search-input" placeholder="搜索猫咪名..." value="{{catSearchKeyword}}" bindinput="onCatSearchInput" bindconfirm="searchCats" />
+    </view>
+
+    <view class="empty-state" wx:if="{{cats.length === 0}}">
+      <text class="empty-icon">🐱</text>
+      <text class="empty-text">暂无猫咪档案</text>
+    </view>
+
+    <view class="cat-list" wx:else>
+      <view class="cat-item" wx:for="{{cats}}" wx:key="_id">
+        <image class="cat-avatar" src="{{item.avatar || '/assets/icons/default-cat.png'}}" mode="aspectFill"></image>
+        <view class="cat-info">
+          <text class="cat-name">{{item.name}}</text>
+          <text class="cat-detail">{{item.breed || '未知品种'}} · {{item.gender === 'male' ? '公' : '母'}} · {{item.age || '未知'}}岁</text>
+          <text class="cat-owner">主人: {{item.ownerName || '未知'}}</text>
+        </view>
+        <view class="cat-actions">
+          <view class="action-btn danger" bindtap="deleteCat" data-id="{{item._id}}" data-index="{{index}}">删除</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="load-more" wx:if="{{catsHasMore}}" bindtap="loadMoreCats">
+      <text>加载更多</text>
+    </view>
+  </view>
+
+  <!-- 6. 系统设置 -->
+  <view class="content-section" wx:if="{{activeTab === 'settings'}}">
+    <view class="section-header">
+      <text class="section-title">系统设置</text>
+      <text class="section-desc">配置小程序基础设置</text>
+    </view>
+
+    <!-- 轮播图管理 -->
+    <view class="settings-card">
+      <view class="settings-header">
+        <text class="settings-title">🖼️ 轮播图管理</text>
+      </view>
+      <view class="banner-list">
+        <view class="banner-item" wx:for="{{banners}}" wx:key="index">
+          <image class="banner-img" src="{{item.image}}" mode="aspectFill"></image>
+          <view class="banner-actions">
+            <view class="action-btn danger small" bindtap="deleteBanner" data-index="{{index}}">删除</view>
+          </view>
+        </view>
+        <view class="add-banner" bindtap="addBanner">
+          <text class="add-icon">+</text>
+          <text class="add-text">添加轮播图</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 社区公告管理 -->
+    <view class="settings-card">
+      <view class="settings-header">
+        <text class="settings-title">📋 社区公告</text>
+      </view>
+      <view class="form-group">
+        <input class="form-input" placeholder="公告标题" value="{{announcementTitle}}" bindinput="onAnnouncementTitleInput" maxlength="30" />
+      </view>
+      <view class="form-group">
+        <textarea class="form-textarea" placeholder="公告内容..." value="{{announcementContent}}" bindinput="onAnnouncementContentInput" maxlength="500"></textarea>
+      </view>
+      <view class="btn-primary" bindtap="publishAnnouncement">发布公告</view>
+
+      <view class="announcement-list" wx:if="{{announcements.length > 0}}">
+        <view class="announcement-item" wx:for="{{announcements}}" wx:key="id">
+          <view class="announcement-content">
+            <text class="announcement-title">{{item.title}}</text>
+            <text class="announcement-time">{{item.createTime}}</text>
+          </view>
+          <view class="action-btn danger small" bindtap="deleteAnnouncement" data-id="{{item.id}}">删除</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 操作日志 -->
+    <view class="settings-card">
+      <view class="settings-header">
+        <text class="settings-title">📜 操作日志</text>
+      </view>
+      <view class="empty-state small" wx:if="{{logs.length === 0}}">
+        <text class="empty-text">暂无操作记录</text>
+      </view>
+      <view class="log-list" wx:else>
+        <view class="log-item" wx:for="{{logs}}" wx:key="_id">
+          <text class="log-action">{{item.action}}</text>
+          <text class="log-time">{{item.createTimeStr}}</text>
+        </view>
+      </view>
     </view>
   </view>
 

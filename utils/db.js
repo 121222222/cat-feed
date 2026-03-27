@@ -135,37 +135,41 @@ module.exports = {
       
       // 如果是简单调用（传入字符串作为category）
       if (typeof options === 'string') {
-        let query = postsCol.orderBy('createTime', 'desc');
+        let conditions = {};
         if (options && options !== 'all') {
-          query = postsCol.where({ category: options }).orderBy('createTime', 'desc');
+          conditions.category = options;
         }
-        const res = await query.limit(20).get();
-        return res.data;
+        const res = await postsCol.where(conditions)
+          .orderBy('createTime', 'desc')
+          .limit(20)
+          .get();
+        // 过滤已删除的帖子
+        return res.data.filter(p => !p.deleted);
       }
       
-      let query = postsCol;
+      // 基础条件
+      let conditions = {};
       
       // 分类筛选
       if (category && category !== 'all') {
-        query = query.where({ category });
+        conditions.category = category;
       }
       
       // 关键词搜索（简单模糊匹配）
       if (keyword) {
-        query = postsCol.where({
-          content: database.RegExp({
-            regexp: keyword,
-            options: 'i'
-          })
+        conditions.content = database.RegExp({
+          regexp: keyword,
+          options: 'i'
         });
       }
       
-      const res = await query
+      const res = await postsCol.where(conditions)
         .orderBy('createTime', 'desc')
         .skip((page - 1) * pageSize)
         .limit(pageSize)
         .get();
-      return res.data;
+      // 过滤已删除的帖子
+      return res.data.filter(p => !p.deleted);
     } catch (err) {
       console.error('getPosts 失败:', err);
       return [];
@@ -232,11 +236,24 @@ module.exports = {
     }
   },
 
-  /** 删除动态 */
+  /** 删除动态（通过云函数，管理员可删除任何帖子） */
   async deletePost(postId) {
     try {
-      await postsCol.doc(postId).remove();
-      return true;
+      // 调用云函数执行删除
+      const res = await wx.cloud.callFunction({
+        name: 'adminDeletePost',
+        data: {
+          postId: postId,
+          action: 'delete'  // 软删除
+        }
+      });
+      
+      if (res.result && res.result.success) {
+        return true;
+      } else {
+        console.error('云函数删除失败:', res.result && res.result.error);
+        return false;
+      }
     } catch (err) {
       console.error('deletePost 失败:', err);
       return false;
@@ -639,6 +656,359 @@ module.exports = {
     const hours = d.getHours().toString().padStart(2, '0');
     const minutes = d.getMinutes().toString().padStart(2, '0');
     return `${month}-${day} ${hours}:${minutes}`;
+  },
+
+  // ========== 管理员后台相关 ==========
+
+  /** 获取统计数据 */
+  async getStatistics() {
+    try {
+      const [usersRes, postsRes, helpsRes, catsRes] = await Promise.all([
+        usersCol.count(),
+        postsCol.count(),
+        helpsCol.count(),
+        catsCol.count()
+      ]);
+      
+      // 获取今日数据
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      const [todayUsersRes, todayPostsRes] = await Promise.all([
+        usersCol.where({
+          createTime: _.gte(database.serverDate({ offset: -24 * 60 * 60 * 1000 }))
+        }).count(),
+        postsCol.where({
+          createTime: _.gte(database.serverDate({ offset: -24 * 60 * 60 * 1000 }))
+        }).count()
+      ]);
+
+      // 获取进行中和已完成的互助数
+      const [openHelpsRes, closedHelpsRes] = await Promise.all([
+        helpsCol.where({ status: 'open' }).count(),
+        helpsCol.where({ status: 'closed' }).count()
+      ]);
+
+      return {
+        totalUsers: usersRes.total || 0,
+        todayUsers: todayUsersRes.total || 0,
+        totalPosts: postsRes.total || 0,
+        todayPosts: todayPostsRes.total || 0,
+        totalHelps: helpsRes.total || 0,
+        openHelps: openHelpsRes.total || 0,
+        closedHelps: closedHelpsRes.total || 0,
+        totalCats: catsRes.total || 0
+      };
+    } catch (err) {
+      console.error('getStatistics 失败:', err);
+      return {
+        totalUsers: 0, todayUsers: 0,
+        totalPosts: 0, todayPosts: 0,
+        totalHelps: 0, openHelps: 0, closedHelps: 0,
+        totalCats: 0
+      };
+    }
+  },
+
+  /** 获取所有用户列表（管理员用） */
+  async getAllUsers(options = {}) {
+    try {
+      const { page = 1, pageSize = 20, keyword } = options;
+      let query = usersCol;
+      
+      if (keyword) {
+        query = usersCol.where({
+          name: database.RegExp({
+            regexp: keyword,
+            options: 'i'
+          })
+        });
+      }
+      
+      const res = await query
+        .orderBy('createTime', 'desc')
+        .skip((page - 1) * pageSize)
+        .limit(pageSize)
+        .get();
+      return res.data;
+    } catch (err) {
+      console.error('getAllUsers 失败:', err);
+      return [];
+    }
+  },
+
+  /** 禁用/启用用户 */
+  async toggleUserStatus(userId, disabled) {
+    try {
+      await usersCol.doc(userId).update({
+        data: { disabled, updateTime: database.serverDate() }
+      });
+      return true;
+    } catch (err) {
+      console.error('toggleUserStatus 失败:', err);
+      return false;
+    }
+  },
+
+  /** 获取所有帖子（管理员用，包括已删除） */
+  async getAllPosts(options = {}) {
+    try {
+      const { page = 1, pageSize = 20, keyword, status } = options;
+      let conditions = {};
+      
+      if (keyword) {
+        conditions.content = database.RegExp({
+          regexp: keyword,
+          options: 'i'
+        });
+      }
+      if (status) {
+        conditions.status = status;
+      }
+      
+      let query = Object.keys(conditions).length > 0 
+        ? postsCol.where(conditions) 
+        : postsCol;
+      
+      const res = await query
+        .orderBy('createTime', 'desc')
+        .skip((page - 1) * pageSize)
+        .limit(pageSize)
+        .get();
+      return res.data;
+    } catch (err) {
+      console.error('getAllPosts 失败:', err);
+      return [];
+    }
+  },
+
+  /** 置顶/取消置顶帖子 */
+  async togglePostTop(postId, isTop) {
+    try {
+      await postsCol.doc(postId).update({
+        data: { isTop, updateTime: database.serverDate() }
+      });
+      return true;
+    } catch (err) {
+      console.error('togglePostTop 失败:', err);
+      return false;
+    }
+  },
+
+  /** 获取所有互助请求（管理员用） */
+  async getAllHelps(options = {}) {
+    try {
+      const { page = 1, pageSize = 20, status } = options;
+      let query = helpsCol;
+      
+      if (status && status !== 'all') {
+        query = helpsCol.where({ status });
+      }
+      
+      const res = await query
+        .orderBy('createTime', 'desc')
+        .skip((page - 1) * pageSize)
+        .limit(pageSize)
+        .get();
+      return res.data;
+    } catch (err) {
+      console.error('getAllHelps 失败:', err);
+      return [];
+    }
+  },
+
+  /** 获取所有评论（管理员用） */
+  async getAllComments(options = {}) {
+    try {
+      const { page = 1, pageSize = 20 } = options;
+      const res = await commentsCol
+        .orderBy('createTime', 'desc')
+        .skip((page - 1) * pageSize)
+        .limit(pageSize)
+        .get();
+      return res.data;
+    } catch (err) {
+      console.error('getAllComments 失败:', err);
+      return [];
+    }
+  },
+
+  /** 获取所有猫咪（管理员用） */
+  async getAllCats(options = {}) {
+    try {
+      const { page = 1, pageSize = 20, keyword } = options;
+      let query = catsCol;
+      
+      if (keyword) {
+        query = catsCol.where({
+          name: database.RegExp({
+            regexp: keyword,
+            options: 'i'
+          })
+        });
+      }
+      
+      const res = await query
+        .orderBy('createTime', 'desc')
+        .skip((page - 1) * pageSize)
+        .limit(pageSize)
+        .get();
+      return res.data;
+    } catch (err) {
+      console.error('getAllCats 失败:', err);
+      return [];
+    }
+  },
+
+  /** 获取举报列表 */
+  async getReports(options = {}) {
+    try {
+      const { page = 1, pageSize = 20, status } = options;
+      const reportsCol = database.collection('reports');
+      let query = reportsCol;
+      
+      if (status && status !== 'all') {
+        query = reportsCol.where({ status });
+      }
+      
+      const res = await query
+        .orderBy('createTime', 'desc')
+        .skip((page - 1) * pageSize)
+        .limit(pageSize)
+        .get();
+      return res.data;
+    } catch (err) {
+      console.error('getReports 失败:', err);
+      return [];
+    }
+  },
+
+  /** 处理举报 */
+  async handleReport(reportId, result, remark) {
+    try {
+      const reportsCol = database.collection('reports');
+      await reportsCol.doc(reportId).update({
+        data: {
+          status: 'handled',
+          result,
+          remark,
+          handleTime: database.serverDate()
+        }
+      });
+      return true;
+    } catch (err) {
+      console.error('handleReport 失败:', err);
+      return false;
+    }
+  },
+
+  /** 获取话题列表 */
+  async getTopics() {
+    try {
+      const topicsCol = database.collection('topics');
+      const res = await topicsCol.orderBy('sort', 'asc').get();
+      return res.data;
+    } catch (err) {
+      console.error('getTopics 失败:', err);
+      return [];
+    }
+  },
+
+  /** 添加话题 */
+  async addTopic(topicData) {
+    try {
+      const topicsCol = database.collection('topics');
+      const res = await topicsCol.add({
+        data: {
+          ...topicData,
+          sort: 0,
+          createTime: database.serverDate()
+        }
+      });
+      return res._id;
+    } catch (err) {
+      console.error('addTopic 失败:', err);
+      return null;
+    }
+  },
+
+  /** 删除话题 */
+  async deleteTopic(topicId) {
+    try {
+      const topicsCol = database.collection('topics');
+      await topicsCol.doc(topicId).remove();
+      return true;
+    } catch (err) {
+      console.error('deleteTopic 失败:', err);
+      return false;
+    }
+  },
+
+  /** 获取操作日志 */
+  async getOperationLogs(options = {}) {
+    try {
+      const { page = 1, pageSize = 20 } = options;
+      const logsCol = database.collection('operation_logs');
+      const res = await logsCol
+        .orderBy('createTime', 'desc')
+        .skip((page - 1) * pageSize)
+        .limit(pageSize)
+        .get();
+      return res.data;
+    } catch (err) {
+      console.error('getOperationLogs 失败:', err);
+      return [];
+    }
+  },
+
+  /** 添加操作日志 */
+  async addOperationLog(logData) {
+    try {
+      const logsCol = database.collection('operation_logs');
+      await logsCol.add({
+        data: {
+          ...logData,
+          createTime: database.serverDate()
+        }
+      });
+      return true;
+    } catch (err) {
+      console.error('addOperationLog 失败:', err);
+      return false;
+    }
+  },
+
+  /** 获取轮播图配置 */
+  async getBanners() {
+    try {
+      const configCol = database.collection('config');
+      const res = await configCol.where({ key: 'banners' }).get();
+      return res.data.length > 0 ? res.data[0].value : [];
+    } catch (err) {
+      console.error('getBanners 失败:', err);
+      return [];
+    }
+  },
+
+  /** 更新轮播图配置 */
+  async updateBanners(banners) {
+    try {
+      const configCol = database.collection('config');
+      const res = await configCol.where({ key: 'banners' }).get();
+      if (res.data.length > 0) {
+        await configCol.doc(res.data[0]._id).update({
+          data: { value: banners, updateTime: database.serverDate() }
+        });
+      } else {
+        await configCol.add({
+          data: { key: 'banners', value: banners, createTime: database.serverDate() }
+        });
+      }
+      return true;
+    } catch (err) {
+      console.error('updateBanners 失败:', err);
+      return false;
+    }
   },
 
   // ========== 图片上传 ==========
