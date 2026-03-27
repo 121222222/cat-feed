@@ -1,70 +1,31 @@
 <view class="login-page">
-  <!-- 顶部橙色背景区域 + 猫咪装饰 -->
-  <view class="login-top">
-    <view class="top-bg">
-      <!-- 猫咪线条装饰 -->
-      <view class="cat-line-deco">
-        <view class="cl-tail"></view>
-        <view class="cl-body"></view>
-        <view class="cl-neck"></view>
-        <view class="cl-head"></view>
-        <view class="cl-ear-l"></view>
-        <view class="cl-ear-r"></view>
-      </view>
-      <!-- 装饰小元素 -->
-      <view class="deco-paw paw1">🐾</view>
-      <view class="deco-paw paw2">🐾</view>
-      <view class="deco-paw paw3">🐾</view>
-      <view class="deco-fish">🐟</view>
-
-      <!-- 小猫Logo图片 -->
-      <image class="cat-logo-img" src="/assets/images/cat-logo.png" mode="aspectFit"></image>
-
-      <!-- APP名称 -->
-      <view class="app-brand">
-        <text class="app-name">喵邻帮</text>
-        <text class="app-slogan">邻里互助 · 猫咪无忧</text>
-      </view>
-    </view>
-    <!-- 波浪形底部过渡 -->
-    <view class="wave-divider"></view>
+  <!-- 背景图片 -->
+  <image class="bg-img" src="/assets/images/login-bg.png" mode="aspectFill"></image>
+  
+  <!-- 顶部Logo -->
+  <view class="top-logo">
+    <text class="logo-text">喵邻帮</text>
   </view>
-
-  <!-- 登录表单区域 -->
-  <view class="login-form-area">
-    <!-- 微信一键登录（主按钮） -->
-    <button class="login-btn wechat-btn" open-type="getUserInfo" bindgetuserinfo="onWechatLogin">
-      <text class="btn-icon">💬</text>
-      <text class="btn-text">微信一键登录</text>
+  
+  <!-- 问候语 -->
+  <view class="greeting">
+    <text class="greeting-title">你好！</text>
+    <text class="greeting-subtitle">欢迎来到喵邻帮</text>
+  </view>
+  
+  <!-- 底部按钮区域 -->
+  <view class="bottom-area">
+    <!-- 登录按钮 -->
+    <button class="btn login-btn" bindtap="onLogin">
+      <text>登录</text>
     </button>
-
-    <!-- 手机号登录 -->
-    <view class="phone-login-section">
-      <view class="divider-line">
-        <view class="line"></view>
-        <text class="divider-text">或使用手机号登录</text>
-        <view class="line"></view>
-      </view>
-
-      <view class="phone-input-wrap">
-        <text class="input-prefix">+86</text>
-        <view class="input-divider"></view>
-        <input class="phone-input" type="number" placeholder="请输入手机号" maxlength="11" value="{{phone}}" bindinput="onPhoneInput" />
-      </view>
-
-      <view class="code-input-wrap" wx:if="{{showCodeInput}}">
-        <input class="code-input" type="number" placeholder="请输入验证码" maxlength="6" value="{{code}}" bindinput="onCodeInput" />
-        <view class="code-btn {{codeCooldown > 0 ? 'disabled' : ''}}" bindtap="sendCode">
-          {{codeCooldown > 0 ? codeCooldown + 's' : '获取验证码'}}
-        </view>
-      </view>
-
-      <button class="login-btn phone-btn" wx:if="{{showCodeInput}}" bindtap="onPhoneLogin">
-        <text class="btn-text">登录</text>
-      </button>
-    </view>
-
-    <!-- 底部协议 -->
+    
+    <!-- 注册按钮 -->
+    <button class="btn register-btn" bindtap="onRegister">
+      <text>注册账号</text>
+    </button>
+    
+    <!-- 协议勾选 -->
     <view class="agreement">
       <view class="checkbox-wrap" bindtap="toggleAgreement">
         <view class="checkbox {{agreed ? 'checked' : ''}}">
@@ -78,10 +39,10 @@
         <text class="link" bindtap="showPrivacy">《隐私政策》</text>
       </text>
     </view>
-  </view>
-
-  <!-- 底部管理员入口 -->
-  <view class="bottom-admin-entry" bindtap="goAdminLogin">
-    <text class="bottom-admin-text">管理员入口</text>
+    
+    <!-- 管理员入口 -->
+    <view class="admin-entry" bindtap="goAdminLogin">
+      <text class="admin-text">管理员入口</text>
+    </view>
   </view>
 </view>
