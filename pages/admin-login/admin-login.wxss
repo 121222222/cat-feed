@@ -1,0 +1,109 @@
+/* 管理员登录页样式 */
+.page-container {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #FFBAA3 0%, #FFF7F4 40%);
+  padding: 60rpx 40rpx;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 80rpx 0 60rpx;
+}
+
+.header-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+}
+
+.header-title {
+  font-size: 44rpx;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin-bottom: 12rpx;
+}
+
+.header-sub {
+  font-size: 26rpx;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.form-card {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 50rpx 40rpx;
+  box-shadow: 0 8rpx 40rpx rgba(255, 186, 163, 0.15);
+}
+
+.form-group {
+  margin-bottom: 40rpx;
+  position: relative;
+}
+
+.form-label {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 16rpx;
+  font-weight: 500;
+}
+
+.form-input {
+  width: 100%;
+  height: 96rpx;
+  padding: 0 24rpx;
+  background: #F8F8F8;
+  border-radius: 16rpx;
+  font-size: 30rpx;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-input {
+  padding-right: 80rpx;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 16rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 36rpx;
+  padding: 10rpx;
+  z-index: 10;
+}
+
+.btn-primary {
+  margin-top: 20rpx;
+  padding: 28rpx;
+  border-radius: 50rpx;
+  background: linear-gradient(135deg, #FF8A6B, #FF6B4A);
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 8rpx 30rpx rgba(255, 107, 66, 0.35);
+}
+
+.btn-primary:active {
+  opacity: 0.85;
+  transform: scale(0.98);
+}
+
+.back-link {
+  text-align: center;
+  margin-top: 40rpx;
+  padding: 20rpx;
+}
+
+.back-link text {
+  font-size: 28rpx;
+  color: #999;
+}

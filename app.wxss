@@ -98,6 +98,9 @@ page {
 .btn-block {
   display: block;
   width: 100%;
+  box-sizing: border-box;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .btn-sm {

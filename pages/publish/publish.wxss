@@ -244,6 +244,41 @@
   border-color: #91D5FF;
 }
 
+.topic-tag.topic-add {
+  background: #FFF7F4;
+  color: #FFBAA3;
+  border: 2rpx dashed #FFD4C4;
+}
+
+/* 自定义话题输入 */
+.custom-topic-input {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid #F5EDE5;
+}
+
+.topic-input {
+  flex: 1;
+  height: 72rpx;
+  padding: 0 24rpx;
+  background: #F8F8F8;
+  border-radius: 36rpx;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.topic-confirm-btn {
+  padding: 16rpx 32rpx;
+  background: linear-gradient(135deg, #FFBAA3, #FFD4C4);
+  color: #FFFFFF;
+  font-size: 26rpx;
+  font-weight: 500;
+  border-radius: 36rpx;
+}
+
 /* 提交栏 */
 .submit-bar {
   position: fixed;
@@ -277,7 +312,7 @@
   flex: 2;
   height: 88rpx;
   border-radius: 44rpx;
-  background: linear-gradient(135deg, #FFBAA3, #E8A48D);
+  background: linear-gradient(135deg, #FF8A6B, #FF6B4A);
   color: #FFFFFF;
   font-size: 30rpx;
   font-weight: 600;

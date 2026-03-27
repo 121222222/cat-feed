@@ -1,0 +1,130 @@
+<view class="page-container">
+  <view class="admin-header">
+    <text class="admin-title">👑 管理员后台</text>
+    <text class="admin-sub">系统管理与内容审核</text>
+  </view>
+
+  <!-- 功能选项卡 -->
+  <view class="tab-bar">
+    <view class="tab-item {{activeTab === 'notice' ? 'active' : ''}}" bindtap="switchTab" data-tab="notice">
+      <text class="tab-icon">📢</text>
+      <text class="tab-text">系统通知</text>
+    </view>
+    <view class="tab-item {{activeTab === 'announcement' ? 'active' : ''}}" bindtap="switchTab" data-tab="announcement">
+      <text class="tab-icon">📋</text>
+      <text class="tab-text">社区公告</text>
+    </view>
+    <view class="tab-item {{activeTab === 'posts' ? 'active' : ''}}" bindtap="switchTab" data-tab="posts">
+      <text class="tab-icon">🗑️</text>
+      <text class="tab-text">帖子管理</text>
+    </view>
+  </view>
+
+  <!-- 系统通知发布 -->
+  <view class="content-section" wx:if="{{activeTab === 'notice'}}">
+    <view class="section-header">
+      <text class="section-title">发布系统通知</text>
+      <text class="section-desc">通知将发送给所有用户</text>
+    </view>
+    
+    <view class="form-group">
+      <text class="form-label">通知标题</text>
+      <input class="form-input" placeholder="如：重要通知、系统维护等" value="{{noticeTitle}}" bindinput="onNoticeTitleInput" maxlength="30" />
+    </view>
+    
+    <view class="form-group">
+      <text class="form-label">通知内容</text>
+      <textarea class="form-textarea" placeholder="输入通知内容..." value="{{noticeContent}}" bindinput="onNoticeContentInput" maxlength="500"></textarea>
+      <text class="char-count">{{noticeContent.length || 0}}/500</text>
+    </view>
+
+    <view class="btn-primary" bindtap="publishNotice">发布系统通知</view>
+  </view>
+
+  <!-- 社区公告发布 -->
+  <view class="content-section" wx:if="{{activeTab === 'announcement'}}">
+    <view class="section-header">
+      <text class="section-title">发布社区公告</text>
+      <text class="section-desc">公告将显示在社区交流顶部</text>
+    </view>
+    
+    <view class="form-group">
+      <text class="form-label">公告标题</text>
+      <input class="form-input" placeholder="如：社区活动、温馨提示等" value="{{announcementTitle}}" bindinput="onAnnouncementTitleInput" maxlength="30" />
+    </view>
+    
+    <view class="form-group">
+      <text class="form-label">公告内容</text>
+      <textarea class="form-textarea" placeholder="输入公告内容..." value="{{announcementContent}}" bindinput="onAnnouncementContentInput" maxlength="500"></textarea>
+      <text class="char-count">{{announcementContent.length || 0}}/500</text>
+    </view>
+
+    <view class="btn-primary" bindtap="publishAnnouncement">发布社区公告</view>
+
+    <!-- 已发布的公告列表 -->
+    <view class="list-section" wx:if="{{announcements.length > 0}}">
+      <view class="list-header">
+        <text class="list-title">已发布公告</text>
+      </view>
+      <view class="list-item" wx:for="{{announcements}}" wx:key="id">
+        <view class="item-content">
+          <text class="item-title">{{item.title}}</text>
+          <text class="item-time">{{item.createTime}}</text>
+        </view>
+        <view class="item-actions">
+          <text class="action-btn delete" bindtap="deleteAnnouncement" data-id="{{item.id}}">删除</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 帖子管理 -->
+  <view class="content-section" wx:if="{{activeTab === 'posts'}}">
+    <view class="section-header">
+      <text class="section-title">帖子管理</text>
+      <text class="section-desc">审核和管理社区帖子</text>
+    </view>
+
+    <view class="search-bar">
+      <text class="search-icon">🔍</text>
+      <input class="search-input" placeholder="搜索帖子..." value="{{searchKeyword}}" bindinput="onSearchInput" bindconfirm="searchPosts" />
+    </view>
+
+    <view class="empty-state" wx:if="{{posts.length === 0}}">
+      <text class="empty-icon">📭</text>
+      <text class="empty-text">暂无帖子</text>
+    </view>
+
+    <view class="post-list" wx:else>
+      <view class="post-item" wx:for="{{posts}}" wx:key="id">
+        <view class="post-header">
+          <image class="post-avatar" src="{{item.userAvatar || '/assets/icons/default-avatar.png'}}" mode="aspectFill"></image>
+          <view class="post-user-info">
+            <text class="post-username">{{item.userName || '匿名用户'}}</text>
+            <text class="post-time">{{item.createTime}}</text>
+          </view>
+        </view>
+        <view class="post-content">
+          <text class="post-text">{{item.content}}</text>
+          <view class="post-images" wx:if="{{item.images && item.images.length > 0}}">
+            <image class="post-img" wx:for="{{item.images}}" wx:for-item="img" wx:key="*this" src="{{img}}" mode="aspectFill"></image>
+          </view>
+        </view>
+        <view class="post-actions">
+          <view class="action-btn danger" bindtap="deletePost" data-id="{{item.id}}" data-index="{{index}}">
+            <text>🗑️ 删除帖子</text>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="load-more" wx:if="{{hasMore}}" bindtap="loadMorePosts">
+      <text>加载更多</text>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-btn" bindtap="logout">
+    <text>退出管理后台</text>
+  </view>
+</view>

@@ -10,7 +10,8 @@ Page({
     allPosts: [],
     loading: false,
     page: 1,
-    hasMore: true
+    hasMore: true,
+    searchKeyword: ''
   },
 
   onLoad() {
@@ -66,13 +67,24 @@ Page({
       }
       
       // 替换图片链接
-      const posts = postsRaw.map(p => ({
+      let posts = postsRaw.map(p => ({
         ...p,
         id: p._id,
         imgRatio: p.imgRatio || 100,
         images: (p.images || []).map(img => fileUrlMap[img] || img),
         userAvatar: fileUrlMap[p.userAvatar] || p.userAvatar || ''
       }));
+      
+      // 搜索过滤
+      const keyword = this.data.searchKeyword.trim().toLowerCase();
+      if (keyword) {
+        posts = posts.filter(p => {
+          const title = (p.title || '').toLowerCase();
+          const content = (p.content || '').toLowerCase();
+          const userName = (p.userName || '').toLowerCase();
+          return title.includes(keyword) || content.includes(keyword) || userName.includes(keyword);
+        });
+      }
       
       // 分配到左右两列（简单的交替分配，实际可用更复杂的算法）
       const leftPosts = [];
@@ -105,8 +117,21 @@ Page({
     this.loadData();
   },
 
+  onSearchInput(e) {
+    this.setData({ searchKeyword: e.detail.value });
+  },
+
+  onSearch() {
+    this.loadData();
+  },
+
+  clearSearch() {
+    this.setData({ searchKeyword: '' });
+    this.loadData();
+  },
+
   onSearchTap() {
-    wx.showToast({ title: '搜索功能开发中', icon: 'none' });
+    // 保留兼容
   },
 
   goPublish() {

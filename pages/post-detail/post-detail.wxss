@@ -51,13 +51,21 @@
 /* 图片轮播 */
 .image-swiper {
   width: 100%;
-  height: 750rpx;
+  height: auto;
+  min-height: 400rpx;
   background: #F8F8F8;
+}
+
+.swiper-item-img {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .post-image {
   width: 100%;
-  max-height: 750rpx;
+  max-height: 1000rpx;
 }
 
 .image-count {
@@ -184,6 +192,54 @@
   font-size: 26rpx;
 }
 
+/* 评论列表 */
+.comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.comment-item {
+  display: flex;
+  gap: 16rpx;
+}
+
+.comment-avatar {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 50%;
+  background: #FFEFE9;
+  flex-shrink: 0;
+}
+
+.comment-content {
+  flex: 1;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8rpx;
+}
+
+.comment-name {
+  font-size: 26rpx;
+  font-weight: 500;
+  color: #333;
+}
+
+.comment-time {
+  font-size: 22rpx;
+  color: #BBB;
+}
+
+.comment-text {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 1.6;
+}
+
 /* 底部评论输入 */
 .comment-bar {
   position: fixed;
@@ -210,7 +266,7 @@
 .send-btn {
   padding: 16rpx 32rpx;
   border-radius: 30rpx;
-  background: linear-gradient(135deg, #FFBAA3, #E8A48D);
+  background: linear-gradient(135deg, #FF8A6B, #FF6B4A);
   color: #FFFFFF;
   font-size: 28rpx;
   font-weight: 500;

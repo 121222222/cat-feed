@@ -7,6 +7,13 @@ Page({
     agreed: false
   },
 
+  // 跳转管理员登录
+  goAdminLogin() {
+    wx.navigateTo({
+      url: '/pages/admin-login/admin-login'
+    });
+  },
+
   onPhoneInput(e) {
     const phone = e.detail.value;
     this.setData({

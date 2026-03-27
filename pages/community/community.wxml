@@ -80,7 +80,7 @@
 
   <!-- 交流板块 -->
   <view class="tab-content" wx:if="{{activeTab === 1}}">
-    <view class="post-card" wx:for="{{posts}}" wx:key="id">
+    <view class="post-card" wx:for="{{posts}}" wx:key="id" bindtap="goPostDetail" data-id="{{item.id}}">
       <view class="post-user">
         <view class="avatar avatar-sm">
           <image src="{{item.avatar}}" mode="aspectFill"></image>
@@ -97,7 +97,7 @@
         </view>
       </view>
       <view class="post-actions">
-        <view class="post-action" bindtap="onLike" data-id="{{item.id}}">
+        <view class="post-action" catchtap="onLike" data-id="{{item.id}}">
           <text>{{item.liked ? '❤️' : '🤍'}} {{item.likes}}</text>
         </view>
         <view class="post-action">

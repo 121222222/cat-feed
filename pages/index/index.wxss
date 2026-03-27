@@ -148,6 +148,19 @@
   font-size: 26rpx;
 }
 
+.search-input {
+  flex: 1;
+  font-size: 26rpx;
+  color: #333;
+}
+
+.search-clear {
+  font-size: 28rpx;
+  color: #BBB;
+  padding: 8rpx;
+  margin-left: 10rpx;
+}
+
 /* 分类标签 */
 .category-tabs {
   background: #FFFFFF;

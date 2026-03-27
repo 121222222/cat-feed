@@ -175,14 +175,16 @@
   display: inline-flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   background: #FFFFFF;
   border-radius: 20rpx;
   padding: 20rpx;
   margin-right: 16rpx;
   width: 180rpx;
-  min-height: 220rpx;
+  height: 220rpx;
   box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
   box-sizing: border-box;
+  vertical-align: top;
 }
 
 .cat-card-avatar {
@@ -228,6 +230,7 @@
   background: #FFF7F4;
   border: 2rpx dashed #FFD4C4;
   justify-content: center;
+  height: 220rpx;
 }
 
 .add-icon {
@@ -398,4 +401,30 @@
 .menu-badge-warn {
   font-size: 22rpx;
   color: #FAAD14;
+}
+
+/* 管理员标签 */
+.admin-tag {
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+  background: #E8F8E8;
+  color: #52C41A;
+  font-size: 20rpx;
+  margin-right: 8rpx;
+}
+
+/* 退出登录 */
+.logout-btn {
+  background: #FFFFFF;
+  border-radius: 20rpx;
+  padding: 28rpx;
+  text-align: center;
+  color: #FF6B6B;
+  font-size: 30rpx;
+  font-weight: 500;
+  box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
+}
+
+.logout-btn:active {
+  opacity: 0.8;
 }

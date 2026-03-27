@@ -10,9 +10,11 @@
   </view>
 
   <!-- 图片轮播 -->
-  <swiper class="image-swiper" indicator-dots="{{post.images.length > 1}}" circular autoplay="{{false}}">
+  <swiper class="image-swiper" indicator-dots="{{post.images.length > 1}}" circular autoplay="{{false}}" style="height: {{swiperHeight}}px;">
     <swiper-item wx:for="{{post.images}}" wx:key="*this">
-      <image class="post-image" src="{{item}}" mode="widthFix" bindtap="previewImage" data-url="{{item}}"></image>
+      <view class="swiper-item-img">
+        <image class="post-image" src="{{item}}" mode="widthFix" bindtap="previewImage" data-url="{{item}}" bindload="onImageLoad"></image>
+      </view>
     </swiper-item>
   </swiper>
   <view class="image-count" wx:if="{{post.images.length > 1}}">{{currentIndex + 1}}/{{post.images.length}}</view>
@@ -50,9 +52,24 @@
     </view>
   </view>
 
-  <!-- 评论区域（简化） -->
+  <!-- 评论区域 -->
   <view class="comment-section">
     <view class="section-title">评论 ({{post.comments || 0}})</view>
+    
+    <!-- 评论列表 -->
+    <view class="comment-list" wx:if="{{comments && comments.length > 0}}">
+      <view class="comment-item" wx:for="{{comments}}" wx:key="_id">
+        <image class="comment-avatar" src="{{item.userAvatar}}" mode="aspectFill"></image>
+        <view class="comment-content">
+          <view class="comment-header">
+            <text class="comment-name">{{item.userName}}</text>
+            <text class="comment-time">{{item.time || '刚刚'}}</text>
+          </view>
+          <text class="comment-text">{{item.content}}</text>
+        </view>
+      </view>
+    </view>
+    
     <view class="empty-comment" wx:if="{{!comments || comments.length === 0}}">
       <text>暂无评论，快来抢沙发~</text>
     </view>

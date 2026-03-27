@@ -215,6 +215,19 @@
   border-bottom: 1rpx solid #F0F0F0;
 }
 
+/* 选择器样式 */
+.form-picker {
+  padding: 16rpx 20rpx;
+  background: #F8F8F8;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.form-picker.placeholder {
+  color: #BBB;
+}
+
 /* 提交栏 */
 .submit-bar {
   position: fixed;
@@ -228,7 +241,7 @@
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #FFBAA3, #E8A48D);
+  background: linear-gradient(135deg, #FF8A6B, #FF6B4A);
   color: #FFFFFF;
   font-size: 32rpx;
   font-weight: 600;

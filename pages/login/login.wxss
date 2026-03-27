@@ -6,6 +6,24 @@
   overflow: hidden;
 }
 
+/* ========== 管理员入口 ========== */
+.admin-entry {
+  position: absolute;
+  top: 30rpx;
+  left: 30rpx;
+  z-index: 100;
+  padding: 12rpx 24rpx;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 30rpx;
+  backdrop-filter: blur(10rpx);
+}
+
+.admin-entry-text {
+  font-size: 24rpx;
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
 /* ========== 顶部橙色区域 ========== */
 .login-top {
   position: relative;
@@ -141,155 +159,14 @@
   transform: rotate(-15deg);
 }
 
-/* ========== CSS卡通黑猫 ========== */
-.cat-mascot {
-  position: relative;
-  width: 200rpx;
+/* ========== 小猫Logo图片 ========== */
+.cat-logo-img {
+  width: 240rpx;
   height: 240rpx;
   margin-bottom: 20rpx;
-}
-
-/* 猫耳朵 */
-.cat-ear {
-  position: absolute;
-  top: 0;
-  width: 0;
-  height: 0;
-  border-left: 28rpx solid transparent;
-  border-right: 28rpx solid transparent;
-  border-bottom: 50rpx solid #2D2D2D;
-}
-
-.cat-ear-left {
-  left: 30rpx;
-  transform: rotate(-10deg);
-}
-
-.cat-ear-right {
-  right: 30rpx;
-  transform: rotate(10deg);
-}
-
-/* 猫头 */
-.cat-head {
-  position: absolute;
-  top: 35rpx;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 140rpx;
-  height: 120rpx;
-  background: #2D2D2D;
-  border-radius: 50% 50% 45% 45%;
-}
-
-/* 猫眼睛 */
-.cat-eye {
-  position: absolute;
-  top: 38rpx;
-  width: 28rpx;
-  height: 28rpx;
-  background: #FFFFFF;
-  border-radius: 50%;
-}
-
-.cat-eye::after {
-  content: '';
-  position: absolute;
-  top: 8rpx;
-  left: 8rpx;
-  width: 14rpx;
-  height: 14rpx;
-  background: #2D2D2D;
-  border-radius: 50%;
-}
-
-.cat-eye-left {
-  left: 25rpx;
-}
-
-.cat-eye-right {
-  right: 25rpx;
-}
-
-/* 胡须 */
-.whisker {
-  position: absolute;
-  top: 75rpx;
-  width: 36rpx;
-  height: 2rpx;
-  background: #FFFFFF;
-}
-
-.whisker-left-1 {
-  left: -10rpx;
-  transform: rotate(-10deg);
-}
-
-.whisker-left-2 {
-  left: -8rpx;
-  top: 82rpx;
-  transform: rotate(10deg);
-}
-
-.whisker-right-1 {
-  right: -10rpx;
-  transform: rotate(10deg);
-}
-
-.whisker-right-2 {
-  right: -8rpx;
-  top: 82rpx;
-  transform: rotate(-10deg);
-}
-
-/* 猫鼻子 */
-.cat-nose {
-  position: absolute;
-  top: 68rpx;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 8rpx solid transparent;
-  border-right: 8rpx solid transparent;
-  border-top: 10rpx solid #FFBAA3;
-}
-
-/* 猫嘴巴 */
-.cat-mouth {
-  position: absolute;
-  top: 78rpx;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 24rpx;
-  height: 12rpx;
-  border-bottom: 3rpx solid #888;
-  border-radius: 0 0 50% 50%;
-}
-
-/* 猫身体 */
-.cat-body {
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 110rpx;
-  height: 110rpx;
-  background: #2D2D2D;
-  border-radius: 50% 50% 20rpx 20rpx;
-}
-
-/* 猫尾巴 */
-.cat-tail {
-  position: absolute;
-  bottom: 30rpx;
-  right: 10rpx;
-  width: 60rpx;
-  height: 80rpx;
-  border: 8rpx solid #2D2D2D;
-  border-left: none;
-  border-bottom: none;
-  border-radius: 0 60rpx 0 0;
+  position: relative;
+  z-index: 1;
+  border-radius: 30rpx;
 }
 
 /* APP品牌 */
@@ -524,30 +401,20 @@
   color: #FFBAA3;
 }
 
-/* ========== 底部装饰 ========== */
-.bottom-deco {
+/* ========== 底部管理员入口 ========== */
+.bottom-admin-entry {
   position: fixed;
-  bottom: 40rpx;
+  bottom: 60rpx;
   left: 0;
   right: 0;
   display: flex;
   justify-content: center;
-  gap: 30rpx;
-  opacity: 0.15;
+  z-index: 100;
 }
 
-.paw-print {
-  font-size: 36rpx;
-}
-
-.paw-print:nth-child(1) {
-  transform: rotate(-20deg);
-}
-
-.paw-print:nth-child(2) {
-  transform: rotate(5deg) translateY(-10rpx);
-}
-
-.paw-print:nth-child(3) {
-  transform: rotate(25deg);
+.bottom-admin-text {
+  font-size: 26rpx;
+  color: #999999;
+  letter-spacing: 2rpx;
+  text-decoration: underline;
 }

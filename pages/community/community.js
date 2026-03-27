@@ -130,6 +130,11 @@ Page({
   },
 
   onNewPost() {
-    wx.showToast({ title: '发帖功能开发中', icon: 'none' });
+    wx.navigateTo({ url: '/pages/publish/publish' });
+  },
+
+  goPostDetail(e) {
+    const id = e.currentTarget.dataset.id;
+    wx.navigateTo({ url: `/pages/post-detail/post-detail?id=${id}` });
   }
 });

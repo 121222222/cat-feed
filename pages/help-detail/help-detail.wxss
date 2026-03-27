@@ -216,7 +216,8 @@
 
 .btn-secondary {
   flex: 1;
-  padding: 24rpx;
+  height: 88rpx;
+  line-height: 88rpx;
   border-radius: 44rpx;
   background: #F5F5F5;
   color: #666;
@@ -226,9 +227,10 @@
 
 .btn-primary {
   flex: 2;
-  padding: 24rpx;
+  height: 88rpx;
+  line-height: 88rpx;
   border-radius: 44rpx;
-  background: linear-gradient(135deg, #FFBAA3, #E8A48D);
+  background: linear-gradient(135deg, #FF8A6B, #FF6B4A);
   color: #FFFFFF;
   font-size: 30rpx;
   font-weight: 600;

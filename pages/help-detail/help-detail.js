@@ -45,18 +45,26 @@ Page({
   },
 
   onContact() {
-    const contact = this.data.help.contact;
+    const help = this.data.help;
+    const contact = help.contact;
+    const location = help.location;
+    
     if (contact) {
+      let content = contact;
+      if (location) {
+        content = `楼栋: ${location}\n联系方式: ${contact}`;
+      }
+      
       wx.showModal({
         title: '联系方式',
-        content: contact,
+        content: content,
         confirmText: '复制',
         success: (res) => {
           if (res.confirm) {
             wx.setClipboardData({
               data: contact,
               success: () => {
-                wx.showToast({ title: '已复制', icon: 'success' });
+                wx.showToast({ title: '已复制联系方式', icon: 'success' });
               }
             });
           }

@@ -14,6 +14,8 @@ const appliesCol = database.collection('applies');
 const messagesCol = database.collection('messages');
 const postsCol = database.collection('posts');
 const helpsCol = database.collection('helps');
+const commentsCol = database.collection('comments');
+const announcementsCol = database.collection('announcements');
 
 module.exports = {
   db: database,
@@ -126,14 +128,43 @@ module.exports = {
 
   // ========== 动态/帖子相关 ==========
 
-  /** 获取动态列表 */
-  async getPosts(category, limit = 20) {
+  /** 获取动态列表（支持分页和搜索） */
+  async getPosts(options = {}) {
     try {
-      let query = postsCol.orderBy('createTime', 'desc');
-      if (category && category !== 'all') {
-        query = postsCol.where({ category }).orderBy('createTime', 'desc');
+      const { category, page = 1, pageSize = 20, keyword } = options;
+      
+      // 如果是简单调用（传入字符串作为category）
+      if (typeof options === 'string') {
+        let query = postsCol.orderBy('createTime', 'desc');
+        if (options && options !== 'all') {
+          query = postsCol.where({ category: options }).orderBy('createTime', 'desc');
+        }
+        const res = await query.limit(20).get();
+        return res.data;
       }
-      const res = await query.limit(limit).get();
+      
+      let query = postsCol;
+      
+      // 分类筛选
+      if (category && category !== 'all') {
+        query = query.where({ category });
+      }
+      
+      // 关键词搜索（简单模糊匹配）
+      if (keyword) {
+        query = postsCol.where({
+          content: database.RegExp({
+            regexp: keyword,
+            options: 'i'
+          })
+        });
+      }
+      
+      const res = await query
+        .orderBy('createTime', 'desc')
+        .skip((page - 1) * pageSize)
+        .limit(pageSize)
+        .get();
       return res.data;
     } catch (err) {
       console.error('getPosts 失败:', err);
@@ -208,6 +239,61 @@ module.exports = {
       return true;
     } catch (err) {
       console.error('deletePost 失败:', err);
+      return false;
+    }
+  },
+
+  // ========== 评论相关 ==========
+
+  /** 获取帖子的评论列表 */
+  async getComments(postId) {
+    try {
+      const res = await commentsCol.where({ postId })
+        .orderBy('createTime', 'desc')
+        .limit(50)
+        .get();
+      return res.data;
+    } catch (err) {
+      console.error('getComments 失败:', err);
+      return [];
+    }
+  },
+
+  /** 添加评论 */
+  async addComment(commentData) {
+    try {
+      const res = await commentsCol.add({
+        data: {
+          ...commentData,
+          createTime: database.serverDate()
+        }
+      });
+      // 更新帖子评论数
+      if (commentData.postId) {
+        await postsCol.doc(commentData.postId).update({
+          data: { comments: _.inc(1) }
+        });
+      }
+      return res._id;
+    } catch (err) {
+      console.error('addComment 失败:', err);
+      return null;
+    }
+  },
+
+  /** 删除评论 */
+  async deleteComment(commentId, postId) {
+    try {
+      await commentsCol.doc(commentId).remove();
+      // 更新帖子评论数
+      if (postId) {
+        await postsCol.doc(postId).update({
+          data: { comments: _.inc(-1) }
+        });
+      }
+      return true;
+    } catch (err) {
+      console.error('deleteComment 失败:', err);
       return false;
     }
   },
@@ -446,6 +532,113 @@ module.exports = {
       console.error('addMessage 失败:', err);
       return null;
     }
+  },
+
+  /** 添加系统通知（管理员用） */
+  async addSystemNotice(noticeData) {
+    try {
+      const res = await messagesCol.add({
+        data: {
+          ...noticeData,
+          type: 'system',
+          icon: '🔔',
+          avatarBg: '#E6F7FF',
+          read: false,
+          isGlobal: true, // 全局通知
+          createTime: database.serverDate()
+        }
+      });
+      return res._id;
+    } catch (err) {
+      console.error('addSystemNotice 失败:', err);
+      return null;
+    }
+  },
+
+  /** 获取系统通知列表 */
+  async getSystemNotices(limit = 20) {
+    try {
+      const res = await messagesCol.where({ type: 'system', isGlobal: true })
+        .orderBy('createTime', 'desc')
+        .limit(limit)
+        .get();
+      return res.data;
+    } catch (err) {
+      console.error('getSystemNotices 失败:', err);
+      return [];
+    }
+  },
+
+  // ========== 社区公告相关 ==========
+
+  /** 获取公告列表 */
+  async getAnnouncements(limit = 20) {
+    try {
+      const res = await announcementsCol
+        .orderBy('createTime', 'desc')
+        .limit(limit)
+        .get();
+      return res.data.map(item => ({
+        ...item,
+        id: item._id,
+        createTime: this.formatDate(item.createTime)
+      }));
+    } catch (err) {
+      console.error('getAnnouncements 失败:', err);
+      return [];
+    }
+  },
+
+  /** 获取最新公告（社区顶部显示） */
+  async getLatestAnnouncement() {
+    try {
+      const res = await announcementsCol
+        .orderBy('createTime', 'desc')
+        .limit(1)
+        .get();
+      return res.data.length > 0 ? res.data[0] : null;
+    } catch (err) {
+      console.error('getLatestAnnouncement 失败:', err);
+      return null;
+    }
+  },
+
+  /** 添加公告 */
+  async addAnnouncement(data) {
+    try {
+      const res = await announcementsCol.add({
+        data: {
+          ...data,
+          createTime: database.serverDate()
+        }
+      });
+      return res._id;
+    } catch (err) {
+      console.error('addAnnouncement 失败:', err);
+      return null;
+    }
+  },
+
+  /** 删除公告 */
+  async deleteAnnouncement(id) {
+    try {
+      await announcementsCol.doc(id).remove();
+      return true;
+    } catch (err) {
+      console.error('deleteAnnouncement 失败:', err);
+      return false;
+    }
+  },
+
+  /** 格式化日期 */
+  formatDate(date) {
+    if (!date) return '';
+    const d = new Date(date);
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const day = d.getDate().toString().padStart(2, '0');
+    const hours = d.getHours().toString().padStart(2, '0');
+    const minutes = d.getMinutes().toString().padStart(2, '0');
+    return `${month}-${day} ${hours}:${minutes}`;
   },
 
   // ========== 图片上传 ==========

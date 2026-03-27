@@ -27,7 +27,7 @@
 
     <!-- 内容输入 -->
     <view class="form-section">
-      <textarea class="content-textarea" placeholder="分享你和猫咪的日常故事、养猫心得、趣事萌照...&#10;&#10;可以聊聊：&#10;· 猫咪今天做了什么可爱的事&#10;· 养猫的小技巧&#10;· 猫咪的健康日常" maxlength="1000" value="{{form.content}}" bindinput="onInput" data-field="content"></textarea>
+      <textarea class="content-textarea" placeholder="分享你和猫咪的日常故事、养猫心得、趣事萌照..." maxlength="1000" value="{{form.content}}" bindinput="onInput" data-field="content"></textarea>
       <text class="content-count">{{form.content.length || 0}}/1000</text>
     </view>
 
@@ -89,6 +89,15 @@
         <view class="topic-tag {{item.checked ? 'active' : ''}}" wx:for="{{topicOptions}}" wx:key="name" bindtap="toggleTopic" data-index="{{index}}">
           <text>#{{item.name}}</text>
         </view>
+        <!-- 自定义话题入口 -->
+        <view class="topic-tag topic-add" bindtap="addCustomTopic">
+          <text>+ 自定义</text>
+        </view>
+      </view>
+      <!-- 自定义话题输入框 -->
+      <view class="custom-topic-input" wx:if="{{showCustomTopic}}">
+        <input class="topic-input" placeholder="输入自定义话题" maxlength="10" value="{{customTopicValue}}" bindinput="onCustomTopicInput" />
+        <view class="topic-confirm-btn" bindtap="confirmCustomTopic">添加</view>
       </view>
     </view>
   </view>

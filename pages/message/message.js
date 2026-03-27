@@ -45,16 +45,6 @@ Page({
         unread: false
       },
       {
-        id: 'm005',
-        type: 'notice',
-        icon: '📢',
-        avatarBg: '#FFFBE6',
-        title: '平台公告',
-        preview: '【重要】宿舍区养猫新规则发布，请所有养猫同事查看',
-        time: '3月18日',
-        unread: false
-      },
-      {
         id: 'm006',
         type: 'system',
         icon: '⏰',
@@ -90,7 +80,6 @@ Page({
     switch(tab) {
       case 1: filtered = all.filter(m => m.type === 'chat'); break;
       case 2: filtered = all.filter(m => m.type === 'system'); break;
-      case 3: filtered = all.filter(m => m.type === 'notice'); break;
       default: filtered = all;
     }
     this.setData({ messages: filtered });

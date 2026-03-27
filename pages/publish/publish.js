@@ -64,6 +64,39 @@ Page({
     this.setData({ [key]: !this.data.topicOptions[index].checked });
   },
 
+  // 显示自定义话题输入框
+  addCustomTopic() {
+    this.setData({ showCustomTopic: !this.data.showCustomTopic });
+  },
+
+  // 自定义话题输入
+  onCustomTopicInput(e) {
+    this.setData({ customTopicValue: e.detail.value });
+  },
+
+  // 确认添加自定义话题
+  confirmCustomTopic() {
+    const { customTopicValue, topicOptions } = this.data;
+    if (!customTopicValue.trim()) {
+      wx.showToast({ title: '请输入话题名称', icon: 'none' });
+      return;
+    }
+    // 检查是否已存在
+    const exists = topicOptions.some(t => t.name === customTopicValue.trim());
+    if (exists) {
+      wx.showToast({ title: '该话题已存在', icon: 'none' });
+      return;
+    }
+    // 添加新话题并选中
+    const newTopic = { name: customTopicValue.trim(), checked: true };
+    this.setData({
+      topicOptions: [...topicOptions, newTopic],
+      customTopicValue: '',
+      showCustomTopic: false
+    });
+    wx.showToast({ title: '话题已添加', icon: 'success' });
+  },
+
   // 选择照片
   choosePhoto() {
     const that = this;

@@ -3,6 +3,14 @@
   padding: 30rpx;
 }
 
+/* 保存按钮样式覆盖 */
+.form-container .btn-primary.btn-block {
+  margin-left: 0;
+  margin-right: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
 .avatar-section {
   display: flex;
   flex-direction: column;

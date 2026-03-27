@@ -1,0 +1,30 @@
+<view class="page-container">
+  <view class="header">
+    <text class="header-icon">👑</text>
+    <text class="header-title">管理员登录</text>
+    <text class="header-sub">仅限管理员使用</text>
+  </view>
+
+  <view class="form-card">
+    <view class="form-group">
+      <text class="form-label">管理员账号</text>
+      <input class="form-input" placeholder="请输入管理员手机号" type="number" maxlength="11" value="{{adminPhone}}" bindinput="onPhoneInput" />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">管理员密码</text>
+      <view class="input-wrapper">
+        <input class="form-input password-input" placeholder="请输入管理员密码" password="{{!showPassword}}" value="{{adminPassword}}" bindinput="onPasswordInput" />
+        <view class="toggle-password" bindtap="togglePassword">
+          <text>{{showPassword ? '🙈' : '👁️'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="btn-primary" bindtap="onAdminLogin">登录管理后台</view>
+
+    <view class="back-link" bindtap="goBack">
+      <text>← 返回普通登录</text>
+    </view>
+  </view>
+</view>

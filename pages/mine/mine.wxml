@@ -113,7 +113,21 @@
         <text class="menu-text">帮助中心</text>
         <text class="menu-arrow">›</text>
       </view>
+      <!-- 管理员入口 -->
+      <view class="menu-item" wx:if="{{isAdmin}}" bindtap="goAdmin">
+        <view class="menu-icon-wrap" style="background:#E8F8E8;">
+          <text class="menu-icon">👑</text>
+        </view>
+        <text class="menu-text">管理员后台</text>
+        <view class="admin-tag">管理</view>
+        <text class="menu-arrow">›</text>
+      </view>
     </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="section">
+    <view class="logout-btn" bindtap="onLogout">退出登录</view>
   </view>
 
   <view style="height: 140rpx;"></view>

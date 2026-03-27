@@ -15,12 +15,18 @@ Page({
       location: '',
       contact: ''
     },
-    myCats: []
+    myCats: [],
+    presetType: false,
+    dormitoryOptions: ['1栋', '2栋', '3栋', '4栋', '5栋', '6栋', '7栋', '8栋', '9栋', '10栋', '11栋'],
+    dormitoryIndex: -1
   },
 
   onLoad(options) {
     if (options.type) {
-      this.setData({ 'form.type': options.type });
+      this.setData({ 
+        'form.type': options.type,
+        presetType: true
+      });
     }
     this.loadMyCats();
   },
@@ -50,6 +56,14 @@ Page({
   onDateChange(e) {
     const field = e.currentTarget.dataset.field;
     this.setData({ [`form.${field}`]: e.detail.value });
+  },
+
+  onDormitoryChange(e) {
+    const index = e.detail.value;
+    this.setData({
+      dormitoryIndex: index,
+      'form.location': this.data.dormitoryOptions[index]
+    });
   },
 
   selectCat(e) {
@@ -85,7 +99,7 @@ Page({
     wx.showModal({
       title: '确认发布',
       content: '确认发布这条互助信息吗？',
-      confirmColor: '#FFBAA3',
+      confirmColor: '#FF8A6B',
       success: async (res) => {
         if (res.confirm) {
           wx.showLoading({ title: '发布中...', mask: true });
@@ -101,6 +115,7 @@ Page({
               contact: form.contact.trim(),
               userName: userInfo.name || '匿名',
               userAvatar: userInfo.avatar || '',
+              userId: userInfo._id || '',
               time: '刚刚'
             };
 

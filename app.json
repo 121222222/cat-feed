@@ -15,7 +15,9 @@
     "pages/settings/settings",
     "pages/help/help",
     "pages/login/login",
-    "pages/my-posts/my-posts"
+    "pages/my-posts/my-posts",
+    "pages/admin/admin",
+    "pages/admin-login/admin-login"
   ],
   "window": {
     "backgroundTextStyle": "light",

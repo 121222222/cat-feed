@@ -22,9 +22,10 @@
       </view>
       <!-- 搜索栏 -->
       <view class="search-wrap">
-        <view class="search-box" bindtap="onSearchTap">
+        <view class="search-box">
           <text class="search-icon">🔍</text>
-          <text class="search-placeholder">搜索猫咪日常、品种...</text>
+          <input class="search-input" placeholder="搜索猫咪日常、品种..." value="{{searchKeyword}}" bindinput="onSearchInput" bindconfirm="onSearch" confirm-type="search" />
+          <text class="search-clear" wx:if="{{searchKeyword}}" bindtap="clearSearch">✕</text>
         </view>
       </view>
     </view>
