@@ -1,0 +1,235 @@
+.register-page {
+  min-height: 100vh;
+  background: #FFF7F4;
+  padding: 40rpx;
+  box-sizing: border-box;
+}
+
+/* 顶部标题 */
+.header {
+  text-align: center;
+  margin-bottom: 60rpx;
+}
+
+.title {
+  display: block;
+  font-size: 48rpx;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+.subtitle {
+  display: block;
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 头像区域 */
+.avatar-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40rpx;
+}
+
+.avatar-wrap {
+  width: 180rpx;
+  height: 180rpx;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #FFFFFF;
+  box-shadow: 0 8rpx 30rpx rgba(255, 186, 163, 0.2);
+  border: 4rpx dashed #FFD4C4;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #FFF7F4;
+}
+
+.avatar-icon {
+  font-size: 48rpx;
+  margin-bottom: 8rpx;
+}
+
+.avatar-text {
+  font-size: 20rpx;
+  color: #999;
+}
+
+/* 表单区域 */
+.form-section {
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.1);
+}
+
+.form-item {
+  margin-bottom: 30rpx;
+}
+
+.form-item:last-child {
+  margin-bottom: 0;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16rpx;
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.label-icon {
+  margin-right: 8rpx;
+}
+
+.required {
+  color: #FF6B6B;
+  margin-left: 4rpx;
+}
+
+.form-input {
+  width: 100%;
+  height: 88rpx;
+  background: #F8F8F8;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.form-input::placeholder {
+  color: #CCC;
+}
+
+/* 公寓选择行 */
+.apartment-row {
+  display: flex;
+  gap: 16rpx;
+}
+
+.building-picker {
+  flex: 1;
+}
+
+.picker-content {
+  width: 100%;
+  height: 88rpx;
+  background: #F8F8F8;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: #333;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.picker-content.placeholder {
+  color: #CCC;
+}
+
+.picker-arrow {
+  font-size: 20rpx;
+  color: #999;
+}
+
+.room-input {
+  flex: 1;
+  height: 88rpx;
+  background: #F8F8F8;
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  font-size: 28rpx;
+  color: #333;
+  box-sizing: border-box;
+}
+
+/* 养猫经验选项 */
+.exp-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.exp-option {
+  flex: 1;
+  min-width: calc(50% - 8rpx);
+  height: 72rpx;
+  background: #F8F8F8;
+  border-radius: 12rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26rpx;
+  color: #666;
+  transition: all 0.2s ease;
+}
+
+.exp-option.active {
+  background: linear-gradient(135deg, #FFBAA3, #FFD4C4);
+  color: #FFFFFF;
+  font-weight: 500;
+}
+
+/* 按钮区域 */
+.btn-section {
+  margin-top: 60rpx;
+}
+
+.register-btn {
+  width: 100%;
+  height: 96rpx;
+  background: linear-gradient(135deg, #FFBAA3, #FFD4C4);
+  border-radius: 48rpx;
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: 600;
+  letter-spacing: 4rpx;
+  border: none;
+  box-shadow: 0 8rpx 30rpx rgba(255, 186, 163, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 96rpx;
+}
+
+.register-btn::after {
+  border: none;
+}
+
+.register-btn:active {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+.login-link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30rpx;
+  font-size: 26rpx;
+  color: #999;
+}
+
+.login-link .link {
+  color: #FFBAA3;
+  font-weight: 500;
+  margin-left: 8rpx;
+}

@@ -6,6 +6,7 @@
     "pages/mine/mine",
     "pages/publish/publish",
     "pages/publish-help/publish-help",
+    "pages/publish-talk/publish-talk",
     "pages/post-detail/post-detail",
     "pages/help-detail/help-detail",
     "pages/my-cats/my-cats",
@@ -17,7 +18,9 @@
     "pages/login/login",
     "pages/my-posts/my-posts",
     "pages/admin/admin",
-    "pages/admin-login/admin-login"
+    "pages/admin-login/admin-login",
+    "pages/my-drafts/my-drafts",
+    "pages/register/register"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -1,7 +1,19 @@
 <view class="page-container">
   <view class="form-container">
-    <!-- 照片上传区域 - 放在最顶部突出 -->
-    <view class="photo-section">
+    <!-- 媒体类型切换 -->
+    <view class="media-type-switch">
+      <view class="media-type-item {{mediaType === 'image' ? 'active' : ''}}" bindtap="switchMediaType" data-type="image">
+        <text class="media-type-icon">📷</text>
+        <text>图片</text>
+      </view>
+      <view class="media-type-item {{mediaType === 'video' ? 'active' : ''}}" bindtap="switchMediaType" data-type="video">
+        <text class="media-type-icon">🎬</text>
+        <text>视频</text>
+      </view>
+    </view>
+
+    <!-- 照片上传区域 -->
+    <view class="photo-section" wx:if="{{mediaType === 'image'}}">
       <view class="photo-upload-area">
         <view class="photo-item" wx:for="{{photos}}" wx:key="*this">
           <image src="{{item}}" mode="aspectFill" class="photo-img" bindtap="previewPhoto" data-url="{{item}}"></image>
@@ -16,6 +28,53 @@
       <view class="photo-tips">
         <text class="tip-icon">💡</text>
         <text>添加清晰的猫咪照片，让分享更生动~</text>
+      </view>
+    </view>
+
+    <!-- 视频上传区域 -->
+    <view class="video-section" wx:if="{{mediaType === 'video'}}">
+      <view class="video-upload-area">
+        <!-- 已选择的视频 -->
+        <view class="video-preview" wx:if="{{video.tempFilePath}}">
+          <video 
+            class="video-player" 
+            src="{{video.tempFilePath}}" 
+            controls 
+            object-fit="contain"
+            show-center-play-btn="{{true}}"
+            enable-progress-gesture="{{false}}"
+          ></video>
+          <view class="video-delete" catchtap="deleteVideo">×</view>
+          <view class="video-duration">{{video.durationText}}</view>
+        </view>
+        <!-- 添加视频按钮 -->
+        <view class="video-add" bindtap="chooseVideo" wx:if="{{!video.tempFilePath}}">
+          <text class="video-add-icon">🎬</text>
+          <text class="video-add-text">添加视频</text>
+          <text class="video-limit">最长60秒</text>
+        </view>
+      </view>
+      <!-- 视频封面设置 -->
+      <view class="video-cover-section" wx:if="{{video.tempFilePath}}">
+        <view class="section-header">
+          <text class="section-icon">🖼️</text>
+          <text class="section-title">视频封面</text>
+          <text class="section-opt">（首页展示用）</text>
+        </view>
+        <view class="video-cover-area">
+          <view class="video-cover-preview" wx:if="{{video.thumbTempFilePath}}">
+            <image class="cover-img" src="{{video.thumbTempFilePath}}" mode="aspectFill"></image>
+            <view class="cover-change" bindtap="chooseVideoCover">更换封面</view>
+          </view>
+          <view class="video-cover-add" wx:else bindtap="chooseVideoCover">
+            <text class="cover-add-icon">+</text>
+            <text class="cover-add-text">选择封面图</text>
+          </view>
+        </view>
+      </view>
+      <view class="photo-tips">
+        <text class="tip-icon">💡</text>
+        <text>上传有趣的猫咪视频，最长支持60秒~</text>
       </view>
     </view>
 

@@ -2,7 +2,7 @@ const app = getApp();
 
 // 管理员账号配置
 const ADMIN_ACCOUNTS = [
-  { phone: '15820430351', password: 'admin070025' }
+  { phone: '15820430351', password: 'Wzx15820430351' }
 ];
 
 Page({

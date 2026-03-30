@@ -1,98 +1,106 @@
 .page-container {
   padding: 20rpx;
-  background: #F8F8F8;
+  background: #FFF7F4;
   min-height: 100vh;
 }
 
-.post-list {
+.draft-list {
   display: flex;
   flex-direction: column;
   gap: 20rpx;
 }
 
-.post-item {
+.draft-item {
   display: flex;
   align-items: center;
   background: #FFFFFF;
   border-radius: 16rpx;
   padding: 20rpx;
-  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.06);
+  box-shadow: 0 4rpx 12rpx rgba(255, 186, 163, 0.08);
 }
 
-.post-cover {
-  width: 160rpx;
-  height: 160rpx;
+.draft-cover {
+  width: 140rpx;
+  height: 140rpx;
   border-radius: 12rpx;
   background: #FFEFE9;
-  flex-shrink: 0;
-}
-
-.cover-wrap {
-  position: relative;
-  width: 160rpx;
-  height: 160rpx;
-  border-radius: 12rpx;
-  overflow: hidden;
   margin-right: 20rpx;
   flex-shrink: 0;
-  background: #FFEFE9;
+  overflow: hidden;
+  position: relative;
 }
 
-.cover-placeholder {
+.draft-cover image {
+  width: 100%;
+  height: 100%;
+}
+
+.draft-cover-placeholder {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #F5F5F5, #E8E8E8);
-}
-
-.placeholder-icon {
   font-size: 48rpx;
 }
 
-.video-badge {
+.media-type-tag {
   position: absolute;
   bottom: 8rpx;
   right: 8rpx;
-  display: flex;
-  align-items: center;
-  gap: 4rpx;
-  padding: 4rpx 10rpx;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.5);
   border-radius: 8rpx;
+  padding: 4rpx 8rpx;
   font-size: 20rpx;
-  color: #FFF;
 }
 
-.video-icon {
-  font-size: 18rpx;
-}
-
-.post-info {
+.draft-info {
   flex: 1;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
 }
 
-.post-title {
+.draft-title {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   overflow: hidden;
   font-size: 28rpx;
   font-weight: 600;
   color: #333;
-  margin-bottom: 12rpx;
 }
 
-.post-stats {
-  display: flex;
-  gap: 24rpx;
+.draft-content {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
   font-size: 24rpx;
+  color: #666;
+}
+
+.draft-meta {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.draft-time {
+  font-size: 22rpx;
   color: #999;
 }
 
-.post-delete {
+.draft-media-count {
+  font-size: 22rpx;
+  color: #FFBAA3;
+  background: #FFF2ED;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.draft-delete {
   padding: 12rpx 20rpx;
   border-radius: 20rpx;
   background: #FFF2F0;
@@ -101,6 +109,11 @@
   flex-shrink: 0;
 }
 
+.draft-delete:active {
+  opacity: 0.7;
+}
+
+/* 空状态 */
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -114,9 +127,16 @@
 }
 
 .empty-text {
-  font-size: 28rpx;
+  font-size: 32rpx;
+  color: #666;
+  font-weight: 500;
+  margin-bottom: 12rpx;
+}
+
+.empty-tip {
+  font-size: 26rpx;
   color: #999;
-  margin-bottom: 30rpx;
+  margin-bottom: 40rpx;
 }
 
 .empty-btn {
@@ -126,4 +146,8 @@
   color: #FFFFFF;
   font-size: 28rpx;
   font-weight: 500;
+}
+
+.empty-btn:active {
+  opacity: 0.8;
 }

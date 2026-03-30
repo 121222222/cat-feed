@@ -29,45 +29,13 @@ Page({
         time: '2026-03-01 发布'
       }
     ],
-    posts: [
-      {
-        id: 'p001',
-        userName: '小美',
-        avatar: '/assets/images/avatar4.png',
-        time: '2小时前',
-        content: '今天帮邻居喂猫，这只小橘真的太可爱了！吃饭的时候呼噜呼噜的 😻',
-        images: [],
-        likes: 12,
-        comments: 3,
-        liked: false
-      },
-      {
-        id: 'p002',
-        userName: '大壮',
-        avatar: '/assets/images/avatar5.png',
-        time: '5小时前',
-        content: '求助！我家猫最近不爱吃猫粮了，有没有推荐的牌子？',
-        images: [],
-        likes: 5,
-        comments: 8,
-        liked: true
-      },
-      {
-        id: 'p003',
-        userName: '小花',
-        avatar: '/assets/images/avatar6.png',
-        time: '昨天',
-        content: '分享一下猫咪日常护理小知识：\n1. 定期修剪指甲\n2. 每周梳毛2-3次\n3. 注意观察精神状态\n4. 定期驱虫',
-        images: [],
-        likes: 28,
-        comments: 6,
-        liked: false
-      }
-    ]
+    posts: [],
+    postsLoading: true
   },
 
   onLoad() {
     this.loadHelpList();
+    this.loadPosts();
   },
 
   onShow() {
@@ -77,6 +45,8 @@ Page({
     // 刷新互助列表
     if (this.data.activeTab === 0) {
       this.loadHelpList();
+    } else if (this.data.activeTab === 1) {
+      this.loadPosts();
     }
   },
 
@@ -94,11 +64,111 @@ Page({
     }
   },
 
+  // 从数据库加载交流帖子
+  async loadPosts() {
+    this.setData({ postsLoading: true });
+    
+    try {
+      const userInfo = app.globalData.userInfo || {};
+      const currentUserId = userInfo._id || '';
+      
+      // 从数据库获取帖子
+      const postsRaw = await db.getPosts('all', currentUserId);
+      
+      // 过滤掉当前用户自己发布的帖子（自己的动态在"我的动态"中查看）
+      const filteredPosts = postsRaw.filter(p => p.userId !== currentUserId);
+      
+      // 收集所有图片 fileID，转换为临时链接
+      const allFileIDs = [];
+      filteredPosts.forEach(p => {
+        if (p.images && p.images.length > 0) {
+          allFileIDs.push(...p.images);
+        }
+        if (p.userAvatar && p.userAvatar.startsWith('cloud://')) {
+          allFileIDs.push(p.userAvatar);
+        }
+      });
+      
+      // 批量获取临时链接
+      let fileUrlMap = {};
+      if (allFileIDs.length > 0) {
+        try {
+          const tempUrls = await db.getImageUrls(allFileIDs);
+          allFileIDs.forEach((id, index) => {
+            fileUrlMap[id] = tempUrls[index] || id;
+          });
+        } catch (e) {
+          console.error('获取临时链接失败:', e);
+        }
+      }
+      
+      // 格式化帖子数据
+      const posts = filteredPosts.map(p => ({
+        id: p._id,
+        userName: p.userName || '匿名用户',
+        avatar: fileUrlMap[p.userAvatar] || p.userAvatar || '/assets/images/default-avatar.png',
+        time: this.formatTime(p.createTime),
+        content: p.content || p.title || '',
+        images: (p.images || []).map(img => fileUrlMap[img] || img),
+        likes: p.likes || 0,
+        comments: p.commentCount || 0,
+        liked: p.liked || false
+      }));
+      
+      this.setData({ 
+        posts,
+        postsLoading: false
+      });
+    } catch (err) {
+      console.error('加载交流帖子失败:', err);
+      this.setData({ 
+        posts: [],
+        postsLoading: false
+      });
+    }
+  },
+
+  // 格式化时间
+  formatTime(createTime) {
+    if (!createTime) return '';
+    
+    const date = new Date(createTime);
+    const now = new Date();
+    const diff = now - date;
+    
+    // 1分钟内
+    if (diff < 60 * 1000) {
+      return '刚刚';
+    }
+    // 1小时内
+    if (diff < 60 * 60 * 1000) {
+      return Math.floor(diff / (60 * 1000)) + '分钟前';
+    }
+    // 24小时内
+    if (diff < 24 * 60 * 60 * 1000) {
+      return Math.floor(diff / (60 * 60 * 1000)) + '小时前';
+    }
+    // 昨天
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (date.getDate() === yesterday.getDate() && 
+        date.getMonth() === yesterday.getMonth() &&
+        date.getFullYear() === yesterday.getFullYear()) {
+      return '昨天';
+    }
+    // 更早
+    const month = (date.getMonth() + 1).toString();
+    const day = date.getDate().toString();
+    return `${month}月${day}日`;
+  },
+
   switchTab(e) {
     const tab = Number(e.currentTarget.dataset.tab);
     this.setData({ activeTab: tab });
     if (tab === 0) {
       this.loadHelpList();
+    } else if (tab === 1) {
+      this.loadPosts();
     }
   },
 
@@ -118,8 +188,10 @@ Page({
     wx.navigateTo({ url: `/pages/help-detail/help-detail?id=${id}` });
   },
 
-  onLike(e) {
+  async onLike(e) {
     const id = e.currentTarget.dataset.id;
+    
+    // 本地先更新状态
     const posts = this.data.posts.map(p => {
       if (p.id === id) {
         return { ...p, liked: !p.liked, likes: p.liked ? p.likes - 1 : p.likes + 1 };
@@ -127,10 +199,20 @@ Page({
       return p;
     });
     this.setData({ posts });
+    
+    // 异步更新数据库
+    try {
+      const post = posts.find(p => p.id === id);
+      if (post) {
+        await db.togglePostLike(id, post.liked);
+      }
+    } catch (err) {
+      console.error('点赞失败:', err);
+    }
   },
 
   onNewPost() {
-    wx.navigateTo({ url: '/pages/publish/publish' });
+    wx.navigateTo({ url: '/pages/publish-talk/publish-talk' });
   },
 
   goPostDetail(e) {

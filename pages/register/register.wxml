@@ -1,0 +1,90 @@
+<view class="register-page">
+  <!-- 顶部标题 -->
+  <view class="header">
+    <text class="title">创建账号</text>
+    <text class="subtitle">加入喵邻帮，开启爱猫之旅</text>
+  </view>
+
+  <!-- 表单区域 -->
+  <view class="form-section">
+    <!-- 头像 -->
+    <view class="avatar-section" bindtap="chooseAvatar">
+      <view class="avatar-wrap">
+        <image wx:if="{{avatar}}" src="{{avatar}}" mode="aspectFill" class="avatar-img"></image>
+        <view wx:else class="avatar-placeholder">
+          <text class="avatar-icon">📷</text>
+          <text class="avatar-text">点击上传头像</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 昵称 -->
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-icon">👤</text>
+        <text>昵称</text>
+        <text class="required">*</text>
+      </view>
+      <input class="form-input" placeholder="请输入您的昵称" value="{{name}}" bindinput="onInputName" maxlength="20" />
+    </view>
+
+    <!-- 手机号 -->
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-icon">📱</text>
+        <text>手机号</text>
+        <text class="required">*</text>
+      </view>
+      <input class="form-input" type="number" placeholder="请输入手机号" value="{{phone}}" bindinput="onInputPhone" maxlength="11" />
+    </view>
+
+    <!-- 公寓信息 -->
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-icon">🏠</text>
+        <text>公寓</text>
+        <text class="required">*</text>
+      </view>
+      <view class="apartment-row">
+        <picker class="building-picker" mode="selector" range="{{buildingOptions}}" value="{{buildingIndex}}" bindchange="onBuildingChange">
+          <view class="picker-content {{buildingIndex >= 0 ? '' : 'placeholder'}}">
+            {{buildingIndex >= 0 ? buildingOptions[buildingIndex] : '选择楼栋'}}
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+        <input class="room-input" type="text" placeholder="房间号" value="{{roomNumber}}" bindinput="onInputRoom" maxlength="10" />
+      </view>
+    </view>
+
+    <!-- 养猫经验 -->
+    <view class="form-item">
+      <view class="form-label">
+        <text class="label-icon">🐱</text>
+        <text>养猫经验</text>
+      </view>
+      <view class="exp-options">
+        <view class="exp-option {{catExperience === 'none' ? 'active' : ''}}" bindtap="selectExp" data-exp="none">
+          <text>没养过</text>
+        </view>
+        <view class="exp-option {{catExperience === 'beginner' ? 'active' : ''}}" bindtap="selectExp" data-exp="beginner">
+          <text>新手</text>
+        </view>
+        <view class="exp-option {{catExperience === 'experienced' ? 'active' : ''}}" bindtap="selectExp" data-exp="experienced">
+          <text>有经验</text>
+        </view>
+        <view class="exp-option {{catExperience === 'expert' ? 'active' : ''}}" bindtap="selectExp" data-exp="expert">
+          <text>资深铲屎官</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 注册按钮 -->
+  <view class="btn-section">
+    <button class="register-btn" bindtap="onRegister">完成注册</button>
+    <view class="login-link" bindtap="goLogin">
+      <text>已有账号？</text>
+      <text class="link">去登录</text>
+    </view>
+  </view>
+</view>

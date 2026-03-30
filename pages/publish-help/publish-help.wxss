@@ -222,10 +222,80 @@
   border-radius: 12rpx;
   font-size: 28rpx;
   color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .form-picker.placeholder {
   color: #BBB;
+}
+
+.picker-arrow {
+  font-size: 20rpx;
+  color: #999;
+}
+
+/* 位置选择行 */
+.location-row {
+  display: flex;
+  gap: 16rpx;
+}
+
+.building-picker {
+  flex: 1;
+}
+
+.room-input {
+  flex: 1;
+  height: 88rpx;
+  background: #F8F8F8;
+  border-radius: 12rpx;
+  padding: 0 20rpx;
+  font-size: 28rpx;
+  color: #333;
+  box-sizing: border-box;
+}
+
+/* 必填标记 */
+.required {
+  color: #FF4D4F;
+  margin-left: 4rpx;
+}
+
+/* 地图定位 */
+.map-section {
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+
+.location-map {
+  width: 100%;
+  height: 300rpx;
+  border-radius: 16rpx;
+}
+
+.location-info {
+  padding: 16rpx;
+  background: #F8F8F8;
+  margin-top: 12rpx;
+  border-radius: 12rpx;
+}
+
+.location-address {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.map-btn {
+  margin-top: 16rpx;
+  padding: 20rpx;
+  background: linear-gradient(135deg, #FFBAA3, #FFD4C4);
+  border-radius: 12rpx;
+  text-align: center;
+  color: #FFFFFF;
+  font-size: 28rpx;
+  font-weight: 500;
 }
 
 /* 提交栏 */

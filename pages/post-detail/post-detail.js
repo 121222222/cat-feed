@@ -31,12 +31,42 @@ Page({
           images = tempUrls;
         }
         
+        // 转换视频链接
+        let videoUrl = '';
+        let videoCover = '';
+        if (post.mediaType === 'video' && post.video) {
+          const videoUrls = await db.getImageUrls([post.video]);
+          videoUrl = videoUrls[0] || '';
+          
+          if (post.videoCover) {
+            const coverUrls = await db.getImageUrls([post.videoCover]);
+            videoCover = coverUrls[0] || '';
+          }
+        }
+        
+        // 格式化视频时长
+        let videoDurationText = '';
+        if (post.videoDuration) {
+          const minutes = Math.floor(post.videoDuration / 60);
+          const seconds = post.videoDuration % 60;
+          videoDurationText = minutes > 0 ? 
+            `${minutes}:${seconds.toString().padStart(2, '0')}` : 
+            `0:${seconds.toString().padStart(2, '0')}`;
+        }
+        
         // 判断是否是自己发布的
         const userInfo = app.globalData.userInfo || {};
         const isOwner = userInfo._id && post.userId && userInfo._id === post.userId;
         
         this.setData({
-          post: { ...post, id: post._id, images },
+          post: { 
+            ...post, 
+            id: post._id, 
+            images,
+            videoUrl,
+            videoCover,
+            videoDurationText
+          },
           isOwner: isOwner
         });
       }

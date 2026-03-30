@@ -11,7 +11,8 @@ Page({
     catCount: 0,
     postCount: 0,
     likeCount: 0,
-    isAdmin: false
+    isAdmin: false,
+    draftCount: 0
   },
 
   onShow() {
@@ -43,13 +44,23 @@ Page({
         likeCount += (p.likes || 0);
       });
 
+      // 计算草稿数量
+      let draftCount = 0;
+      const singleDraft = wx.getStorageSync('postDraft');
+      const multipleDrafts = wx.getStorageSync('postDrafts') || [];
+      if (singleDraft && singleDraft.time) {
+        draftCount = 1;
+      }
+      draftCount += multipleDrafts.length;
+
       this.setData({
         userInfo,
         cats,
         catCount: cats.length,
         postCount: postsRaw.length,
         likeCount,
-        isAdmin
+        isAdmin,
+        draftCount
       });
     } catch (err) {
       console.error('加载数据失败:', err);
@@ -71,6 +82,10 @@ Page({
 
   goMyPosts() {
     wx.navigateTo({ url: '/pages/my-posts/my-posts' });
+  },
+
+  goMyDrafts() {
+    wx.navigateTo({ url: '/pages/my-drafts/my-drafts' });
   },
 
   goMyHelps() {

@@ -1,7 +1,21 @@
 <view class="page-container">
   <view class="post-list" wx:if="{{posts.length > 0}}">
     <view class="post-item" wx:for="{{posts}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
-      <image class="post-cover" src="{{item.images[0]}}" mode="aspectFill"></image>
+      <!-- 封面：视频用 videoCover，图片用第一张图 -->
+      <view class="cover-wrap">
+        <image class="post-cover" 
+          src="{{item.mediaType === 'video' ? item.videoCover : item.images[0]}}" 
+          mode="aspectFill"
+          wx:if="{{(item.mediaType === 'video' && item.videoCover && item.videoCover.length > 10) || (item.mediaType !== 'video' && item.images[0])}}"></image>
+        <view class="cover-placeholder" wx:else>
+          <text class="placeholder-icon">{{item.mediaType === 'video' ? '🎬' : '📷'}}</text>
+        </view>
+        <!-- 视频标识 -->
+        <view class="video-badge" wx:if="{{item.mediaType === 'video'}}">
+          <text class="video-icon">🎬</text>
+          <text wx:if="{{item.videoDurationText}}">{{item.videoDurationText}}</text>
+        </view>
+      </view>
       <view class="post-info">
         <text class="post-title">{{item.title}}</text>
         <view class="post-stats">

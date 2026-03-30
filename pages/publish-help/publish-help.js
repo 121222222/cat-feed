@@ -12,13 +12,18 @@ Page({
       catId: '',
       catName: '',
       catAvatar: '',
+      building: '',
+      roomNumber: '',
       location: '',
-      contact: ''
+      latitude: '',
+      longitude: '',
+      address: ''
     },
     myCats: [],
     presetType: false,
     dormitoryOptions: ['1栋', '2栋', '3栋', '4栋', '5栋', '6栋', '7栋', '8栋', '9栋', '10栋', '11栋'],
-    dormitoryIndex: -1
+    dormitoryIndex: -1,
+    markers: []
   },
 
   onLoad(options) {
@@ -51,6 +56,11 @@ Page({
   onInput(e) {
     const field = e.currentTarget.dataset.field;
     this.setData({ [`form.${field}`]: e.detail.value });
+    
+    // 如果是房间号输入，更新完整位置
+    if (field === 'roomNumber') {
+      this.updateLocation();
+    }
   },
 
   onDateChange(e) {
@@ -60,9 +70,60 @@ Page({
 
   onDormitoryChange(e) {
     const index = e.detail.value;
+    const building = this.data.dormitoryOptions[index];
     this.setData({
       dormitoryIndex: index,
-      'form.location': this.data.dormitoryOptions[index]
+      'form.building': building
+    });
+    this.updateLocation();
+  },
+
+  // 更新完整位置信息
+  updateLocation() {
+    const { building, roomNumber } = this.data.form;
+    let location = '';
+    if (building) {
+      location = building;
+      if (roomNumber) {
+        location += ' ' + roomNumber;
+      }
+    }
+    this.setData({ 'form.location': location });
+  },
+
+  // 选择地图定位
+  chooseLocation() {
+    wx.chooseLocation({
+      success: (res) => {
+        this.setData({
+          'form.latitude': res.latitude,
+          'form.longitude': res.longitude,
+          'form.address': res.address || res.name || '',
+          markers: [{
+            id: 1,
+            latitude: res.latitude,
+            longitude: res.longitude,
+            iconPath: '/assets/images/location-marker.png',
+            width: 30,
+            height: 30
+          }]
+        });
+      },
+      fail: (err) => {
+        console.error('选择位置失败:', err);
+        if (err.errMsg && err.errMsg.includes('auth deny')) {
+          wx.showModal({
+            title: '定位授权',
+            content: '请在设置中开启位置权限',
+            confirmText: '去设置',
+            success: (res) => {
+              if (res.confirm) {
+                wx.openSetting();
+              }
+            }
+          });
+        }
+      }
     });
   },
 
@@ -95,6 +156,14 @@ Page({
       wx.showToast({ title: '请选择需要帮忙的时间', icon: 'none' });
       return;
     }
+    if (!form.building) {
+      wx.showToast({ title: '请选择楼栋', icon: 'none' });
+      return;
+    }
+    if (!form.roomNumber || !form.roomNumber.trim()) {
+      wx.showToast({ title: '请输入房间号', icon: 'none' });
+      return;
+    }
 
     wx.showModal({
       title: '确认发布',
@@ -111,8 +180,12 @@ Page({
               type: form.type,
               title: form.title.trim(),
               description: form.description.trim(),
+              building: form.building,
+              roomNumber: form.roomNumber.trim(),
               location: form.location.trim(),
-              contact: form.contact.trim(),
+              latitude: form.latitude || '',
+              longitude: form.longitude || '',
+              address: form.address || '',
               userName: userInfo.name || '匿名',
               userAvatar: userInfo.avatar || '',
               userId: userInfo._id || '',

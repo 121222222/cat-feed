@@ -222,6 +222,7 @@
 
 /* 帖子卡片 */
 .post-card {
+  position: relative;
   background: #FFFFFF;
   border-radius: 20rpx;
   overflow: hidden;
@@ -231,6 +232,27 @@
 .post-card:active {
   transform: scale(0.98);
   opacity: 0.9;
+}
+
+/* 删除按钮 */
+.post-delete-btn {
+  position: absolute;
+  top: 12rpx;
+  right: 12rpx;
+  z-index: 10;
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.5);
+  color: #FFF;
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.post-delete-btn:active {
+  background: rgba(255,77,79,0.9);
 }
 
 .post-img-wrap {
@@ -258,6 +280,43 @@
   font-size: 20rpx;
   padding: 4rpx 12rpx;
   border-radius: 16rpx;
+}
+
+/* 视频标识 */
+.video-badge {
+  position: absolute;
+  bottom: 12rpx;
+  right: 12rpx;
+  background: rgba(0,0,0,0.6);
+  color: #FFFFFF;
+  font-size: 20rpx;
+  padding: 6rpx 12rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+}
+
+.video-icon {
+  font-size: 20rpx;
+}
+
+.video-placeholder {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #333, #555);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-play-icon {
+  font-size: 60rpx;
+  color: #FFFFFF;
+  opacity: 0.8;
 }
 
 .post-content {

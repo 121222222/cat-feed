@@ -14,11 +14,17 @@
     </view>
   </view>
 
+  <!-- 加载状态 -->
+  <view class="loading-state" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+
   <!-- 消息列表 -->
-  <view class="msg-list" wx:if="{{messages.length > 0}}">
+  <view class="msg-list" wx:if="{{!loading && messages.length > 0}}">
     <view class="msg-item" wx:for="{{messages}}" wx:key="id" bindtap="onMsgTap" data-item="{{item}}">
       <view class="msg-avatar-wrap">
-        <view class="msg-avatar" style="background:{{item.avatarBg}}">
+        <image wx:if="{{item.avatar}}" class="msg-avatar-img" src="{{item.avatar}}" mode="aspectFill"></image>
+        <view wx:else class="msg-avatar" style="background:{{item.avatarBg}}">
           <text class="msg-avatar-icon">{{item.icon}}</text>
         </view>
         <view class="msg-unread-dot" wx:if="{{item.unread}}"></view>
@@ -34,7 +40,7 @@
   </view>
 
   <!-- 空状态 -->
-  <view class="empty-state" wx:if="{{messages.length === 0}}">
+  <view class="empty-state" wx:if="{{!loading && messages.length === 0}}">
     <text class="empty-icon">📭</text>
     <text class="empty-text">暂无消息</text>
   </view>

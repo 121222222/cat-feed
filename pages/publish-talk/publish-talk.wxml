@@ -1,0 +1,46 @@
+<view class="page-container">
+  <view class="form-container">
+    <!-- 顶部提示 -->
+    <view class="header-tip">
+      <text class="tip-emoji">💬</text>
+      <text class="tip-text">说点啥吧</text>
+    </view>
+
+    <!-- 内容输入 -->
+    <view class="form-section">
+      <textarea 
+        class="content-textarea" 
+        placeholder="分享日常、出闲置、找猫友...有啥说啥~" 
+        maxlength="500" 
+        value="{{content}}" 
+        bindinput="onContentInput"
+        auto-height
+        focus="{{true}}"
+      ></textarea>
+      <text class="content-count">{{content.length || 0}}/500</text>
+    </view>
+
+    <!-- 图片上传（可选） -->
+    <view class="form-section">
+      <view class="section-header">
+        <text class="section-icon">📷</text>
+        <text class="section-title">添加图片</text>
+        <text class="section-opt">（可选，最多3张）</text>
+      </view>
+      <view class="photo-upload-area">
+        <view class="photo-item" wx:for="{{photos}}" wx:key="*this">
+          <image src="{{item}}" mode="aspectFill" class="photo-img" bindtap="previewPhoto" data-url="{{item}}"></image>
+          <view class="photo-delete" catchtap="deletePhoto" data-index="{{index}}">×</view>
+        </view>
+        <view class="photo-add" bindtap="choosePhoto" wx:if="{{photos.length < 3}}">
+          <text class="photo-add-icon">+</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部提交 -->
+  <view class="submit-bar safe-bottom">
+    <view class="btn-primary btn-block" bindtap="onSubmit">发布</view>
+  </view>
+</view>

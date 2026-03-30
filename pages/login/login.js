@@ -1,10 +1,12 @@
+const db = require('../../utils/db.js');
+
 Page({
   data: {
     agreed: false
   },
 
   // 登录
-  onLogin() {
+  async onLogin() {
     if (!this.data.agreed) {
       wx.showToast({ title: '请先同意用户协议和隐私政策', icon: 'none' });
       return;
@@ -14,19 +16,35 @@ Page({
     const app = getApp();
     
     try {
-      app.loginSuccess({
-        name: '微信用户',
-        avatar: '',
-        dormitory: '',
-        phone: '',
-        certified: false,
-        catExperience: ''
-      });
-      wx.hideLoading();
-      wx.showToast({ title: '登录成功', icon: 'success' });
-      setTimeout(() => {
-        wx.switchTab({ url: '/pages/index/index' });
-      }, 1000);
+      // 检查是否已有账号（通过 openid 自动匹配）
+      const existUser = await db.getCurrentUser();
+      
+      if (existUser) {
+        // 已有账号，直接登录
+        app.globalData.isLoggedIn = true;
+        app.globalData.userInfo = existUser;
+        wx.setStorageSync('isLoggedIn', true);
+        
+        wx.hideLoading();
+        wx.showToast({ title: '登录成功', icon: 'success' });
+        setTimeout(() => {
+          wx.switchTab({ url: '/pages/index/index' });
+        }, 1000);
+      } else {
+        // 没有账号，跳转到注册页面
+        wx.hideLoading();
+        wx.showModal({
+          title: '提示',
+          content: '您还没有账号，请先注册',
+          confirmText: '去注册',
+          confirmColor: '#FFBAA3',
+          success: (res) => {
+            if (res.confirm) {
+              wx.navigateTo({ url: '/pages/register/register' });
+            }
+          }
+        });
+      }
     } catch (err) {
       wx.hideLoading();
       console.error('登录失败:', err);
@@ -41,10 +59,8 @@ Page({
       return;
     }
 
-    // 跳转到注册页面或执行注册流程
-    wx.showToast({ title: '注册功能开发中', icon: 'none' });
-    // 或者直接执行登录注册一体化
-    // wx.navigateTo({ url: '/pages/register/register' });
+    // 跳转到注册页面
+    wx.navigateTo({ url: '/pages/register/register' });
   },
 
   // 跳转管理员登录

@@ -1,79 +1,100 @@
+const db = require('../../utils/db.js');
+
 Page({
   data: {
     activeTab: 0,
-    chatUnread: 2,
-    sysUnread: 1,
-    allMessages: [
-      {
-        id: 'm001',
-        type: 'chat',
-        icon: '💬',
-        avatarBg: '#FFE0D6',
-        title: '小美',
-        preview: '好的，我明天下午3点过去喂猫~',
-        time: '10:30',
-        unread: true,
-        userId: 'user001'  // 用于跳转聊天
-      },
-      {
-        id: 'm002',
-        type: 'system',
-        subType: 'order',  // 接单通知
-        icon: '🔔',
-        avatarBg: '#E6F7FF',
-        title: '接单通知',
-        preview: '您发布的喂养需求「橘座」已被小美接单',
-        time: '09:15',
-        unread: true,
-        relatedId: 'help001'  // 关联的互助ID
-      },
-      {
-        id: 'm003',
-        type: 'chat',
-        icon: '💬',
-        avatarBg: '#F0FFF0',
-        title: '大壮',
-        preview: '请问您家猫咪有什么忌口吗？',
-        time: '昨天',
-        unread: true,
-        userId: 'user002'
-      },
-      {
-        id: 'm004',
-        type: 'system',
-        subType: 'complete',  // 服务完成
-        icon: '✅',
-        avatarBg: '#F0FFF0',
-        title: '服务完成',
-        preview: '喂养人小花已完成本次服务，请确认并评价',
-        time: '昨天',
-        unread: false,
-        relatedId: 'help002'
-      },
-      {
-        id: 'm006',
-        type: 'system',
-        subType: 'remind',  // 到期提醒
-        icon: '⏰',
-        avatarBg: '#FFEFE9',
-        title: '到期提醒',
-        preview: '您发布的喂养需求将于明天开始，请确认喂养人信息',
-        time: '3月17日',
-        unread: false,
-        relatedId: 'help003'
-      }
-    ],
-    messages: []
+    chatUnread: 0,
+    sysUnread: 0,
+    allMessages: [],
+    messages: [],
+    loading: true
   },
 
   onLoad() {
-    this.filterMessages(0);
+    this.loadMessages();
   },
 
   onShow() {
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 1 });
     }
+    // 每次显示时刷新消息
+    this.loadMessages();
+  },
+
+  // 从数据库加载消息
+  async loadMessages() {
+    this.setData({ loading: true });
+    
+    try {
+      const messages = await db.getMyMessages();
+      
+      // 格式化消息数据
+      const formattedMessages = messages.map(msg => ({
+        id: msg._id,
+        type: msg.type || 'system',
+        subType: msg.subType || '',
+        icon: msg.icon || (msg.type === 'chat' ? '💬' : '🔔'),
+        avatarBg: msg.avatarBg || (msg.type === 'chat' ? '#FFE0D6' : '#E6F7FF'),
+        title: msg.title || '系统通知',
+        preview: msg.preview || msg.content || '',
+        time: this.formatTime(msg.createTime),
+        unread: !msg.read,
+        userId: msg.fromUserId || '',
+        relatedId: msg.relatedId || '',
+        avatar: msg.avatar || ''
+      }));
+      
+      // 计算未读数
+      const chatUnread = formattedMessages.filter(m => m.type === 'chat' && m.unread).length;
+      const sysUnread = formattedMessages.filter(m => m.type === 'system' && m.unread).length;
+      
+      this.setData({
+        allMessages: formattedMessages,
+        chatUnread,
+        sysUnread,
+        loading: false
+      });
+      
+      this.filterMessages(this.data.activeTab);
+    } catch (err) {
+      console.error('加载消息失败:', err);
+      this.setData({ 
+        allMessages: [],
+        messages: [],
+        loading: false 
+      });
+    }
+  },
+
+  // 格式化时间
+  formatTime(createTime) {
+    if (!createTime) return '';
+    
+    const date = new Date(createTime);
+    const now = new Date();
+    const diff = now - date;
+    
+    // 今天
+    if (diff < 24 * 60 * 60 * 1000 && date.getDate() === now.getDate()) {
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      return `${hours}:${minutes}`;
+    }
+    
+    // 昨天
+    const yesterday = new Date(now);
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (date.getDate() === yesterday.getDate() && 
+        date.getMonth() === yesterday.getMonth() &&
+        date.getFullYear() === yesterday.getFullYear()) {
+      return '昨天';
+    }
+    
+    // 更早
+    const month = (date.getMonth() + 1).toString();
+    const day = date.getDate().toString();
+    return `${month}月${day}日`;
   },
 
   switchTab(e) {
@@ -124,8 +145,9 @@ Page({
     }
   },
   
-  // 标记消息已读
-  markAsRead(msgId) {
+  // 标记消息已读（同时更新数据库）
+  async markAsRead(msgId) {
+    // 更新本地状态
     const allMessages = this.data.allMessages.map(m => {
       if (m.id === msgId) {
         return { ...m, unread: false };
@@ -139,6 +161,15 @@ Page({
     
     this.setData({ allMessages, chatUnread, sysUnread });
     this.filterMessages(this.data.activeTab);
+    
+    // 更新数据库（可选，如果需要持久化已读状态）
+    try {
+      await db.db.collection('messages').doc(msgId).update({
+        data: { read: true }
+      });
+    } catch (err) {
+      console.error('更新已读状态失败:', err);
+    }
   },
   
   // 显示通知详情弹窗
@@ -150,5 +181,11 @@ Page({
       confirmText: '知道了',
       confirmColor: '#FFBAA3'
     });
+  },
+
+  // 下拉刷新
+  async onPullDownRefresh() {
+    await this.loadMessages();
+    wx.stopPullDownRefresh();
   }
 });

@@ -32,12 +32,7 @@
           <text wx:if="{{agreed}}">✓</text>
         </view>
       </view>
-      <text class="agreement-text">
-        登录即代表同意
-        <text class="link" bindtap="showUserAgreement">《用户协议》</text>
-        和
-        <text class="link" bindtap="showPrivacy">《隐私政策》</text>
-      </text>
+      <text class="agreement-text">登录即代表同意<text class="link" bindtap="showUserAgreement">《用户协议》</text>和<text class="link" bindtap="showPrivacy">《隐私政策》</text></text>
     </view>
     
     <!-- 管理员入口 -->

@@ -71,6 +71,14 @@
         <text class="menu-text">我的动态</text>
         <text class="menu-arrow">›</text>
       </view>
+      <view class="menu-item" bindtap="goMyDrafts">
+        <view class="menu-icon-wrap" style="background:#FFF8E6;">
+          <text class="menu-icon">📝</text>
+        </view>
+        <text class="menu-text">我的草稿</text>
+        <view class="draft-badge" wx:if="{{draftCount > 0}}">{{draftCount}}</view>
+        <text class="menu-arrow">›</text>
+      </view>
       <view class="menu-item" bindtap="goMyHelps">
         <view class="menu-icon-wrap" style="background:#E8F8E8;">
           <text class="menu-icon">🤝</text>

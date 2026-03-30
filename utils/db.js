@@ -1051,6 +1051,20 @@ module.exports = {
     }
   },
 
+  /** 上传视频到云存储 */
+  async uploadVideo(filePath, cloudPath) {
+    try {
+      const res = await wx.cloud.uploadFile({
+        cloudPath: cloudPath || `videos/${Date.now()}-${Math.random().toString(36).substr(2)}.mp4`,
+        filePath
+      });
+      return res.fileID;
+    } catch (err) {
+      console.error('uploadVideo 失败:', err);
+      return null;
+    }
+  },
+
   /** 将云存储 fileID 转换为临时链接 */
   async getImageUrls(fileIDs) {
     if (!fileIDs || fileIDs.length === 0) return [];

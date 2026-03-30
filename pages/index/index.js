@@ -4,6 +4,7 @@ const db = require('../../utils/db.js');
 Page({
   data: {
     userInfo: {},
+    currentUserId: '',
     activeCategory: 'all',
     leftPosts: [],
     rightPosts: [],
@@ -52,6 +53,14 @@ Page({
         if (p.userAvatar && p.userAvatar.startsWith('cloud://')) {
           allFileIDs.push(p.userAvatar);
         }
+        // 添加视频封面
+        if (p.videoCover && p.videoCover.startsWith('cloud://')) {
+          allFileIDs.push(p.videoCover);
+        }
+        // 添加视频链接
+        if (p.video && p.video.startsWith('cloud://')) {
+          allFileIDs.push(p.video);
+        }
       });
       
       // 批量获取临时链接
@@ -68,13 +77,31 @@ Page({
       }
       
       // 替换图片链接
-      let posts = postsRaw.map(p => ({
-        ...p,
-        id: p._id,
-        imgRatio: p.imgRatio || 100,
-        images: (p.images || []).map(img => fileUrlMap[img] || img),
-        userAvatar: fileUrlMap[p.userAvatar] || p.userAvatar || ''
-      }));
+      let posts = postsRaw.map(p => {
+        // 格式化视频时长
+        let videoDurationText = '';
+        if (p.videoDuration) {
+          const duration = Math.round(p.videoDuration);
+          const minutes = Math.floor(duration / 60);
+          const seconds = duration % 60;
+          videoDurationText = minutes > 0 ? 
+            `${minutes}:${seconds.toString().padStart(2, '0')}` : 
+            `0:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        return {
+          ...p,
+          id: p._id,
+          imgRatio: p.imgRatio || 100,
+          mediaType: p.mediaType || 'image',
+          images: (p.images || []).map(img => fileUrlMap[img] || img),
+          video: fileUrlMap[p.video] || p.video || '',
+          videoCover: fileUrlMap[p.videoCover] || p.videoCover || '',
+          videoDuration: p.videoDuration || 0,
+          videoDurationText: videoDurationText,
+          userAvatar: fileUrlMap[p.userAvatar] || p.userAvatar || ''
+        };
+      });
       
       // 搜索过滤
       const keyword = this.data.searchKeyword.trim().toLowerCase();
@@ -190,5 +217,31 @@ Page({
       this.setData({ page: this.data.page + 1 });
       // this.loadMoreData();
     }
+  },
+
+  // 删除自己的帖子
+  deletePost(e) {
+    const id = e.currentTarget.dataset.id;
+    const that = this;
+    
+    wx.showModal({
+      title: '删除动态',
+      content: '确定要删除这条动态吗？',
+      confirmColor: '#FF4D4F',
+      success: async (res) => {
+        if (res.confirm) {
+          wx.showLoading({ title: '删除中...' });
+          const success = await db.deletePost(id);
+          wx.hideLoading();
+          
+          if (success) {
+            wx.showToast({ title: '删除成功', icon: 'success' });
+            that.loadData(); // 重新加载数据
+          } else {
+            wx.showToast({ title: '删除失败', icon: 'none' });
+          }
+        }
+      }
+    });
   }
 });

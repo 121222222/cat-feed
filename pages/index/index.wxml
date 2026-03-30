@@ -69,9 +69,20 @@
   <view class="waterfall-container" wx:if="{{leftPosts.length > 0 || rightPosts.length > 0}}">
     <view class="waterfall-column left-column">
       <view class="post-card" wx:for="{{leftPosts}}" wx:key="id" bindtap="goPostDetail" data-id="{{item.id}}">
+        <!-- 视频 -->
+        <view class="post-img-wrap" wx:if="{{item.mediaType === 'video'}}" style="padding-bottom: {{item.imgRatio || 100}}%;">
+          <image class="post-img" src="{{item.videoCover}}" mode="aspectFill" lazy-load wx:if="{{item.videoCover && item.videoCover.length > 10}}"></image>
+          <view class="video-placeholder" wx:else>
+            <text class="video-play-icon">▶</text>
+          </view>
+          <view class="video-badge">
+            <text class="video-icon">🎬</text>
+            <text wx:if="{{item.videoDurationText}}">{{item.videoDurationText}}</text>
+          </view>
+        </view>
         <!-- 图片 -->
-        <view class="post-img-wrap" style="padding-bottom: {{item.imgRatio || 100}}%;">
-          <image class="post-img" src="{{item.images[0]}}" mode="widthFix" lazy-load></image>
+        <view class="post-img-wrap" wx:else style="padding-bottom: {{item.imgRatio || 100}}%;">
+          <image class="post-img" src="{{item.images[0]}}" mode="aspectFill" lazy-load></image>
           <view class="img-count" wx:if="{{item.images.length > 1}}">
             <text>{{item.images.length}}图</text>
           </view>
@@ -94,9 +105,24 @@
     </view>
     <view class="waterfall-column right-column">
       <view class="post-card" wx:for="{{rightPosts}}" wx:key="id" bindtap="goPostDetail" data-id="{{item.id}}">
+        <!-- 删除按钮（仅作者可见） -->
+        <view class="post-delete-btn" wx:if="{{item.userId === currentUserId}}" catchtap="deletePost" data-id="{{item.id}}">
+          <text>×</text>
+        </view>
+        <!-- 视频 -->
+        <view class="post-img-wrap" wx:if="{{item.mediaType === 'video'}}" style="padding-bottom: {{item.imgRatio || 100}}%;">
+          <image class="post-img" src="{{item.videoCover}}" mode="aspectFill" lazy-load wx:if="{{item.videoCover && item.videoCover.length > 10}}"></image>
+          <view class="video-placeholder" wx:else>
+            <text class="video-play-icon">▶</text>
+          </view>
+          <view class="video-badge">
+            <text class="video-icon">🎬</text>
+            <text wx:if="{{item.videoDurationText}}">{{item.videoDurationText}}</text>
+          </view>
+        </view>
         <!-- 图片 -->
-        <view class="post-img-wrap" style="padding-bottom: {{item.imgRatio || 100}}%;">
-          <image class="post-img" src="{{item.images[0]}}" mode="widthFix" lazy-load></image>
+        <view class="post-img-wrap" wx:else style="padding-bottom: {{item.imgRatio || 100}}%;">
+          <image class="post-img" src="{{item.images[0]}}" mode="aspectFill" lazy-load></image>
           <view class="img-count" wx:if="{{item.images.length > 1}}">
             <text>{{item.images.length}}图</text>
           </view>

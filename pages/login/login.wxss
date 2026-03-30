@@ -115,7 +115,8 @@
 /* ========== 协议勾选 ========== */
 .agreement {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   margin-top: 40rpx;
   padding: 0 10rpx;
   width: 100%;
@@ -123,7 +124,6 @@
 
 .checkbox-wrap {
   flex-shrink: 0;
-  padding-top: 4rpx;
   margin-right: 10rpx;
 }
 
@@ -149,7 +149,9 @@
 .agreement-text {
   font-size: 22rpx;
   color: rgba(255, 255, 255, 0.85);
-  line-height: 1.6;
+  line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .link {

@@ -42,15 +42,33 @@
     <view class="action-sheet-cancel" bindtap="hideMoreMenu">取消</view>
   </view>
 
+  <!-- 视频播放区域 -->
+  <view class="video-container" wx:if="{{post.mediaType === 'video' && post.videoUrl}}">
+    <video 
+      class="post-video" 
+      src="{{post.videoUrl}}" 
+      controls 
+      object-fit="contain"
+      show-center-play-btn="{{true}}"
+      show-play-btn="{{true}}"
+      show-fullscreen-btn="{{true}}"
+      enable-progress-gesture="{{true}}"
+      poster="{{post.videoCover}}"
+    ></video>
+    <view class="video-duration-tag" wx:if="{{post.videoDuration}}">{{post.videoDurationText}}</view>
+  </view>
+
   <!-- 图片轮播 -->
-  <swiper class="image-swiper" indicator-dots="{{post.images.length > 1}}" circular autoplay="{{false}}" style="height: {{swiperHeight}}px;">
-    <swiper-item wx:for="{{post.images}}" wx:key="*this">
-      <view class="swiper-item-img">
-        <image class="post-image" src="{{item}}" mode="widthFix" bindtap="previewImage" data-url="{{item}}" bindload="onImageLoad"></image>
-      </view>
-    </swiper-item>
-  </swiper>
-  <view class="image-count" wx:if="{{post.images.length > 1}}">{{currentIndex + 1}}/{{post.images.length}}</view>
+  <block wx:if="{{post.mediaType !== 'video' && post.images && post.images.length > 0}}">
+    <swiper class="image-swiper" indicator-dots="{{post.images.length > 1}}" circular autoplay="{{false}}" style="height: {{swiperHeight}}px;">
+      <swiper-item wx:for="{{post.images}}" wx:key="*this">
+        <view class="swiper-item-img">
+          <image class="post-image" src="{{item}}" mode="widthFix" bindtap="previewImage" data-url="{{item}}" bindload="onImageLoad"></image>
+        </view>
+      </swiper-item>
+    </swiper>
+    <view class="image-count" wx:if="{{post.images.length > 1}}">{{currentIndex + 1}}/{{post.images.length}}</view>
+  </block>
 
   <!-- 内容区域 -->
   <view class="content-section">

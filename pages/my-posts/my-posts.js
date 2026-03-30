@@ -17,11 +17,15 @@ Page({
       const userId = userInfo._id || '';
       const postsRaw = await db.getMyPosts(userId);
       
-      // 收集所有图片 fileID
+      // 收集所有图片和视频封面 fileID
       const allFileIDs = [];
       postsRaw.forEach(p => {
         if (p.images && p.images.length > 0) {
           allFileIDs.push(...p.images);
+        }
+        // 收集视频封面
+        if (p.videoCover) {
+          allFileIDs.push(p.videoCover);
         }
       });
       
@@ -38,11 +42,17 @@ Page({
         }
       }
       
-      // 替换图片链接
+      // 替换图片链接和视频封面
       const posts = postsRaw.map(p => ({
         ...p,
         id: p._id,
-        images: (p.images || []).map(img => fileUrlMap[img] || img)
+        images: (p.images || []).map(img => fileUrlMap[img] || img),
+        videoCover: fileUrlMap[p.videoCover] || p.videoCover || '',
+        // 计算视频时长文本
+        videoDurationText: p.videoDuration ? 
+          (Math.floor(p.videoDuration / 60) > 0 ? 
+            `${Math.floor(p.videoDuration / 60)}:${(p.videoDuration % 60).toString().padStart(2, '0')}` : 
+            `0:${p.videoDuration.toString().padStart(2, '0')}`) : ''
       }));
       
       this.setData({ posts });
