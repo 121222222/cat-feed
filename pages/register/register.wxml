@@ -54,6 +54,10 @@
         </picker>
         <input class="room-input" type="text" placeholder="房间号" value="{{roomNumber}}" bindinput="onInputRoom" maxlength="10" />
       </view>
+      <view class="form-hint">
+        <text class="hint-icon">ℹ️</text>
+        <text>请填写真实房间号，系统将验证是否为公司公寓住户</text>
+      </view>
     </view>
 
     <!-- 养猫经验 -->

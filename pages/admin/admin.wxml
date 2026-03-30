@@ -27,6 +27,10 @@
         <text class="tab-icon">🐱</text>
         <text class="tab-text">猫咪管理</text>
       </view>
+      <view class="tab-item {{activeTab === 'rooms' ? 'active' : ''}}" bindtap="switchTab" data-tab="rooms">
+        <text class="tab-icon">🏠</text>
+        <text class="tab-text">房间号管理</text>
+      </view>
       <view class="tab-item {{activeTab === 'settings' ? 'active' : ''}}" bindtap="switchTab" data-tab="settings">
         <text class="tab-icon">⚙️</text>
         <text class="tab-text">系统设置</text>
@@ -361,7 +365,102 @@
     </view>
   </view>
 
-  <!-- 6. 系统设置 -->
+  <!-- 6. 房间号管理 -->
+  <view class="content-section" wx:if="{{activeTab === 'rooms'}}">
+    <view class="section-header">
+      <text class="section-title">房间号管理</text>
+      <text class="section-desc">管理有效的公寓房间号</text>
+    </view>
+
+    <!-- 房间号统计 -->
+    <view class="room-stats">
+      <view class="room-stat-item">
+        <text class="room-stat-value">{{roomStatistics.totalRooms}}</text>
+        <text class="room-stat-label">总房间数</text>
+      </view>
+      <view class="room-stat-item">
+        <text class="room-stat-value">{{roomStatistics.activeRooms}}</text>
+        <text class="room-stat-label">有效房间</text>
+      </view>
+      <view class="room-stat-item">
+        <text class="room-stat-value">{{roomStatistics.boundRooms}}</text>
+        <text class="room-stat-label">已绑定</text>
+      </view>
+    </view>
+
+    <!-- 批量添加 -->
+    <view class="settings-card">
+      <view class="settings-header">
+        <text class="settings-title">➕ 批量添加房间号</text>
+      </view>
+      <view class="form-group">
+        <text class="form-label">选择楼栋</text>
+        <picker class="building-select" mode="selector" range="{{buildingOptions}}" value="{{batchBuildingIndex}}" bindchange="onBatchBuildingChange">
+          <view class="picker-box">
+            {{batchBuildingIndex >= 0 ? buildingOptions[batchBuildingIndex] : '请选择楼栋'}}
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+      <view class="form-group">
+        <text class="form-label">房间号（多个用逗号分隔）</text>
+        <textarea class="form-textarea" placeholder="如：101,102,103,201,202" value="{{batchRoomNumbers}}" bindinput="onBatchRoomInput"></textarea>
+      </view>
+      <view class="btn-primary" bindtap="batchAddRooms">批量添加</view>
+    </view>
+
+    <!-- 房间号列表 -->
+    <view class="settings-card">
+      <view class="settings-header">
+        <text class="settings-title">📋 房间号列表</text>
+        <picker mode="selector" range="{{roomFilterOptions}}" value="{{roomFilterIndex}}" bindchange="onRoomFilterChange">
+          <view class="filter-btn">{{roomFilterOptions[roomFilterIndex]}} ▼</view>
+        </picker>
+      </view>
+      
+      <view class="empty-state small" wx:if="{{validRooms.length === 0}}">
+        <text class="empty-text">暂无房间号数据</text>
+      </view>
+      
+      <view class="room-list" wx:else>
+        <view class="room-item" wx:for="{{validRooms}}" wx:key="_id">
+          <view class="room-info">
+            <text class="room-name">{{item.building}} {{item.roomNumber}}</text>
+            <text class="room-status {{item.status === 'active' ? 'active' : 'inactive'}}">
+              {{item.status === 'active' ? '有效' : '已禁用'}}
+            </text>
+          </view>
+          <view class="room-actions">
+            <view class="action-btn small {{item.status === 'active' ? 'warning' : 'success'}}" 
+                  bindtap="toggleRoomStatus" 
+                  data-id="{{item._id}}" 
+                  data-status="{{item.status}}">
+              {{item.status === 'active' ? '禁用' : '启用'}}
+            </view>
+            <view class="action-btn danger small" bindtap="deleteRoom" data-id="{{item._id}}" data-index="{{index}}">删除</view>
+          </view>
+        </view>
+      </view>
+      
+      <view class="load-more" wx:if="{{roomsHasMore}}" bindtap="loadMoreRooms">
+        <text>加载更多</text>
+      </view>
+    </view>
+
+    <!-- 解绑用户房间号 -->
+    <view class="settings-card">
+      <view class="settings-header">
+        <text class="settings-title">🔓 解绑用户房间号</text>
+      </view>
+      <view class="form-group">
+        <text class="form-label">用户手机号</text>
+        <input class="form-input" type="number" placeholder="输入要解绑的用户手机号" value="{{unbindPhone}}" bindinput="onUnbindPhoneInput" maxlength="11" />
+      </view>
+      <view class="btn-primary warning" bindtap="unbindUserRoom">解绑房间号</view>
+    </view>
+  </view>
+
+  <!-- 7. 系统设置 -->
   <view class="content-section" wx:if="{{activeTab === 'settings'}}">
     <view class="section-header">
       <text class="section-title">系统设置</text>

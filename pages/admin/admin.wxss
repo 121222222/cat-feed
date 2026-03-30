@@ -979,3 +979,125 @@
 .logout-btn:active {
   background: #F5F5F5;
 }
+
+/* ========== 房间号管理 ========== */
+.room-stats {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.room-stat-item {
+  flex: 1;
+  background: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  text-align: center;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.06);
+}
+
+.room-stat-value {
+  display: block;
+  font-size: 40rpx;
+  font-weight: 700;
+  color: #FF8A6B;
+}
+
+.room-stat-label {
+  display: block;
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+.building-select {
+  width: 100%;
+}
+
+.picker-box {
+  width: 100%;
+  height: 88rpx;
+  padding: 0 24rpx;
+  background: #F8F8F8;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: #333;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.picker-arrow {
+  font-size: 20rpx;
+  color: #999;
+}
+
+.form-label {
+  display: block;
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 12rpx;
+}
+
+.filter-btn {
+  padding: 10rpx 20rpx;
+  background: #F5F5F5;
+  border-radius: 20rpx;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.room-list {
+  margin-top: 16rpx;
+}
+
+.room-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.room-item:last-child {
+  border-bottom: none;
+}
+
+.room-info {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.room-name {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+.room-status {
+  font-size: 22rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
+}
+
+.room-status.active {
+  background: #F6FFED;
+  color: #52C41A;
+}
+
+.room-status.inactive {
+  background: #FFF2F0;
+  color: #FF4D4F;
+}
+
+.room-actions {
+  display: flex;
+  gap: 12rpx;
+}
+
+.btn-primary.warning {
+  background: linear-gradient(135deg, #FAAD14, #FFC53D);
+  box-shadow: 0 8rpx 24rpx rgba(250, 173, 20, 0.3);
+}

@@ -160,6 +160,25 @@
   box-sizing: border-box;
 }
 
+/* 表单提示 */
+.form-hint {
+  display: flex;
+  align-items: center;
+  margin-top: 12rpx;
+  padding: 0 8rpx;
+}
+
+.hint-icon {
+  font-size: 24rpx;
+  margin-right: 8rpx;
+}
+
+.form-hint text:last-child {
+  font-size: 22rpx;
+  color: #999;
+  line-height: 1.4;
+}
+
 /* 养猫经验选项 */
 .exp-options {
   display: flex;

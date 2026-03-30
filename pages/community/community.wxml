@@ -78,6 +78,7 @@
     </view>
   </view>
 
+
   <!-- 交流板块 -->
   <view class="tab-content" wx:if="{{activeTab === 1}}">
     <!-- 加载状态 -->
@@ -87,19 +88,26 @@
     
     <!-- 帖子列表 -->
     <block wx:if="{{!postsLoading && posts.length > 0}}">
-      <view class="post-card" wx:for="{{posts}}" wx:key="id" bindtap="goPostDetail" data-id="{{item.id}}">
-        <view class="post-user">
-          <view class="avatar avatar-sm">
-            <image src="{{item.avatar}}" mode="aspectFill"></image>
+      <view class="post-card" wx:for="{{posts}}" wx:key="id">
+        <view class="post-header">
+          <view class="post-user">
+            <view class="avatar avatar-sm">
+              <image src="{{item.avatar}}" mode="aspectFill"></image>
+            </view>
+            <view class="post-user-info">
+              <text class="post-username">{{item.userName}}</text>
+              <text class="post-time">{{item.time}}</text>
+            </view>
           </view>
-          <view class="post-user-info">
-            <text class="post-username">{{item.userName}}</text>
-            <text class="post-time">{{item.time}}</text>
+          <!-- 删除按钮（仅作者可见） -->
+          <view class="post-delete-btn" wx:if="{{item.isOwner}}" catchtap="deletePost" data-id="{{item.id}}">
+            <text>删除</text>
           </view>
         </view>
         <text class="post-content">{{item.content}}</text>
         <view class="post-images" wx:if="{{item.images && item.images.length > 0}}">
-          <view class="post-img-wrap" wx:for="{{item.images}}" wx:for-item="img" wx:key="*this">
+          <view class="post-img-wrap" wx:for="{{item.images}}" wx:for-item="img" wx:key="*this" 
+                bindtap="previewImage" data-url="{{img}}" data-urls="{{item.images}}">
             <image src="{{img}}" mode="aspectFill"></image>
           </view>
         </view>

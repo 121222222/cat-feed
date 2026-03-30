@@ -16,6 +16,7 @@ const postsCol = database.collection('posts');
 const helpsCol = database.collection('helps');
 const commentsCol = database.collection('comments');
 const announcementsCol = database.collection('announcements');
+const roomsCol = database.collection('valid_rooms'); // 有效房间号集合
 
 module.exports = {
   db: database,
@@ -30,6 +31,28 @@ module.exports = {
       return res.data.length > 0 ? res.data[0] : null;
     } catch (err) {
       console.error('getCurrentUser 失败:', err);
+      return null;
+    }
+  },
+
+  /** 根据手机号获取用户信息 */
+  async getUserByPhone(phone) {
+    try {
+      const res = await usersCol.where({ phone: phone }).get();
+      return res.data.length > 0 ? res.data[0] : null;
+    } catch (err) {
+      console.error('getUserByPhone 失败:', err);
+      return null;
+    }
+  },
+
+  /** 根据openid获取用户信息 */
+  async getUserByOpenId(openid) {
+    try {
+      const res = await usersCol.where({ _openid: openid }).get();
+      return res.data.length > 0 ? res.data[0] : null;
+    } catch (err) {
+      console.error('getUserByOpenId 失败:', err);
       return null;
     }
   },
@@ -61,6 +84,146 @@ module.exports = {
     } catch (err) {
       console.error('updateUser 失败:', err);
       return false;
+    }
+  },
+
+  // ========== 房间号验证相关 ==========
+
+  /** 验证房间号是否有效（在预设的有效房间号列表中） */
+  async verifyRoom(building, roomNumber) {
+    try {
+      const res = await roomsCol.where({
+        building: building,
+        roomNumber: roomNumber,
+        status: 'active' // 只验证激活状态的房间
+      }).get();
+      return res.data.length > 0 ? res.data[0] : null;
+    } catch (err) {
+      console.error('verifyRoom 失败:', err);
+      return null;
+    }
+  },
+
+  /** 检查房间号是否已被其他用户绑定 */
+  async isRoomBound(building, roomNumber) {
+    try {
+      const res = await usersCol.where({
+        building: building,
+        roomNumber: roomNumber,
+        roomVerified: true // 只检查已验证的绑定
+      }).get();
+      return res.data.length > 0 ? res.data[0] : null;
+    } catch (err) {
+      console.error('isRoomBound 失败:', err);
+      return null;
+    }
+  },
+
+  /** 获取所有有效房间号列表（管理员用） */
+  async getValidRooms(options = {}) {
+    try {
+      const { page = 1, pageSize = 50, building } = options;
+      let query = roomsCol;
+      
+      if (building) {
+        query = roomsCol.where({ building });
+      }
+      
+      const res = await query
+        .orderBy('building', 'asc')
+        .orderBy('roomNumber', 'asc')
+        .skip((page - 1) * pageSize)
+        .limit(pageSize)
+        .get();
+      return res.data;
+    } catch (err) {
+      console.error('getValidRooms 失败:', err);
+      return [];
+    }
+  },
+
+  /** 添加有效房间号（管理员用） */
+  async addValidRoom(roomData) {
+    try {
+      // 检查是否已存在
+      const existing = await roomsCol.where({
+        building: roomData.building,
+        roomNumber: roomData.roomNumber
+      }).get();
+      
+      if (existing.data.length > 0) {
+        return { success: false, error: '该房间号已存在' };
+      }
+      
+      const res = await roomsCol.add({
+        data: {
+          ...roomData,
+          status: 'active',
+          createTime: database.serverDate()
+        }
+      });
+      return { success: true, _id: res._id };
+    } catch (err) {
+      console.error('addValidRoom 失败:', err);
+      return { success: false, error: err.message };
+    }
+  },
+
+  /** 批量添加有效房间号（管理员用） */
+  async batchAddValidRooms(building, roomNumbers) {
+    try {
+      const results = [];
+      for (const roomNumber of roomNumbers) {
+        const result = await this.addValidRoom({ building, roomNumber });
+        results.push({ roomNumber, ...result });
+      }
+      return results;
+    } catch (err) {
+      console.error('batchAddValidRooms 失败:', err);
+      return [];
+    }
+  },
+
+  /** 删除有效房间号（管理员用） */
+  async deleteValidRoom(roomId) {
+    try {
+      await roomsCol.doc(roomId).remove();
+      return true;
+    } catch (err) {
+      console.error('deleteValidRoom 失败:', err);
+      return false;
+    }
+  },
+
+  /** 更新房间号状态（管理员用） */
+  async updateRoomStatus(roomId, status) {
+    try {
+      await roomsCol.doc(roomId).update({
+        data: { status, updateTime: database.serverDate() }
+      });
+      return true;
+    } catch (err) {
+      console.error('updateRoomStatus 失败:', err);
+      return false;
+    }
+  },
+
+  /** 获取房间号统计信息（管理员用） */
+  async getRoomStatistics() {
+    try {
+      const [totalRes, activeRes, boundRes] = await Promise.all([
+        roomsCol.count(),
+        roomsCol.where({ status: 'active' }).count(),
+        usersCol.where({ roomVerified: true }).count()
+      ]);
+      return {
+        totalRooms: totalRes.total || 0,
+        activeRooms: activeRes.total || 0,
+        boundRooms: boundRes.total || 0
+      };
+    } catch (err) {
+      console.error('getRoomStatistics 失败:', err);
+      return { totalRooms: 0, activeRooms: 0, boundRooms: 0 };
     }
   },
 

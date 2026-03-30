@@ -340,11 +340,29 @@
   box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
 }
 
+.post-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+
 .post-user {
   display: flex;
   align-items: center;
   gap: 16rpx;
-  margin-bottom: 16rpx;
+}
+
+.post-delete-btn {
+  padding: 8rpx 20rpx;
+  border-radius: 16rpx;
+  background: #FFF2F0;
+  font-size: 24rpx;
+  color: #FF4D4F;
+}
+
+.post-delete-btn:active {
+  background: #FFCCC7;
 }
 
 .post-user-info {

@@ -215,8 +215,38 @@ Page({
     wx.navigateTo({ url: '/pages/publish-talk/publish-talk' });
   },
 
-  goPostDetail(e) {
+  // 预览图片
+  previewImage(e) {
+    const { url, urls } = e.currentTarget.dataset;
+    wx.previewImage({
+      current: url,
+      urls: urls
+    });
+  },
+
+  // 删除自己的帖子
+  deletePost(e) {
     const id = e.currentTarget.dataset.id;
-    wx.navigateTo({ url: `/pages/post-detail/post-detail?id=${id}` });
+    const that = this;
+    
+    wx.showModal({
+      title: '删除帖子',
+      content: '确定要删除这条帖子吗？',
+      confirmColor: '#FF4D4F',
+      success: async (res) => {
+        if (res.confirm) {
+          wx.showLoading({ title: '删除中...' });
+          const success = await db.deletePost(id);
+          wx.hideLoading();
+          
+          if (success) {
+            wx.showToast({ title: '删除成功', icon: 'success' });
+            that.loadPosts();
+          } else {
+            wx.showToast({ title: '删除失败', icon: 'none' });
+          }
+        }
+      }
+    });
   }
 });

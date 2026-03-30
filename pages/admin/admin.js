@@ -60,6 +60,22 @@ Page({
     catsPage: 1,
     catsHasMore: true,
 
+    // 房间号管理
+    roomStatistics: {
+      totalRooms: 0,
+      activeRooms: 0,
+      boundRooms: 0
+    },
+    validRooms: [],
+    roomsPage: 1,
+    roomsHasMore: true,
+    roomFilterIndex: 0,
+    batchBuildingIndex: -1,
+    batchRoomNumbers: '',
+    unbindPhone: '',
+    buildingOptions: ['1栋', '2栋', '3栋', '4栋', '5栋', '6栋', '7栋', '8栋', '9栋', '10栋'],
+    roomFilterOptions: ['全部', '1栋', '2栋', '3栋', '4栋', '5栋', '6栋', '7栋', '8栋', '9栋', '10栋'],
+
     // 系统设置
     banners: [],
     announcementTitle: '',
@@ -111,6 +127,10 @@ Page({
         break;
       case 'cats':
         this.loadCats(true);
+        break;
+      case 'rooms':
+        this.loadRoomStatistics();
+        this.loadValidRooms(true);
         break;
       case 'settings':
         this.loadSettings();
@@ -670,6 +690,221 @@ Page({
         }
       }
     });
+  },
+
+  // ========== 房间号管理 ==========
+  async loadRoomStatistics() {
+    try {
+      const roomStatistics = await db.getRoomStatistics();
+      this.setData({ roomStatistics });
+    } catch (err) {
+      console.error('加载房间号统计失败:', err);
+    }
+  },
+
+  async loadValidRooms(reset = false) {
+    if (reset) {
+      this.setData({ roomsPage: 1, validRooms: [], roomsHasMore: true });
+    }
+
+    try {
+      wx.showLoading({ title: '加载中...' });
+      const { roomsPage, roomFilterIndex, buildingOptions } = this.data;
+      const building = roomFilterIndex > 0 ? buildingOptions[roomFilterIndex - 1] : null;
+      
+      const rooms = await db.getValidRooms({
+        page: roomsPage,
+        pageSize: 50,
+        building
+      });
+
+      wx.hideLoading();
+
+      if (reset) {
+        this.setData({ validRooms: rooms });
+      } else {
+        this.setData({ validRooms: [...this.data.validRooms, ...rooms] });
+      }
+
+      this.setData({ roomsHasMore: rooms.length >= 50 });
+    } catch (err) {
+      wx.hideLoading();
+      console.error('加载房间号失败:', err);
+    }
+  },
+
+  loadMoreRooms() {
+    if (!this.data.roomsHasMore) return;
+    this.setData({ roomsPage: this.data.roomsPage + 1 });
+    this.loadValidRooms();
+  },
+
+  onRoomFilterChange(e) {
+    this.setData({ roomFilterIndex: parseInt(e.detail.value) });
+    this.loadValidRooms(true);
+  },
+
+  onBatchBuildingChange(e) {
+    this.setData({ batchBuildingIndex: parseInt(e.detail.value) });
+  },
+
+  onBatchRoomInput(e) {
+    this.setData({ batchRoomNumbers: e.detail.value });
+  },
+
+  async batchAddRooms() {
+    const { batchBuildingIndex, buildingOptions, batchRoomNumbers } = this.data;
+
+    if (batchBuildingIndex < 0) {
+      wx.showToast({ title: '请选择楼栋', icon: 'none' });
+      return;
+    }
+
+    if (!batchRoomNumbers.trim()) {
+      wx.showToast({ title: '请输入房间号', icon: 'none' });
+      return;
+    }
+
+    const building = buildingOptions[batchBuildingIndex];
+    // 解析房间号，支持逗号、中文逗号、空格、换行分隔
+    const roomNumbers = batchRoomNumbers
+      .split(/[,，\s\n]+/)
+      .map(r => r.trim())
+      .filter(r => r);
+
+    if (roomNumbers.length === 0) {
+      wx.showToast({ title: '请输入有效的房间号', icon: 'none' });
+      return;
+    }
+
+    wx.showLoading({ title: '添加中...', mask: true });
+
+    try {
+      const results = await db.batchAddValidRooms(building, roomNumbers);
+      wx.hideLoading();
+
+      const successCount = results.filter(r => r.success).length;
+      const failCount = results.filter(r => !r.success).length;
+
+      let message = `成功添加 ${successCount} 个房间号`;
+      if (failCount > 0) {
+        message += `，${failCount} 个已存在`;
+      }
+
+      wx.showToast({ title: message, icon: 'success', duration: 2000 });
+      
+      this.setData({ batchRoomNumbers: '' });
+      this.loadRoomStatistics();
+      this.loadValidRooms(true);
+      this.addLog(`批量添加房间号: ${building} ${roomNumbers.join(',')}`);
+    } catch (err) {
+      wx.hideLoading();
+      wx.showToast({ title: '添加失败', icon: 'none' });
+    }
+  },
+
+  toggleRoomStatus(e) {
+    const { id, status } = e.currentTarget.dataset;
+    const newStatus = status === 'active' ? 'inactive' : 'active';
+    const actionText = status === 'active' ? '禁用' : '启用';
+
+    wx.showModal({
+      title: `确认${actionText}`,
+      content: `确定要${actionText}这个房间号吗？`,
+      confirmColor: status === 'active' ? '#FAAD14' : '#52C41A',
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            await db.updateRoomStatus(id, newStatus);
+            wx.showToast({ title: `${actionText}成功`, icon: 'success' });
+            this.loadValidRooms(true);
+            this.loadRoomStatistics();
+            this.addLog(`${actionText}房间号`);
+          } catch (err) {
+            wx.showToast({ title: `${actionText}失败`, icon: 'none' });
+          }
+        }
+      }
+    });
+  },
+
+  deleteRoom(e) {
+    const { id, index } = e.currentTarget.dataset;
+    wx.showModal({
+      title: '确认删除',
+      content: '确定删除这个房间号吗？删除后该房间号将无法用于注册。',
+      confirmColor: '#FF4D4F',
+      success: async (res) => {
+        if (res.confirm) {
+          try {
+            await db.deleteValidRoom(id);
+            const validRooms = [...this.data.validRooms];
+            validRooms.splice(index, 1);
+            this.setData({ validRooms });
+            wx.showToast({ title: '删除成功', icon: 'success' });
+            this.loadRoomStatistics();
+            this.addLog('删除房间号');
+          } catch (err) {
+            wx.showToast({ title: '删除失败', icon: 'none' });
+          }
+        }
+      }
+    });
+  },
+
+  onUnbindPhoneInput(e) {
+    this.setData({ unbindPhone: e.detail.value });
+  },
+
+  async unbindUserRoom() {
+    const { unbindPhone } = this.data;
+
+    if (!unbindPhone || unbindPhone.length !== 11) {
+      wx.showToast({ title: '请输入正确的手机号', icon: 'none' });
+      return;
+    }
+
+    wx.showLoading({ title: '查找用户...', mask: true });
+
+    try {
+      const user = await db.getUserByPhone(unbindPhone);
+      wx.hideLoading();
+
+      if (!user) {
+        wx.showToast({ title: '未找到该用户', icon: 'none' });
+        return;
+      }
+
+      if (!user.roomVerified) {
+        wx.showToast({ title: '该用户未绑定房间号', icon: 'none' });
+        return;
+      }
+
+      wx.showModal({
+        title: '确认解绑',
+        content: `确定要解绑用户 ${user.name || unbindPhone} 的房间号（${user.dormitory}）吗？`,
+        confirmColor: '#FAAD14',
+        success: async (res) => {
+          if (res.confirm) {
+            try {
+              await db.updateUser(user._id, {
+                roomVerified: false,
+                unbindTime: new Date().toISOString()
+              });
+              wx.showToast({ title: '解绑成功', icon: 'success' });
+              this.setData({ unbindPhone: '' });
+              this.loadRoomStatistics();
+              this.addLog(`解绑用户房间号: ${unbindPhone}`);
+            } catch (err) {
+              wx.showToast({ title: '解绑失败', icon: 'none' });
+            }
+          }
+        }
+      });
+    } catch (err) {
+      wx.hideLoading();
+      wx.showToast({ title: '查找失败', icon: 'none' });
+    }
   },
 
   // ========== 系统设置 ==========
