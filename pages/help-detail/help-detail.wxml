@@ -54,9 +54,6 @@
 
   <!-- 底部操作 -->
   <view class="action-bar safe-bottom">
-    <view class="btn-secondary" bindtap="onMessage">💬 私信</view>
-    <view class="btn-primary" bindtap="onContact">
-      {{help.type === 'need' ? '🙋 我来帮忙' : '📞 联系TA'}}
-    </view>
+    <view class="btn-primary full-width" bindtap="onMessage">💬 私信联系</view>
   </view>
 </view>

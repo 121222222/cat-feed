@@ -237,6 +237,10 @@
   text-align: center;
 }
 
+.btn-primary.full-width {
+  flex: 1;
+}
+
 .btn-primary:active {
   opacity: 0.85;
 }

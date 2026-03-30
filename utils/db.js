@@ -17,6 +17,8 @@ const helpsCol = database.collection('helps');
 const commentsCol = database.collection('comments');
 const announcementsCol = database.collection('announcements');
 const roomsCol = database.collection('valid_rooms'); // 有效房间号集合
+const conversationsCol = database.collection('conversations'); // 会话集合
+const chatMessagesCol = database.collection('chat_messages'); // 聊天消息集合
 
 module.exports = {
   db: database,
@@ -1239,6 +1241,213 @@ module.exports = {
     } catch (err) {
       console.error('getImageUrls 失败:', err);
       return fileIDs; // 失败时返回原始 fileID
+    }
+  },
+
+  // ========== 私信会话相关 ==========
+
+  /** 获取或创建会话（两个用户之间的唯一会话） */
+  async getOrCreateConversation(myUserId, targetUserId, targetName, targetAvatar) {
+    try {
+      // 用两个用户ID排序后拼接，确保唯一性
+      const participants = [myUserId, targetUserId].sort();
+      const conversationKey = participants.join('_');
+      
+      // 查找是否已存在会话
+      const existRes = await conversationsCol.where({
+        conversationKey: conversationKey
+      }).get();
+      
+      if (existRes.data.length > 0) {
+        return existRes.data[0];
+      }
+      
+      // 不存在则创建新会话
+      const res = await conversationsCol.add({
+        data: {
+          conversationKey: conversationKey,
+          participants: participants,
+          user1Id: participants[0],
+          user2Id: participants[1],
+          // 存储双方信息便于显示
+          participantsInfo: {
+            [myUserId]: { name: '', avatar: '' }, // 会在发消息时更新
+            [targetUserId]: { name: targetName, avatar: targetAvatar }
+          },
+          lastMessage: '',
+          lastMessageTime: database.serverDate(),
+          unreadCount: {
+            [myUserId]: 0,
+            [targetUserId]: 0
+          },
+          createTime: database.serverDate()
+        }
+      });
+      
+      // 返回新创建的会话
+      const newConv = await conversationsCol.doc(res._id).get();
+      return newConv.data;
+    } catch (err) {
+      console.error('getOrCreateConversation 失败:', err);
+      return null;
+    }
+  },
+
+  /** 获取我的所有会话列表 */
+  async getMyConversations(myUserId) {
+    try {
+      const res = await conversationsCol.where(_.or([
+        { user1Id: myUserId },
+        { user2Id: myUserId }
+      ]))
+      .orderBy('lastMessageTime', 'desc')
+      .get();
+      
+      return res.data;
+    } catch (err) {
+      console.error('getMyConversations 失败:', err);
+      return [];
+    }
+  },
+
+  /** 发送私信消息 */
+  async sendChatMessage(conversationId, fromUserId, toUserId, content, fromUserInfo) {
+    try {
+      // 添加消息
+      const msgRes = await chatMessagesCol.add({
+        data: {
+          conversationId: conversationId,
+          fromUserId: fromUserId,
+          toUserId: toUserId,
+          content: content,
+          read: false,
+          createTime: database.serverDate()
+        }
+      });
+      
+      // 更新会话的最后消息和未读数
+      await conversationsCol.doc(conversationId).update({
+        data: {
+          lastMessage: content.length > 20 ? content.substring(0, 20) + '...' : content,
+          lastMessageTime: database.serverDate(),
+          [`participantsInfo.${fromUserId}`]: {
+            name: fromUserInfo.name || fromUserInfo.nickName || '用户',
+            avatar: fromUserInfo.avatarUrl || fromUserInfo.avatar || ''
+          },
+          [`unreadCount.${toUserId}`]: _.inc(1)
+        }
+      });
+      
+      // 同时在 messages 集合创建一条记录，用于消息页面显示
+      await this.updateChatMessageNotification(conversationId, toUserId, fromUserId, fromUserInfo, content);
+      
+      return msgRes._id;
+    } catch (err) {
+      console.error('sendChatMessage 失败:', err);
+      return null;
+    }
+  },
+
+  /** 更新/创建聊天消息通知（用于消息页面显示） */
+  async updateChatMessageNotification(conversationId, toUserId, fromUserId, fromUserInfo, content) {
+    try {
+      // 查找是否已有该会话的通知
+      const existRes = await messagesCol.where({
+        type: 'chat',
+        conversationId: conversationId,
+        toUserId: toUserId
+      }).get();
+      
+      if (existRes.data.length > 0) {
+        // 更新现有通知
+        await messagesCol.doc(existRes.data[0]._id).update({
+          data: {
+            preview: content.length > 30 ? content.substring(0, 30) + '...' : content,
+            read: false,
+            createTime: database.serverDate()
+          }
+        });
+      } else {
+        // 创建新通知
+        await messagesCol.add({
+          data: {
+            type: 'chat',
+            conversationId: conversationId,
+            toUserId: toUserId,
+            fromUserId: fromUserId,
+            title: fromUserInfo.name || fromUserInfo.nickName || '用户',
+            avatar: fromUserInfo.avatarUrl || fromUserInfo.avatar || '',
+            preview: content.length > 30 ? content.substring(0, 30) + '...' : content,
+            read: false,
+            createTime: database.serverDate()
+          }
+        });
+      }
+    } catch (err) {
+      console.error('updateChatMessageNotification 失败:', err);
+    }
+  },
+
+  /** 获取会话的聊天消息列表 */
+  async getChatMessages(conversationId, page = 1, pageSize = 50) {
+    try {
+      const res = await chatMessagesCol.where({
+        conversationId: conversationId
+      })
+      .orderBy('createTime', 'asc')
+      .skip((page - 1) * pageSize)
+      .limit(pageSize)
+      .get();
+      
+      return res.data;
+    } catch (err) {
+      console.error('getChatMessages 失败:', err);
+      return [];
+    }
+  },
+
+  /** 标记会话消息已读 */
+  async markConversationRead(conversationId, myUserId) {
+    try {
+      // 更新会话未读数
+      await conversationsCol.doc(conversationId).update({
+        data: {
+          [`unreadCount.${myUserId}`]: 0
+        }
+      });
+      
+      // 标记消息通知已读
+      const notifyRes = await messagesCol.where({
+        type: 'chat',
+        conversationId: conversationId,
+        toUserId: myUserId
+      }).get();
+      
+      if (notifyRes.data.length > 0) {
+        await messagesCol.doc(notifyRes.data[0]._id).update({
+          data: { read: true }
+        });
+      }
+      
+      // 标记聊天消息已读
+      // 注意：小程序云数据库不支持批量更新非自己创建的记录
+      // 这里只能通过循环更新（或使用云函数）
+      
+      return true;
+    } catch (err) {
+      console.error('markConversationRead 失败:', err);
+      return false;
+    }
+  },
+
+  /** 根据用户ID获取用户信息 */
+  async getUserById(userId) {
+    try {
+      const res = await usersCol.doc(userId).get();
+      return res.data;
+    } catch (err) {
+      console.error('getUserById 失败:', err);
+      return null;
     }
   }
 };

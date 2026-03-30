@@ -1,4 +1,5 @@
 const db = require('../../utils/db.js');
+const app = getApp();
 
 Page({
   data: {
@@ -22,35 +23,28 @@ Page({
     this.loadMessages();
   },
 
-  // 从数据库加载消息
+  // 加载消息
   async loadMessages() {
     this.setData({ loading: true });
     
     try {
-      const messages = await db.getMyMessages();
+      // 从云数据库加载聊天会话
+      const chatMessages = await this.loadCloudConversations();
       
-      // 格式化消息数据
-      const formattedMessages = messages.map(msg => ({
-        id: msg._id,
-        type: msg.type || 'system',
-        subType: msg.subType || '',
-        icon: msg.icon || (msg.type === 'chat' ? '💬' : '🔔'),
-        avatarBg: msg.avatarBg || (msg.type === 'chat' ? '#FFE0D6' : '#E6F7FF'),
-        title: msg.title || '系统通知',
-        preview: msg.preview || msg.content || '',
-        time: this.formatTime(msg.createTime),
-        unread: !msg.read,
-        userId: msg.fromUserId || '',
-        relatedId: msg.relatedId || '',
-        avatar: msg.avatar || ''
-      }));
+      // 从数据库加载系统消息
+      const systemMessages = await this.loadSystemMessages();
+      
+      // 合并并排序所有消息
+      const allMessages = [...chatMessages, ...systemMessages].sort((a, b) => {
+        return (b.sortTime || 0) - (a.sortTime || 0);
+      });
       
       // 计算未读数
-      const chatUnread = formattedMessages.filter(m => m.type === 'chat' && m.unread).length;
-      const sysUnread = formattedMessages.filter(m => m.type === 'system' && m.unread).length;
+      const chatUnread = chatMessages.filter(m => m.unread).length;
+      const sysUnread = systemMessages.filter(m => m.unread).length;
       
       this.setData({
-        allMessages: formattedMessages,
+        allMessages: allMessages,
         chatUnread,
         sysUnread,
         loading: false
@@ -64,6 +58,82 @@ Page({
         messages: [],
         loading: false 
       });
+    }
+  },
+
+  // 从云数据库加载聊天会话
+  async loadCloudConversations() {
+    try {
+      const currentUser = app.globalData.userInfo;
+      if (!currentUser) return [];
+      
+      const currentUserId = currentUser._id || currentUser.openid || '';
+      if (!currentUserId) return [];
+      
+      // 从云数据库获取会话列表
+      const conversations = await db.getMyConversations(currentUserId);
+      
+      return conversations.map(conv => {
+        // 判断对方是谁
+        const isUser1 = conv.user1Id === currentUserId;
+        const targetId = isUser1 ? conv.user2Id : conv.user1Id;
+        
+        // 获取对方的信息
+        const targetInfo = conv.participantsInfo ? conv.participantsInfo[targetId] : null;
+        const targetName = targetInfo ? targetInfo.name : '用户';
+        const targetAvatar = targetInfo ? targetInfo.avatar : '';
+        
+        // 获取未读数
+        const unreadCount = conv.unreadCount ? (conv.unreadCount[currentUserId] || 0) : 0;
+        
+        return {
+          id: conv._id,
+          type: 'chat',
+          conversationId: conv._id,
+          icon: '💬',
+          avatarBg: '#FFE0D6',
+          title: targetName,
+          avatar: targetAvatar,
+          preview: conv.lastMessage || '暂无消息',
+          time: this.formatTime(conv.lastMessageTime),
+          unread: unreadCount > 0,
+          unreadCount: unreadCount,
+          userId: targetId,
+          targetName: targetName,
+          targetAvatar: targetAvatar,
+          sortTime: conv.lastMessageTime ? new Date(conv.lastMessageTime).getTime() : 0
+        };
+      });
+    } catch (err) {
+      console.error('加载云端会话失败:', err);
+      return [];
+    }
+  },
+
+  // 加载系统消息
+  async loadSystemMessages() {
+    try {
+      const messages = await db.getMyMessages();
+      
+      // 只返回系统类型消息
+      return messages.filter(msg => msg.type === 'system' || !msg.type).map(msg => ({
+        id: msg._id,
+        type: msg.type || 'system',
+        subType: msg.subType || '',
+        icon: msg.icon || '🔔',
+        avatarBg: msg.avatarBg || '#E6F7FF',
+        title: msg.title || '系统通知',
+        preview: msg.preview || msg.content || '',
+        time: this.formatTime(msg.createTime),
+        unread: !msg.read,
+        userId: msg.fromUserId || '',
+        relatedId: msg.relatedId || '',
+        avatar: msg.avatar || '',
+        sortTime: msg.createTime ? new Date(msg.createTime).getTime() : 0
+      }));
+    } catch (err) {
+      console.error('加载系统消息失败:', err);
+      return [];
     }
   },
 
@@ -118,12 +188,12 @@ Page({
     const item = e.currentTarget.dataset.item;
     
     // 标记为已读
-    this.markAsRead(item.id);
+    this.markAsRead(item);
     
     if (item.type === 'chat') {
       // 私信消息：跳转到聊天页面
       wx.navigateTo({ 
-        url: `/pages/chat/chat?id=${item.userId || item.id}&name=${item.title}` 
+        url: `/pages/chat/chat?targetId=${item.userId}&targetName=${encodeURIComponent(item.targetName || item.title)}&targetAvatar=${encodeURIComponent(item.targetAvatar || item.avatar || '')}` 
       });
     } else if (item.type === 'system') {
       // 系统通知：根据子类型跳转不同页面
@@ -145,12 +215,12 @@ Page({
     }
   },
   
-  // 标记消息已读（同时更新数据库）
-  async markAsRead(msgId) {
+  // 标记消息已读
+  async markAsRead(item) {
     // 更新本地状态
     const allMessages = this.data.allMessages.map(m => {
-      if (m.id === msgId) {
-        return { ...m, unread: false };
+      if (m.id === item.id) {
+        return { ...m, unread: false, unreadCount: 0 };
       }
       return m;
     });
@@ -162,13 +232,26 @@ Page({
     this.setData({ allMessages, chatUnread, sysUnread });
     this.filterMessages(this.data.activeTab);
     
-    // 更新数据库（可选，如果需要持久化已读状态）
-    try {
-      await db.db.collection('messages').doc(msgId).update({
-        data: { read: true }
-      });
-    } catch (err) {
-      console.error('更新已读状态失败:', err);
+    // 更新云数据库
+    const currentUser = app.globalData.userInfo;
+    const currentUserId = currentUser ? (currentUser._id || currentUser.openid || '') : '';
+    
+    if (item.type === 'chat' && item.conversationId) {
+      // 聊天消息：更新云数据库的未读数
+      try {
+        await db.markConversationRead(item.conversationId, currentUserId);
+      } catch (err) {
+        console.error('更新会话已读状态失败:', err);
+      }
+    } else if (item.type === 'system') {
+      // 系统消息：更新数据库
+      try {
+        await db.db.collection('messages').doc(item.id).update({
+          data: { read: true }
+        });
+      } catch (err) {
+        console.error('更新已读状态失败:', err);
+      }
     }
   },
   

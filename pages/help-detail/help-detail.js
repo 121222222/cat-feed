@@ -42,9 +42,34 @@ Page({
 
   onMessage() {
     const help = this.data.help;
-    // 跳转到聊天页面
+    const app = getApp();
+    
+    // 检查登录状态
+    if (!app.globalData.isLoggedIn) {
+      wx.showModal({
+        title: '提示',
+        content: '请先登录后再发起私信',
+        confirmText: '去登录',
+        confirmColor: '#FFBAA3',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({ url: '/pages/login/login' });
+          }
+        }
+      });
+      return;
+    }
+    
+    // 不能给自己发私信
+    const currentUser = app.globalData.userInfo;
+    if (currentUser && (currentUser._id === help.userId || currentUser._id === help._openid)) {
+      wx.showToast({ title: '不能给自己发私信', icon: 'none' });
+      return;
+    }
+    
+    // 跳转到聊天页面，传递对方用户信息
     wx.navigateTo({ 
-      url: `/pages/chat/chat?id=${help.userId || help._id}&name=${help.userName || '用户'}` 
+      url: `/pages/chat/chat?targetId=${help.userId || help._openid}&targetName=${encodeURIComponent(help.userName || '用户')}&targetAvatar=${encodeURIComponent(help.userAvatar || '')}&from=help&helpId=${help._id}` 
     });
   },
 
