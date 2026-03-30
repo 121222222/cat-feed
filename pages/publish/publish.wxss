@@ -324,3 +324,60 @@
 .btn-publish:active {
   opacity: 0.85;
 }
+
+/* 可见范围选择 */
+.visibility-options {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.visibility-option {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  border-radius: 16rpx;
+  background: #F8F8F8;
+  border: 2rpx solid transparent;
+  transition: all 0.2s ease;
+}
+
+.visibility-option.active {
+  background: #FFF7F4;
+  border-color: #FFBAA3;
+}
+
+.visibility-icon {
+  font-size: 36rpx;
+  margin-right: 20rpx;
+}
+
+.visibility-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.visibility-name {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #2D2D2D;
+}
+
+.visibility-desc {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.visibility-check {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: 50%;
+  background: #FFBAA3;
+  color: #FFFFFF;
+  font-size: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

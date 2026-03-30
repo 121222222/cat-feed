@@ -7,6 +7,39 @@
       <text class="post-time">{{post.time || '刚刚'}}</text>
     </view>
     <view class="follow-btn" wx:if="{{!isOwner}}">+ 关注</view>
+    <!-- 更多按钮 -->
+    <view class="more-btn" bindtap="showMoreMenu">
+      <text class="more-icon">•••</text>
+    </view>
+  </view>
+
+  <!-- 更多操作弹窗 -->
+  <view class="action-sheet-mask" wx:if="{{showActionSheet}}" bindtap="hideMoreMenu"></view>
+  <view class="action-sheet {{showActionSheet ? 'show' : ''}}">
+    <view class="action-sheet-content">
+      <view class="action-sheet-item" bindtap="onSaveImage">
+        <text class="action-sheet-icon">💾</text>
+        <text class="action-sheet-text">保存图片</text>
+      </view>
+      <view class="action-sheet-item" bindtap="onEditPost" wx:if="{{isOwner}}">
+        <text class="action-sheet-icon">✏️</text>
+        <text class="action-sheet-text">编辑</text>
+      </view>
+      <view class="action-sheet-item" bindtap="onSetVisibility" wx:if="{{isOwner}}">
+        <text class="action-sheet-icon">{{post.visibility === 'private' ? '🔒' : '🌍'}}</text>
+        <text class="action-sheet-text">权限设置</text>
+        <text class="action-sheet-tag">{{post.visibility === 'private' ? '仅自己' : '公开'}}</text>
+      </view>
+      <view class="action-sheet-item danger" bindtap="onDeletePost" wx:if="{{isOwner}}">
+        <text class="action-sheet-icon">🗑️</text>
+        <text class="action-sheet-text">删除</text>
+      </view>
+      <view class="action-sheet-item" bindtap="onReportPost" wx:if="{{!isOwner}}">
+        <text class="action-sheet-icon">⚠️</text>
+        <text class="action-sheet-text">举报</text>
+      </view>
+    </view>
+    <view class="action-sheet-cancel" bindtap="hideMoreMenu">取消</view>
   </view>
 
   <!-- 图片轮播 -->

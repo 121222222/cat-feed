@@ -41,7 +41,11 @@ Page({
   },
 
   onMessage() {
-    wx.showToast({ title: '私信功能开发中', icon: 'none' });
+    const help = this.data.help;
+    // 跳转到聊天页面
+    wx.navigateTo({ 
+      url: `/pages/chat/chat?id=${help.userId || help._id}&name=${help.userName || '用户'}` 
+    });
   },
 
   onContact() {

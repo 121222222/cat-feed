@@ -40,7 +40,8 @@ Page({
     
     try {
       const userInfo = app.globalData.userInfo || {};
-      const postsRaw = await db.getPosts(this.data.activeCategory, 20);
+      const currentUserId = userInfo._id || '';
+      const postsRaw = await db.getPosts(this.data.activeCategory, currentUserId);
       
       // 收集所有图片 fileID，转换为临时链接
       const allFileIDs = [];

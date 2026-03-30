@@ -129,7 +129,7 @@ module.exports = {
   // ========== 动态/帖子相关 ==========
 
   /** 获取动态列表（支持分页和搜索） */
-  async getPosts(options = {}) {
+  async getPosts(options = {}, currentUserId = '') {
     try {
       const { category, page = 1, pageSize = 20, keyword } = options;
       
@@ -143,8 +143,12 @@ module.exports = {
           .orderBy('createTime', 'desc')
           .limit(20)
           .get();
-        // 过滤已删除的帖子
-        return res.data.filter(p => !p.deleted);
+        // 过滤已删除的帖子，并过滤可见性（仅显示公开的或自己发布的私密帖子）
+        return res.data.filter(p => {
+          if (p.deleted) return false;
+          if (p.visibility === 'private' && p.userId !== currentUserId) return false;
+          return true;
+        });
       }
       
       // 基础条件
@@ -168,8 +172,12 @@ module.exports = {
         .skip((page - 1) * pageSize)
         .limit(pageSize)
         .get();
-      // 过滤已删除的帖子
-      return res.data.filter(p => !p.deleted);
+      // 过滤已删除的帖子，并过滤可见性
+      return res.data.filter(p => {
+        if (p.deleted) return false;
+        if (p.visibility === 'private' && p.userId !== currentUserId) return false;
+        return true;
+      });
     } catch (err) {
       console.error('getPosts 失败:', err);
       return [];
@@ -232,6 +240,22 @@ module.exports = {
       return true;
     } catch (err) {
       console.error('togglePostLike 失败:', err);
+      return false;
+    }
+  },
+
+  /** 更新动态（用于修改权限等） */
+  async updatePost(postId, data) {
+    try {
+      await postsCol.doc(postId).update({
+        data: {
+          ...data,
+          updateTime: database.serverDate()
+        }
+      });
+      return true;
+    } catch (err) {
+      console.error('updatePost 失败:', err);
       return false;
     }
   },

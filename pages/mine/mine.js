@@ -74,7 +74,7 @@ Page({
   },
 
   goMyHelps() {
-    wx.showToast({ title: '功能开发中', icon: 'none' });
+    wx.navigateTo({ url: '/pages/my-needs/my-needs' });
   },
 
   goMyLikes() {

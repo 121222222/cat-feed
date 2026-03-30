@@ -100,6 +100,32 @@
         <view class="topic-confirm-btn" bindtap="confirmCustomTopic">添加</view>
       </view>
     </view>
+
+    <!-- 可见范围选择 -->
+    <view class="form-section">
+      <view class="section-header">
+        <text class="section-icon">👁️</text>
+        <text class="section-title">谁可以看</text>
+      </view>
+      <view class="visibility-options">
+        <view class="visibility-option {{form.visibility === 'public' ? 'active' : ''}}" bindtap="setVisibility" data-visibility="public">
+          <text class="visibility-icon">🌍</text>
+          <view class="visibility-info">
+            <text class="visibility-name">公开</text>
+            <text class="visibility-desc">所有人可见</text>
+          </view>
+          <view class="visibility-check" wx:if="{{form.visibility === 'public'}}">✓</view>
+        </view>
+        <view class="visibility-option {{form.visibility === 'private' ? 'active' : ''}}" bindtap="setVisibility" data-visibility="private">
+          <text class="visibility-icon">🔒</text>
+          <view class="visibility-info">
+            <text class="visibility-name">仅自己可见</text>
+            <text class="visibility-desc">仅自己能看到</text>
+          </view>
+          <view class="visibility-check" wx:if="{{form.visibility === 'private'}}">✓</view>
+        </view>
+      </view>
+    </view>
   </view>
 
   <!-- 底部提交 -->

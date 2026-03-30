@@ -8,7 +8,8 @@ Page({
       content: '',
       category: 'daily',
       catId: '',
-      catName: ''
+      catName: '',
+      visibility: 'public'  // 默认公开
     },
     photos: [],
     myCats: [],
@@ -62,6 +63,12 @@ Page({
     const index = e.currentTarget.dataset.index;
     const key = `topicOptions[${index}].checked`;
     this.setData({ [key]: !this.data.topicOptions[index].checked });
+  },
+
+  // 设置可见范围
+  setVisibility(e) {
+    const visibility = e.currentTarget.dataset.visibility;
+    this.setData({ 'form.visibility': visibility });
   },
 
   // 显示自定义话题输入框
@@ -201,6 +208,7 @@ Page({
               catId: form.catId,
               catName: form.catName,
               topics: topics,
+              visibility: form.visibility,  // 可见范围
               userId: userInfo._id || '',
               userName: userInfo.name || '匿名',
               userAvatar: userInfo.avatar || '',
