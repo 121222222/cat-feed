@@ -73,8 +73,9 @@ Page({
     batchBuildingIndex: -1,
     batchRoomNumbers: '',
     unbindPhone: '',
-    buildingOptions: ['1栋', '2栋', '3栋', '4栋', '5栋', '6栋', '7栋', '8栋', '9栋', '10栋'],
-    roomFilterOptions: ['全部', '1栋', '2栋', '3栋', '4栋', '5栋', '6栋', '7栋', '8栋', '9栋', '10栋'],
+    buildingOptions: ['1栋', '2栋', '3栋', '4栋', '5栋', '6栋', '7栋', '8栋', '9栋', '10栋', '11栋'],
+    roomFilterOptions: ['全部', '1栋', '2栋', '3栋', '4栋', '5栋', '6栋', '7栋', '8栋', '9栋', '10栋', '11栋'],
+    initRoomsLoading: false,
 
     // 系统设置
     banners: [],
@@ -693,6 +694,55 @@ Page({
   },
 
   // ========== 房间号管理 ==========
+  
+  // 一键初始化所有房间号（调用云函数）
+  async initAllRooms() {
+    wx.showModal({
+      title: '初始化房间号',
+      content: '将批量添加所有楼栋的房间号（1栋-11栋），已存在的房间号会跳过。确定继续吗？',
+      confirmText: '开始初始化',
+      confirmColor: '#FF8A6B',
+      success: async (res) => {
+        if (res.confirm) {
+          this.setData({ initRoomsLoading: true });
+          wx.showLoading({ title: '初始化中...', mask: true });
+          
+          try {
+            const result = await wx.cloud.callFunction({
+              name: 'initRooms',
+              data: { action: 'init' }
+            });
+            
+            wx.hideLoading();
+            this.setData({ initRoomsLoading: false });
+            
+            if (result.result && result.result.success) {
+              wx.showModal({
+                title: '初始化完成',
+                content: `成功添加 ${result.result.totalAdded} 个房间号`,
+                showCancel: false,
+                confirmColor: '#52C41A'
+              });
+              this.loadRoomStatistics();
+              this.loadValidRooms(true);
+              this.addLog('批量初始化房间号');
+            } else {
+              wx.showToast({ 
+                title: result.result?.error || '初始化失败', 
+                icon: 'none' 
+              });
+            }
+          } catch (err) {
+            wx.hideLoading();
+            this.setData({ initRoomsLoading: false });
+            console.error('初始化房间号失败:', err);
+            wx.showToast({ title: '初始化失败，请检查云函数', icon: 'none' });
+          }
+        }
+      }
+    });
+  },
+
   async loadRoomStatistics() {
     try {
       const roomStatistics = await db.getRoomStatistics();

@@ -1101,3 +1101,18 @@
   background: linear-gradient(135deg, #FAAD14, #FFC53D);
   box-shadow: 0 8rpx 24rpx rgba(250, 173, 20, 0.3);
 }
+
+.btn-primary.disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.init-desc {
+  margin-bottom: 20rpx;
+  padding: 16rpx;
+  background: #FFF7E6;
+  border-radius: 12rpx;
+  font-size: 24rpx;
+  color: #D46B08;
+  line-height: 1.6;
+}

@@ -388,6 +388,19 @@
       </view>
     </view>
 
+    <!-- 一键初始化所有房间号 -->
+    <view class="settings-card">
+      <view class="settings-header">
+        <text class="settings-title">🚀 一键初始化</text>
+      </view>
+      <view class="init-desc">
+        <text>点击下方按钮将自动添加1-11栋所有房间号。已存在的房间号会自动跳过，不会重复添加。</text>
+      </view>
+      <view class="btn-primary {{initRoomsLoading ? 'disabled' : ''}}" bindtap="initAllRooms">
+        {{initRoomsLoading ? '初始化中...' : '一键初始化所有房间号'}}
+      </view>
+    </view>
+
     <!-- 批量添加 -->
     <view class="settings-card">
       <view class="settings-header">
