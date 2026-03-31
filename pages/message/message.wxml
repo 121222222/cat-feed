@@ -24,6 +24,12 @@
     <view class="msg-item" wx:for="{{messages}}" wx:key="id" bindtap="onMsgTap" data-item="{{item}}">
       <view class="msg-avatar-wrap">
         <image wx:if="{{item.avatar}}" class="msg-avatar-img" src="{{item.avatar}}" mode="aspectFill"></image>
+        <view wx:elif="{{item.type === 'chat'}}" class="msg-avatar" style="background:{{item.avatarBg}}">
+          <image class="msg-type-icon" src="/assets/icons/chat.png" mode="aspectFit"></image>
+        </view>
+        <view wx:elif="{{item.type === 'system'}}" class="msg-avatar" style="background:{{item.avatarBg}}">
+          <image class="msg-type-icon" src="/assets/icons/notice.png" mode="aspectFit"></image>
+        </view>
         <view wx:else class="msg-avatar" style="background:{{item.avatarBg}}">
           <text class="msg-avatar-icon">{{item.icon}}</text>
         </view>

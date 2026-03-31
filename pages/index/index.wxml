@@ -33,6 +33,15 @@
     </view>
   </view>
 
+  <!-- 轮播图 -->
+  <view class="banner-section" wx:if="{{banners && banners.length > 0}}">
+    <swiper class="banner-swiper" indicator-dots="{{banners.length > 1}}" indicator-color="rgba(255,255,255,0.5)" indicator-active-color="#FF8A6B" autoplay circular interval="4000">
+      <swiper-item wx:for="{{banners}}" wx:key="index">
+        <image class="banner-image" src="{{item.image}}" mode="aspectFill"></image>
+      </swiper-item>
+    </swiper>
+  </view>
+
   <!-- 分类标签 -->
   <view class="category-tabs">
     <scroll-view scroll-x class="tabs-scroll" enable-flex>
@@ -96,7 +105,7 @@
               <text class="user-name">{{item.userName}}</text>
             </view>
             <view class="post-like {{item.liked ? 'liked' : ''}}" catchtap="onLike" data-id="{{item.id}}">
-              <text>{{item.liked ? '❤️' : '🤍'}}</text>
+              <image class="like-icon-img {{item.liked ? 'liked-icon' : ''}}" src="/assets/icons/like.png" mode="aspectFit"></image>
               <text class="like-count">{{item.likes || 0}}</text>
             </view>
           </view>
@@ -136,7 +145,7 @@
               <text class="user-name">{{item.userName}}</text>
             </view>
             <view class="post-like {{item.liked ? 'liked' : ''}}" catchtap="onLike" data-id="{{item.id}}">
-              <text>{{item.liked ? '❤️' : '🤍'}}</text>
+              <image class="like-icon-img {{item.liked ? 'liked-icon' : ''}}" src="/assets/icons/like.png" mode="aspectFit"></image>
               <text class="like-count">{{item.likes || 0}}</text>
             </view>
           </view>

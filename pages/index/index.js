@@ -12,7 +12,8 @@ Page({
     loading: false,
     page: 1,
     hasMore: true,
-    searchKeyword: ''
+    searchKeyword: '',
+    banners: []
   },
 
   onLoad() {
@@ -22,6 +23,7 @@ Page({
       return;
     }
     this.loadData();
+    this.loadBanners();
   },
 
   onShow() {
@@ -31,6 +33,38 @@ Page({
     // 刷新数据
     if (app.globalData.isLoggedIn) {
       this.loadData();
+      this.loadBanners();
+    }
+  },
+
+  // 加载轮播图
+  async loadBanners() {
+    try {
+      const banners = await db.getBanners();
+      if (banners && banners.length > 0) {
+        // 转换云存储链接为临时链接
+        const fileIDs = banners.map(b => b.image).filter(img => img && img.startsWith('cloud://'));
+        let fileUrlMap = {};
+        if (fileIDs.length > 0) {
+          try {
+            const tempUrls = await db.getImageUrls(fileIDs);
+            fileIDs.forEach((id, index) => {
+              fileUrlMap[id] = tempUrls[index] || id;
+            });
+          } catch (e) {
+            console.error('轮播图链接转换失败:', e);
+          }
+        }
+        
+        const processedBanners = banners.map(b => ({
+          ...b,
+          image: fileUrlMap[b.image] || b.image
+        }));
+        
+        this.setData({ banners: processedBanners });
+      }
+    } catch (err) {
+      console.error('加载轮播图失败:', err);
     }
   },
 
@@ -103,14 +137,20 @@ Page({
         };
       });
       
-      // 搜索过滤
+      // 搜索过滤（支持标题、内容、用户名、猫咪名称、猫咪品种）
       const keyword = this.data.searchKeyword.trim().toLowerCase();
       if (keyword) {
         posts = posts.filter(p => {
           const title = (p.title || '').toLowerCase();
           const content = (p.content || '').toLowerCase();
           const userName = (p.userName || '').toLowerCase();
-          return title.includes(keyword) || content.includes(keyword) || userName.includes(keyword);
+          const catName = (p.catName || '').toLowerCase();
+          const catBreed = (p.catBreed || '').toLowerCase();
+          return title.includes(keyword) || 
+                 content.includes(keyword) || 
+                 userName.includes(keyword) ||
+                 catName.includes(keyword) ||
+                 catBreed.includes(keyword);
         });
       }
       

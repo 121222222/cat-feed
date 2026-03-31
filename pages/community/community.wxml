@@ -113,10 +113,12 @@
         </view>
         <view class="post-actions">
           <view class="post-action" catchtap="onLike" data-id="{{item.id}}">
-            <text>{{item.liked ? '❤️' : '🤍'}} {{item.likes}}</text>
+            <image class="action-icon-img {{item.liked ? 'liked-icon' : ''}}" src="/assets/icons/like.png" mode="aspectFit"></image>
+            <text>{{item.likes}}</text>
           </view>
           <view class="post-action">
-            <text>💬 {{item.comments}}</text>
+            <image class="action-icon-img" src="/assets/icons/comment.png" mode="aspectFit"></image>
+            <text>{{item.comments}}</text>
           </view>
         </view>
       </view>

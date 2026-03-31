@@ -417,8 +417,21 @@
 }
 
 .post-action {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
   font-size: 26rpx;
   color: #999;
+}
+
+.action-icon-img {
+  width: 36rpx;
+  height: 36rpx;
+  transition: filter 0.2s ease;
+}
+
+.action-icon-img.liked-icon {
+  filter: brightness(0) saturate(100%) invert(76%) sepia(25%) saturate(747%) hue-rotate(334deg) brightness(97%) contrast(92%);
 }
 
 .fab {

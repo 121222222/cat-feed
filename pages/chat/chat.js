@@ -12,7 +12,8 @@ Page({
     loading: true,
     currentUserId: '',
     conversationId: '',
-    currentUserInfo: null
+    currentUserInfo: null,
+    inputBottom: 0  // 输入框底部距离
   },
 
   onLoad(options) {
@@ -122,6 +123,19 @@ Page({
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
     return `${hours}:${minutes}`;
+  },
+
+  // 输入框获得焦点，键盘弹起
+  onInputFocus(e) {
+    const keyboardHeight = e.detail.height || 0;
+    this.setData({ inputBottom: keyboardHeight });
+    // 滚动到底部
+    setTimeout(() => this.scrollToBottom(), 100);
+  },
+
+  // 输入框失去焦点，键盘收起
+  onInputBlur() {
+    this.setData({ inputBottom: 0 });
   },
 
   onInput(e) {

@@ -90,18 +90,19 @@
   <!-- 互动栏 -->
   <view class="action-bar">
     <view class="action-item {{post.liked ? 'liked' : ''}}" bindtap="onLike">
-      <text class="action-icon">{{post.liked ? '❤️' : '🤍'}}</text>
+      <image class="action-icon-img {{post.liked ? 'liked-icon' : ''}}" src="/assets/icons/like.png" mode="aspectFit"></image>
       <text class="action-text">{{post.likes || 0}}</text>
     </view>
-    <view class="action-item">
-      <text class="action-icon">💬</text>
+    <view class="action-item" bindtap="showCommentPanel">
+      <image class="action-icon-img" src="/assets/icons/comment.png" mode="aspectFit"></image>
       <text class="action-text">{{post.comments || 0}}</text>
     </view>
-    <view class="action-item" bindtap="onShare">
-      <text class="action-icon">↗️</text>
+    <button class="action-item share-btn" open-type="share">
+      <image class="action-icon-img" src="/assets/icons/share.png" mode="aspectFit"></image>
       <text class="action-text">分享</text>
-    </view>
+    </button>
   </view>
+
 
   <!-- 评论区域 -->
   <view class="comment-section">
@@ -126,9 +127,40 @@
     </view>
   </view>
 
-  <!-- 底部评论输入 -->
-  <view class="comment-bar safe-bottom">
-    <input class="comment-input" placeholder="说点什么..." value="{{commentText}}" bindinput="onCommentInput" />
-    <view class="send-btn" bindtap="sendComment">发送</view>
+  <!-- 底部评论入口（点击弹出输入面板） -->
+  <view class="comment-bar-trigger safe-bottom" bindtap="showCommentPanel">
+    <view class="trigger-input-fake">
+      <text class="trigger-placeholder">说点什么...</text>
+    </view>
+    <view class="trigger-send-btn">发送</view>
+  </view>
+
+  <!-- 评论输入面板遮罩 -->
+  <view class="comment-panel-mask {{showCommentPanel ? 'show' : ''}}" bindtap="hideCommentPanel"></view>
+  
+  <!-- 评论输入面板（从底部滑出） -->
+  <view class="comment-panel {{showCommentPanel ? 'show' : ''}}">
+    <view class="comment-panel-header">
+      <text class="panel-title">发表评论</text>
+      <text class="panel-close" bindtap="hideCommentPanel">×</text>
+    </view>
+    <view class="comment-panel-body">
+      <textarea 
+        class="comment-textarea" 
+        placeholder="说点什么..." 
+        value="{{commentText}}" 
+        bindinput="onCommentInput"
+        focus="{{showCommentPanel}}"
+        auto-height
+        maxlength="500"
+        show-confirm-bar="{{false}}"
+        adjust-position="{{false}}"
+        cursor-spacing="20"
+      ></textarea>
+      <view class="comment-panel-footer">
+        <text class="comment-count">{{commentText.length || 0}}/500</text>
+        <view class="panel-send-btn {{commentText ? 'active' : ''}}" bindtap="sendComment">发送</view>
+      </view>
+    </view>
   </view>
 </view>

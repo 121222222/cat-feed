@@ -31,6 +31,32 @@
       </view>
     </view>
 
+    <!-- 实况图上传区域 -->
+    <view class="photo-section" wx:if="{{mediaType === 'live'}}">
+      <view class="live-photo-header">
+        <text class="live-badge">✨ Live Photo</text>
+        <text class="live-desc">支持上传 iPhone 实况照片</text>
+      </view>
+      <view class="photo-upload-area">
+        <view class="photo-item live-photo-item" wx:for="{{livePhotos}}" wx:key="index">
+          <image src="{{item.image}}" mode="aspectFill" class="photo-img" bindtap="previewLivePhoto" data-index="{{index}}"></image>
+          <view class="live-indicator">
+            <text>LIVE</text>
+          </view>
+          <view class="photo-delete" catchtap="deleteLivePhoto" data-index="{{index}}">×</view>
+        </view>
+        <view class="photo-add live-photo-add" bindtap="chooseLivePhoto" wx:if="{{livePhotos.length < 9}}">
+          <text class="photo-add-icon">✨</text>
+          <text class="photo-add-text">添加实况照片</text>
+          <text class="photo-count">{{livePhotos.length}}/9</text>
+        </view>
+      </view>
+      <view class="photo-tips">
+        <text class="tip-icon">💡</text>
+        <text>实况照片将在查看时自动播放动态效果~</text>
+      </view>
+    </view>
+
     <!-- 视频上传区域 -->
     <view class="video-section" wx:if="{{mediaType === 'video'}}">
       <view class="video-upload-area">
@@ -123,11 +149,12 @@
         <text class="section-opt">（可选）</text>
       </view>
       <view class="cat-options" wx:if="{{myCats.length > 0}}">
-        <view class="cat-option {{form.catId === item.id ? 'active' : ''}}" wx:for="{{myCats}}" wx:key="id" bindtap="selectCat" data-id="{{item.id}}" data-name="{{item.name}}">
+        <view class="cat-option {{form.catId === item.id ? 'active' : ''}}" wx:for="{{myCats}}" wx:key="id" bindtap="selectCat" data-id="{{item.id}}" data-name="{{item.name}}" data-breed="{{item.breed}}">
           <image class="cat-avatar" src="{{item.avatar}}" mode="aspectFill"></image>
           <text>{{item.name}}</text>
+          <text class="cat-breed-tag" wx:if="{{item.breed}}">{{item.breed}}</text>
         </view>
-        <view class="cat-option {{!form.catId ? 'active' : ''}}" bindtap="selectCat" data-id="">
+        <view class="cat-option {{!form.catId ? 'active' : ''}}" bindtap="selectCat" data-id="" data-breed="">
           <text>不关联</text>
         </view>
       </view>

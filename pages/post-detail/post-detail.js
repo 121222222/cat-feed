@@ -9,7 +9,9 @@ Page({
     currentIndex: 0,
     isOwner: false,
     swiperHeight: 375,
-    showActionSheet: false
+    showActionSheet: false,
+    showCommentPanel: false,
+    showSharePanel: false
   },
 
   onLoad(options) {
@@ -119,12 +121,113 @@ Page({
     }
   },
 
-  onShare() {
-    wx.showToast({ title: '分享功能开发中', icon: 'none' });
+  // 显示分享面板
+  showSharePanel() {
+    this.setData({ showSharePanel: true });
+  },
+
+  // 隐藏分享面板
+  hideSharePanel() {
+    this.setData({ showSharePanel: false });
+  },
+
+  // 分享到朋友圈（提示用户操作）
+  shareToMoments() {
+    this.hideSharePanel();
+    wx.showModal({
+      title: '分享到朋友圈',
+      content: '请点击右上角"..."按钮，选择"分享到朋友圈"',
+      showCancel: false,
+      confirmText: '知道了',
+      confirmColor: '#FFBAA3'
+    });
+  },
+
+  // 分享到企业微信
+  shareToWorkWechat() {
+    this.hideSharePanel();
+    const post = this.data.post;
+    
+    // 使用企业微信分享接口
+    if (wx.openCustomerServiceChat) {
+      // 如果是企业微信环境
+      wx.showToast({ title: '正在打开企业微信...', icon: 'loading' });
+      
+      // 构建分享内容
+      const shareContent = `【${post.title}】\n${post.content ? post.content.substring(0, 50) + '...' : ''}\n\n点击查看详情`;
+      
+      // 复制到剪贴板后提示用户
+      wx.setClipboardData({
+        data: shareContent,
+        success: () => {
+          wx.hideToast();
+          wx.showModal({
+            title: '分享到企业微信',
+            content: '分享内容已复制，请打开企业微信粘贴分享',
+            showCancel: true,
+            cancelText: '取消',
+            confirmText: '打开企微',
+            confirmColor: '#FFBAA3',
+            success: (res) => {
+              if (res.confirm) {
+                // 尝试跳转到企业微信
+                wx.navigateToMiniProgram({
+                  appId: 'wx4f7d3aa9a8e1a51b', // 企业微信小程序 AppID
+                  fail: () => {
+                    wx.showToast({ title: '请手动打开企业微信', icon: 'none' });
+                  }
+                });
+              }
+            }
+          });
+        }
+      });
+    } else {
+      // 普通微信环境
+      const shareContent = `【${post.title}】\n${post.content ? post.content.substring(0, 50) + '...' : ''}\n\n点击查看详情`;
+      
+      wx.setClipboardData({
+        data: shareContent,
+        success: () => {
+          wx.showModal({
+            title: '分享到企业微信',
+            content: '分享内容已复制到剪贴板，请打开企业微信粘贴发送',
+            showCancel: false,
+            confirmText: '知道了',
+            confirmColor: '#FFBAA3'
+          });
+        }
+      });
+    }
+  },
+
+  // 复制分享链接
+  copyShareLink() {
+    this.hideSharePanel();
+    const post = this.data.post;
+    // 构建小程序路径
+    const shareUrl = `/pages/post-detail/post-detail?id=${post.id}`;
+    
+    wx.setClipboardData({
+      data: `【猫咪喂养分享】${post.title}\n小程序路径：${shareUrl}`,
+      success: () => {
+        wx.showToast({ title: '链接已复制', icon: 'success' });
+      }
+    });
   },
 
   onCommentInput(e) {
     this.setData({ commentText: e.detail.value });
+  },
+
+  // 显示评论面板
+  showCommentPanel() {
+    this.setData({ showCommentPanel: true });
+  },
+
+  // 隐藏评论面板
+  hideCommentPanel() {
+    this.setData({ showCommentPanel: false });
   },
 
   async sendComment() {
@@ -158,7 +261,8 @@ Page({
         this.setData({
           comments,
           commentText: '',
-          'post.comments': (post.comments || 0) + 1
+          'post.comments': (post.comments || 0) + 1,
+          showCommentPanel: false
         });
         
         wx.showToast({ title: '评论成功', icon: 'success' });
@@ -173,9 +277,21 @@ Page({
   },
 
   onShareAppMessage() {
+    const post = this.data.post;
     return {
-      title: this.data.post.title,
-      path: `/pages/post-detail/post-detail?id=${this.data.post.id}`
+      title: post.title,
+      path: `/pages/post-detail/post-detail?id=${post.id}`,
+      imageUrl: post.images && post.images.length > 0 ? post.images[0] : ''
+    };
+  },
+
+  // 分享到朋友圈
+  onShareTimeline() {
+    const post = this.data.post;
+    return {
+      title: post.title,
+      query: `id=${post.id}`,
+      imageUrl: post.images && post.images.length > 0 ? post.images[0] : ''
     };
   },
 

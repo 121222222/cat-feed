@@ -175,16 +175,38 @@
   transition: all 0.2s ease;
 }
 
+.action-item.share-btn {
+  background: transparent;
+  border: none;
+  margin: 0;
+  line-height: normal;
+}
+
+.action-item.share-btn::after {
+  display: none;
+}
+
 .action-item:active {
   background: #F8F8F8;
 }
 
 .action-item.liked {
-  color: #FF6B6B;
+  color: #EFAA97;
 }
 
 .action-icon {
   font-size: 36rpx;
+}
+
+.action-icon-img {
+  width: 40rpx;
+  height: 40rpx;
+  transition: filter 0.2s ease;
+}
+
+.action-icon-img.liked-icon,
+.action-item.liked .action-icon-img {
+  filter: brightness(0) saturate(100%) invert(76%) sepia(25%) saturate(747%) hue-rotate(334deg) brightness(97%) contrast(92%);
 }
 
 .action-text {
@@ -193,7 +215,7 @@
 }
 
 .action-item.liked .action-text {
-  color: #FF6B6B;
+  color: #EFAA97;
 }
 
 /* 评论区域 */
@@ -263,8 +285,8 @@
   line-height: 1.6;
 }
 
-/* 底部评论输入 */
-.comment-bar {
+/* 底部评论入口 */
+.comment-bar-trigger {
   position: fixed;
   bottom: 0;
   left: 0;
@@ -278,21 +300,268 @@
   z-index: 100;
 }
 
-.comment-input {
+.trigger-input-fake {
   flex: 1;
-  padding: 16rpx 24rpx;
+  padding: 20rpx 24rpx;
   background: #F5F5F5;
   border-radius: 30rpx;
-  font-size: 28rpx;
 }
 
-.send-btn {
+.trigger-placeholder {
+  font-size: 28rpx;
+  color: #999;
+}
+
+.trigger-send-btn {
   padding: 16rpx 32rpx;
   border-radius: 30rpx;
-  background: linear-gradient(135deg, #FF8A6B, #FF6B4A);
-  color: #FFFFFF;
+  background: #E0E0E0;
+  color: #999;
   font-size: 28rpx;
   font-weight: 500;
+}
+
+/* 评论面板遮罩 */
+.comment-panel-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.comment-panel-mask.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 评论输入面板 */
+.comment-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #FFFFFF;
+  border-radius: 30rpx 30rpx 0 0;
+  z-index: 999;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  padding-bottom: env(safe-area-inset-bottom);
+  max-height: 70vh;
+}
+
+.comment-panel.show {
+  transform: translateY(0);
+}
+
+.comment-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 32rpx;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.panel-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.panel-close {
+  font-size: 48rpx;
+  color: #999;
+  line-height: 1;
+  padding: 0 10rpx;
+}
+
+.comment-panel-body {
+  padding: 24rpx 32rpx;
+}
+
+.comment-textarea {
+  width: 100%;
+  min-height: 180rpx;
+  max-height: 300rpx;
+  padding: 24rpx;
+  background: #F8F8F8;
+  border-radius: 20rpx;
+  font-size: 30rpx;
+  line-height: 1.6;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.comment-panel-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20rpx;
+  padding-top: 20rpx;
+}
+
+.comment-count {
+  font-size: 24rpx;
+  color: #999;
+}
+
+.panel-send-btn {
+  padding: 16rpx 48rpx;
+  border-radius: 30rpx;
+  background: #E0E0E0;
+  color: #999;
+  font-size: 28rpx;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.panel-send-btn.active {
+  background: linear-gradient(135deg, #FFBAA3, #EFAA97);
+  color: #FFFFFF;
+}
+
+/* 分享面板遮罩 */
+.share-panel-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.share-panel-mask.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 分享面板 */
+.share-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #FFFFFF;
+  border-radius: 30rpx 30rpx 0 0;
+  z-index: 999;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.share-panel.show {
+  transform: translateY(0);
+}
+
+.share-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 28rpx 32rpx;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+
+.share-panel-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.share-panel-close {
+  font-size: 48rpx;
+  color: #999;
+  line-height: 1;
+  padding: 0 10rpx;
+}
+
+/* 分享选项 - 横向滚动 */
+.share-options {
+  width: 100%;
+  white-space: nowrap;
+  padding: 32rpx 0;
+}
+
+.share-options-inner {
+  display: inline-flex;
+  padding: 0 32rpx;
+  gap: 40rpx;
+}
+
+.share-option {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  background: transparent;
+  border: none;
+  line-height: normal;
+  width: 140rpx;
+  min-width: 140rpx;
+}
+
+.share-option::after {
+  display: none;
+}
+
+.share-icon-box {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16rpx;
+}
+
+.share-icon-svg {
+  width: 48rpx;
+  height: 48rpx;
+}
+
+.wechat-bg {
+  background: #07C160;
+}
+
+.moments-bg {
+  background: #F76C6C;
+}
+
+.link-bg {
+  background: #1296DB;
+}
+
+.save-bg {
+  background: #FFB347;
+}
+
+.share-name {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.share-cancel {
+  padding: 28rpx;
+  text-align: center;
+  font-size: 30rpx;
+  color: #666;
+  border-top: 1rpx solid #F5F5F5;
+  margin-top: 8rpx;
+}
+
+.share-cancel:active {
+  background: #F8F8F8;
 }
 
 /* 更多按钮 */

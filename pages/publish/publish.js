@@ -9,6 +9,7 @@ Page({
       category: 'daily',
       catId: '',
       catName: '',
+      catBreed: '',  // 猫咪品种
       visibility: 'public'  // 默认公开
     },
     mediaType: 'image',  // 'image' 或 'video'
@@ -142,9 +143,12 @@ Page({
     const type = e.currentTarget.dataset.type;
     if (type === this.data.mediaType) return;
     
-    // 如果切换类型，提示用户会清空已选择的媒体
-    if ((type === 'video' && this.data.photos.length > 0) || 
-        (type === 'image' && this.data.video.tempFilePath)) {
+    // 检查是否有已选择的内容
+    const hasContent = this.data.photos.length > 0 || 
+                       this.data.livePhotos.length > 0 || 
+                       this.data.video.tempFilePath;
+    
+    if (hasContent) {
       wx.showModal({
         title: '提示',
         content: '切换类型将清空已选择的内容，确定吗？',
@@ -154,6 +158,7 @@ Page({
             this.setData({
               mediaType: type,
               photos: [],
+              livePhotos: [],
               video: {
                 tempFilePath: '',
                 duration: 0,
@@ -180,10 +185,11 @@ Page({
   },
 
   selectCat(e) {
-    const { id, name } = e.currentTarget.dataset;
+    const { id, name, breed } = e.currentTarget.dataset;
     this.setData({
       'form.catId': id || '',
-      'form.catName': name || ''
+      'form.catName': name || '',
+      'form.catBreed': breed || ''  // 保存猫咪品种
     });
   },
 
@@ -386,11 +392,15 @@ Page({
   },
 
   async onSubmit() {
-    const { form, mediaType, photos, video, topicOptions } = this.data;
+    const { form, mediaType, photos, livePhotos, video, topicOptions } = this.data;
 
     // 校验
     if (mediaType === 'image' && photos.length === 0) {
       wx.showToast({ title: '请至少添加一张照片', icon: 'none' });
+      return;
+    }
+    if (mediaType === 'live' && livePhotos.length === 0) {
+      wx.showToast({ title: '请至少添加一张实况照片', icon: 'none' });
       return;
     }
     if (mediaType === 'video' && !video.tempFilePath) {
@@ -414,11 +424,12 @@ Page({
 
           try {
             let mediaUrls = [];
+            let livePhotoUrls = [];
             let videoUrl = '';
             let videoCover = '';
 
             if (mediaType === 'image') {
-              // 上传照片
+              // 上传普通照片
               for (let i = 0; i < photos.length; i++) {
                 wx.showLoading({ title: `上传图片 ${i + 1}/${photos.length}`, mask: true });
                 const fileID = await db.uploadImage(photos[i], `posts/${Date.now()}-${i}.jpg`);
@@ -428,6 +439,24 @@ Page({
               if (mediaUrls.length === 0) {
                 wx.hideLoading();
                 wx.showToast({ title: '图片上传失败', icon: 'none' });
+                return;
+              }
+            } else if (mediaType === 'live') {
+              // 上传实况照片
+              for (let i = 0; i < livePhotos.length; i++) {
+                wx.showLoading({ title: `上传实况照片 ${i + 1}/${livePhotos.length}`, mask: true });
+                const imageID = await db.uploadImage(livePhotos[i].image, `live-photos/${Date.now()}-${i}.jpg`);
+                if (imageID) {
+                  livePhotoUrls.push({
+                    image: imageID,
+                    video: livePhotos[i].video || ''
+                  });
+                }
+              }
+
+              if (livePhotoUrls.length === 0) {
+                wx.hideLoading();
+                wx.showToast({ title: '实况照片上传失败', icon: 'none' });
                 return;
               }
             } else {
@@ -454,14 +483,16 @@ Page({
             const postData = {
               title: form.title.trim(),
               content: form.content.trim(),
-              mediaType: mediaType,  // 'image' 或 'video'
-              images: mediaType === 'image' ? mediaUrls : [],
+              mediaType: mediaType,  // 'image', 'live' 或 'video'
+              images: mediaType === 'image' ? mediaUrls : (mediaType === 'live' ? livePhotoUrls.map(lp => lp.image) : []),
+              livePhotos: mediaType === 'live' ? livePhotoUrls : [],  // 实况照片数组
               video: mediaType === 'video' ? videoUrl : '',
               videoCover: videoCover,
               videoDuration: mediaType === 'video' ? video.duration : 0,
               category: form.category,
               catId: form.catId,
               catName: form.catName,
+              catBreed: form.catBreed || '',  // 猫咪品种
               topics: topics,
               visibility: form.visibility,
               userId: userInfo._id || '',

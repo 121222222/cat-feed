@@ -19,8 +19,10 @@
       <view class="post-info">
         <text class="post-title">{{item.title}}</text>
         <view class="post-stats">
-          <text>❤️ {{item.likes || 0}}</text>
-          <text>💬 {{item.comments || 0}}</text>
+          <image class="stats-icon" src="/assets/icons/like.png" mode="aspectFit"></image>
+          <text>{{item.likes || 0}}</text>
+          <image class="stats-icon" src="/assets/icons/comment.png" mode="aspectFit"></image>
+          <text>{{item.comments || 0}}</text>
         </view>
       </view>
       <view class="post-delete" catchtap="deletePost" data-id="{{item.id}}">

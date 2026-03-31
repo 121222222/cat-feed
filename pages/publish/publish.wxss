@@ -47,6 +47,53 @@
   box-shadow: 0 4rpx 20rpx rgba(255, 186, 163, 0.08);
 }
 
+/* 实况图头部 */
+.live-photo-header {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-bottom: 20rpx;
+  padding-bottom: 16rpx;
+  border-bottom: 1rpx solid #F5EDE5;
+}
+
+.live-badge {
+  padding: 8rpx 20rpx;
+  background: linear-gradient(135deg, #FF6B9D, #C44AFF);
+  color: #FFFFFF;
+  font-size: 24rpx;
+  font-weight: 600;
+  border-radius: 20rpx;
+}
+
+.live-desc {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 实况图项目 */
+.live-photo-item {
+  position: relative;
+}
+
+.live-indicator {
+  position: absolute;
+  top: 8rpx;
+  left: 8rpx;
+  padding: 4rpx 12rpx;
+  background: linear-gradient(135deg, #FF6B9D, #C44AFF);
+  color: #FFFFFF;
+  font-size: 18rpx;
+  font-weight: 600;
+  border-radius: 8rpx;
+  letter-spacing: 1rpx;
+}
+
+.live-photo-add {
+  background: linear-gradient(135deg, #FFF7F4, #FFF0F5) !important;
+  border-color: #FFBAD4 !important;
+}
+
 /* 视频上传区域 */
 .video-section {
   background: #FFFFFF;
@@ -319,6 +366,20 @@
   background: #FFEFE9;
   color: #FFBAA3;
   border-color: #FFBAA3;
+}
+
+.cat-breed-tag {
+  font-size: 20rpx;
+  color: #999;
+  padding: 4rpx 12rpx;
+  background: #F0F0F0;
+  border-radius: 16rpx;
+  margin-left: 4rpx;
+}
+
+.cat-option.active .cat-breed-tag {
+  background: rgba(255, 186, 163, 0.3);
+  color: #FFBAA3;
 }
 
 .cat-avatar {

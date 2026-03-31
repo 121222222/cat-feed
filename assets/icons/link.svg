@@ -1,0 +1,11 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="linkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFB86C"/>
+      <stop offset="100%" style="stop-color:#FFA940"/>
+    </linearGradient>
+  </defs>
+  <circle cx="512" cy="512" r="512" fill="url(#linkGrad)"/>
+  <path d="M584 440l-80 80c-24 24-24 64 0 88s64 24 88 0l80-80c48-48 48-128 0-176s-128-48-176 0l-40 40c-8 8-8 20 0 28s20 8 28 0l40-40c32-32 84-32 116 0s32 84 0 116l-80 80c-8 8-20 8-28 0s-8-20 0-28l80-80c8-8 8-20 0-28s-20-8-28 0z" fill="#FFFFFF"/>
+  <path d="M440 584l80-80c24-24 24-64 0-88s-64-24-88 0l-80 80c-48 48-48 128 0 176s128 48 176 0l40-40c8-8 8-20 0-28s-20-8-28 0l-40 40c-32 32-84 32-116 0s-32-84 0-116l80-80c8-8 20-8 28 0s8 20 0 28l-80 80c-8 8-8 20 0 28s20 8 28 0z" fill="#FFFFFF"/>
+</svg>

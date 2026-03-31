@@ -87,9 +87,20 @@
 
 .post-stats {
   display: flex;
-  gap: 24rpx;
+  align-items: center;
+  gap: 8rpx;
   font-size: 24rpx;
   color: #999;
+}
+
+.stats-icon {
+  width: 28rpx;
+  height: 28rpx;
+  margin-left: 12rpx;
+}
+
+.stats-icon:first-child {
+  margin-left: 0;
 }
 
 .post-delete {
