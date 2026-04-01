@@ -728,7 +728,7 @@ Page({
               this.addLog('批量初始化房间号');
             } else {
               wx.showToast({ 
-                title: result.result?.error || '初始化失败', 
+                title: (result.result && result.result.error) || '初始化失败', 
                 icon: 'none' 
               });
             }

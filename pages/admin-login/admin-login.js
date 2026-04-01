@@ -1,15 +1,11 @@
 const app = getApp();
 
-// 管理员账号配置
-const ADMIN_ACCOUNTS = [
-  { phone: '15820430351', password: 'Wzx15820430351' }
-];
-
 Page({
   data: {
     adminPhone: '',
     adminPassword: '',
-    showPassword: false
+    showPassword: false,
+    isLoading: false
   },
 
   onPhoneInput(e) {
@@ -24,8 +20,10 @@ Page({
     this.setData({ showPassword: !this.data.showPassword });
   },
 
-  onAdminLogin() {
-    const { adminPhone, adminPassword } = this.data;
+  async onAdminLogin() {
+    const { adminPhone, adminPassword, isLoading } = this.data;
+
+    if (isLoading) return;
 
     if (!adminPhone || adminPhone.length !== 11) {
       wx.showToast({ title: '请输入正确的手机号', icon: 'none' });
@@ -37,36 +35,55 @@ Page({
       return;
     }
 
-    // 验证管理员账号
-    const admin = ADMIN_ACCOUNTS.find(a => a.phone === adminPhone && a.password === adminPassword);
-
-    if (!admin) {
-      wx.showToast({ title: '账号或密码错误', icon: 'none' });
-      return;
-    }
-
+    this.setData({ isLoading: true });
     wx.showLoading({ title: '登录中...', mask: true });
 
-    // 登录成功，设置管理员信息
-    setTimeout(() => {
-      app.globalData.userInfo = {
-        name: '管理员',
-        avatar: '',
-        phone: adminPhone,
-        isAdmin: true,
-        certified: true
-      };
-      app.globalData.isLogin = true;
+    try {
+      // 调用云函数验证管理员账号
+      const result = await wx.cloud.callFunction({
+        name: 'adminLogin',
+        data: {
+          phone: adminPhone,
+          password: adminPassword
+        }
+      });
 
       wx.hideLoading();
-      wx.showToast({ title: '登录成功', icon: 'success' });
+      this.setData({ isLoading: false });
 
-      setTimeout(() => {
-        wx.redirectTo({
-          url: '/pages/admin/admin'
+      if (result.result && result.result.success) {
+        // 登录成功，保存 token
+        wx.setStorageSync('adminToken', result.result.token);
+        wx.setStorageSync('adminTokenExpire', result.result.expireTime);
+        
+        app.globalData.userInfo = {
+          name: '管理员',
+          avatar: '',
+          phone: adminPhone,
+          isAdmin: true,
+          certified: true
+        };
+        app.globalData.isLogin = true;
+
+        wx.showToast({ title: '登录成功', icon: 'success' });
+
+        setTimeout(() => {
+          wx.redirectTo({
+            url: '/pages/admin/admin'
+          });
+        }, 1000);
+      } else {
+        wx.showToast({ 
+          title: (result.result && result.result.error) || '账号或密码错误', 
+          icon: 'none' 
         });
-      }, 1000);
-    }, 500);
+      }
+    } catch (err) {
+      wx.hideLoading();
+      this.setData({ isLoading: false });
+      console.error('管理员登录失败:', err);
+      wx.showToast({ title: '登录失败，请重试', icon: 'none' });
+    }
   },
 
   goBack() {
