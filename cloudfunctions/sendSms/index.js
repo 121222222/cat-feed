@@ -1,10 +1,3 @@
-const SMS_CONFIG = {
-  secretId: 'YOUR_SECRET_ID',      // 腾讯云 SecretId
-  secretKey: 'YOUR_SECRET_KEY',    // 腾讯云 SecretKey  
-  appId: 'YOUR_SMS_APP_ID',        // 短信应用 AppId
-  signName: '猫猫社区',             // 短信签名（需审核通过）
-  templateId: 'YOUR_TEMPLATE_ID'   // 短信模板 ID
-};
 // 云函数入口文件
 const cloud = require('wx-server-sdk');
 const tencentcloud = require('tencentcloud-sdk-nodejs');

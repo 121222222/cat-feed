@@ -310,6 +310,86 @@ Page({
     });
   },
 
+  // 视频封面选择入口
+  showCoverOptions() {
+    const that = this;
+    wx.showActionSheet({
+      itemList: ['从视频中截取一帧', '从手机相册选择'],
+      success(res) {
+        if (res.tapIndex === 0) {
+          that.captureVideoFrame();
+        } else if (res.tapIndex === 1) {
+          that.chooseVideoCover();
+        }
+      }
+    });
+  },
+
+  // 从视频中截取一帧作为封面
+  captureVideoFrame() {
+    const that = this;
+    const videoPath = this.data.video.tempFilePath;
+    
+    // 使用 wx.compressVideo 结合创建 canvas 的方式不可行
+    // 微信小程序中最佳方式：利用 video 组件 + VideoContext
+    // 但更简单的方案是让用户在视频播放器中暂停到想要的帧，然后通过 canvas 截图
+    
+    // 实用方案：用 wx.chooseMedia 从原视频重新获取缩略图
+    wx.showModal({
+      title: '截取视频封面',
+      content: '请先播放上方视频并暂停到想要的画面，然后点击确定截取',
+      confirmText: '截取当前画面',
+      confirmColor: '#FFBAA3',
+      success(modalRes) {
+        if (modalRes.confirm) {
+          // 通过 VideoContext 截取当前帧
+          const videoContext = wx.createVideoContext('publishVideo', that);
+          if (videoContext) {
+            // 使用 snapshotVideo 截取视频画面（基础库 3.1.0+）
+            videoContext.snapshotVideo && videoContext.snapshotVideo({
+              quality: 'raw',
+              success(snapshotRes) {
+                that.setData({
+                  'video.thumbTempFilePath': snapshotRes.tempImagePath
+                });
+                wx.showToast({ title: '封面已截取', icon: 'success' });
+              },
+              fail() {
+                // 降级方案：提示用户手动选择
+                wx.showModal({
+                  title: '提示',
+                  content: '当前版本不支持自动截取，请从相册选择一张图片作为封面',
+                  confirmText: '选择图片',
+                  confirmColor: '#FFBAA3',
+                  success(r) {
+                    if (r.confirm) {
+                      that.chooseVideoCover();
+                    }
+                  }
+                });
+              }
+            });
+            
+            // 如果 snapshotVideo 不存在，直接降级
+            if (!videoContext.snapshotVideo) {
+              wx.showModal({
+                title: '提示',
+                content: '当前微信版本不支持自动截取，请从相册选择一张图片作为封面',
+                confirmText: '选择图片',
+                confirmColor: '#FFBAA3',
+                success(r) {
+                  if (r.confirm) {
+                    that.chooseVideoCover();
+                  }
+                }
+              });
+            }
+          }
+        }
+      }
+    });
+  },
+
   // 手动选择视频封面
   chooseVideoCover() {
     const that = this;

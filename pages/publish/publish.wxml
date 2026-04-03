@@ -63,6 +63,7 @@
         <!-- 已选择的视频 -->
         <view class="video-preview" wx:if="{{video.tempFilePath}}">
           <video 
+            id="publishVideo"
             class="video-player" 
             src="{{video.tempFilePath}}" 
             controls 
@@ -90,9 +91,9 @@
         <view class="video-cover-area">
           <view class="video-cover-preview" wx:if="{{video.thumbTempFilePath}}">
             <image class="cover-img" src="{{video.thumbTempFilePath}}" mode="aspectFill"></image>
-            <view class="cover-change" bindtap="chooseVideoCover">更换封面</view>
+            <view class="cover-change" bindtap="showCoverOptions">更换封面</view>
           </view>
-          <view class="video-cover-add" wx:else bindtap="chooseVideoCover">
+          <view class="video-cover-add" wx:else bindtap="showCoverOptions">
             <text class="cover-add-icon">+</text>
             <text class="cover-add-text">选择封面图</text>
           </view>

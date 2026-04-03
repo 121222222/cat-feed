@@ -2,7 +2,7 @@
   <!-- 用户信息头部 -->
   <view class="profile-header">
     <view class="profile-bg">
-      <image class="profile-bg-img" src="/assets/images/mine-header-bg.png" mode="aspectFill"></image>
+      <image class="profile-bg-img" src="/assets/images/mine-header-bg-new.jpg" mode="aspectFill"></image>
     </view>
     <view class="profile-info">
       <view class="profile-avatar-wrap" bindtap="onChangeAvatar">

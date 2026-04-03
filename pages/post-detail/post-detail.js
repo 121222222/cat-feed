@@ -10,7 +10,7 @@ Page({
     isOwner: false,
     swiperHeight: 375,
     showActionSheet: false,
-    showCommentPanel: false,
+    showCommentInput: false,
     showSharePanel: false
   },
 
@@ -220,14 +220,17 @@ Page({
     this.setData({ commentText: e.detail.value });
   },
 
-  // 显示评论面板
+  // 显示评论输入框
   showCommentPanel() {
-    this.setData({ showCommentPanel: true });
+    this.setData({ showCommentInput: true });
   },
 
-  // 隐藏评论面板
+  // 隐藏评论输入框
   hideCommentPanel() {
-    this.setData({ showCommentPanel: false });
+    // 延迟隐藏，避免点击发送按钮时输入框消失
+    setTimeout(() => {
+      this.setData({ showCommentInput: false });
+    }, 150);
   },
 
   async sendComment() {
@@ -262,7 +265,7 @@ Page({
           comments,
           commentText: '',
           'post.comments': (post.comments || 0) + 1,
-          showCommentPanel: false
+          showCommentInput: false
         });
         
         wx.showToast({ title: '评论成功', icon: 'success' });

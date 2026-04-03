@@ -17,5 +17,22 @@
     "checkInvalidKey": true,
     "ignoreDevUnusedFiles": true,
     "bigPackageSizeSupport": false
+  },
+  "packOptions": {
+    "ignore": [
+      { "type": "file", "value": "valid_rooms_all.json" },
+      { "type": "file", "value": "valid_rooms_1_2.json" },
+      { "type": "file", "value": "valid_rooms_3_4.json" },
+      { "type": "file", "value": "valid_rooms_5_6.json" },
+      { "type": "file", "value": "valid_rooms_7_8.json" },
+      { "type": "file", "value": "valid_rooms_9_10.json" },
+      { "type": "file", "value": "valid_rooms_11.json" },
+      { "type": "file", "value": "assets/images/mine-header-bg.png" },
+      { "type": "file", "value": "assets/images/mine-header-bg (2).png" },
+      { "type": "file", "value": "assets/images/login-bg(1).png" },
+      { "type": "file", "value": "assets/images/login-bg.png" },
+      { "type": "file", "value": "assets/images/index-header-bg.png" }
+    ],
+    "include": []
   }
 }

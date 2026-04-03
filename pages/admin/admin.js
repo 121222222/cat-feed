@@ -72,6 +72,8 @@ Page({
     roomFilterIndex: 0,
     batchBuildingIndex: -1,
     batchRoomNumbers: '',
+    singleBuildingIndex: -1,
+    singleRoomNumber: '',
     unbindPhone: '',
     buildingOptions: ['1栋', '2栋', '3栋', '4栋', '5栋', '6栋', '7栋', '8栋', '9栋', '10栋', '11栋'],
     roomFilterOptions: ['全部', '1栋', '2栋', '3栋', '4栋', '5栋', '6栋', '7栋', '8栋', '9栋', '10栋', '11栋'],
@@ -847,6 +849,50 @@ Page({
       this.loadRoomStatistics();
       this.loadValidRooms(true);
       this.addLog(`批量添加房间号: ${building} ${roomNumbers.join(',')}`);
+    } catch (err) {
+      wx.hideLoading();
+      wx.showToast({ title: '添加失败', icon: 'none' });
+    }
+  },
+
+  // 单个添加房间号
+  onSingleBuildingChange(e) {
+    this.setData({ singleBuildingIndex: parseInt(e.detail.value) });
+  },
+
+  onSingleRoomInput(e) {
+    this.setData({ singleRoomNumber: e.detail.value });
+  },
+
+  async addSingleRoom() {
+    const { singleBuildingIndex, buildingOptions, singleRoomNumber } = this.data;
+
+    if (singleBuildingIndex < 0) {
+      wx.showToast({ title: '请选择楼栋', icon: 'none' });
+      return;
+    }
+
+    if (!singleRoomNumber.trim()) {
+      wx.showToast({ title: '请输入房间号', icon: 'none' });
+      return;
+    }
+
+    const building = buildingOptions[singleBuildingIndex];
+    wx.showLoading({ title: '添加中...', mask: true });
+
+    try {
+      const results = await db.batchAddValidRooms(building, [singleRoomNumber.trim()]);
+      wx.hideLoading();
+
+      if (results[0] && results[0].success) {
+        wx.showToast({ title: '添加成功', icon: 'success' });
+        this.setData({ singleRoomNumber: '' });
+        this.loadRoomStatistics();
+        this.loadValidRooms(true);
+        this.addLog(`添加房间号: ${building} ${singleRoomNumber.trim()}`);
+      } else {
+        wx.showToast({ title: '该房间号已存在', icon: 'none' });
+      }
     } catch (err) {
       wx.hideLoading();
       wx.showToast({ title: '添加失败', icon: 'none' });

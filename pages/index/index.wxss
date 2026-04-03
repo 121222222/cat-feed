@@ -1,4 +1,9 @@
 /* 首页样式 - 瀑布流布局 */
+.page-container {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 .header {
   width: 100%;
 }

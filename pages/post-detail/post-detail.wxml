@@ -127,40 +127,29 @@
     </view>
   </view>
 
-  <!-- 底部评论入口（点击弹出输入面板） -->
-  <view class="comment-bar-trigger safe-bottom" bindtap="showCommentPanel">
+  <!-- 底部评论入口（未聚焦时显示） -->
+  <view class="comment-bar-trigger safe-bottom" wx:if="{{!showCommentInput}}" bindtap="showCommentPanel">
     <view class="trigger-input-fake">
       <text class="trigger-placeholder">说点什么...</text>
     </view>
     <view class="trigger-send-btn">发送</view>
   </view>
 
-  <!-- 评论输入面板遮罩 -->
-  <view class="comment-panel-mask {{showCommentPanel ? 'show' : ''}}" bindtap="hideCommentPanel"></view>
-  
-  <!-- 评论输入面板（从底部滑出） -->
-  <view class="comment-panel {{showCommentPanel ? 'show' : ''}}">
-    <view class="comment-panel-header">
-      <text class="panel-title">发表评论</text>
-      <text class="panel-close" bindtap="hideCommentPanel">×</text>
-    </view>
-    <view class="comment-panel-body">
-      <textarea 
-        class="comment-textarea" 
-        placeholder="说点什么..." 
-        value="{{commentText}}" 
-        bindinput="onCommentInput"
-        focus="{{showCommentPanel}}"
-        auto-height
-        maxlength="500"
-        show-confirm-bar="{{false}}"
-        adjust-position="{{false}}"
-        cursor-spacing="20"
-      ></textarea>
-      <view class="comment-panel-footer">
-        <text class="comment-count">{{commentText.length || 0}}/500</text>
-        <view class="panel-send-btn {{commentText ? 'active' : ''}}" bindtap="sendComment">发送</view>
-      </view>
-    </view>
+  <!-- 底部评论输入栏（聚焦时显示，跟随键盘） -->
+  <view class="comment-input-bar safe-bottom" wx:if="{{showCommentInput}}">
+    <input 
+      class="comment-input-field" 
+      placeholder="说点什么..." 
+      value="{{commentText}}" 
+      bindinput="onCommentInput"
+      focus="{{showCommentInput}}"
+      bindblur="hideCommentPanel"
+      confirm-type="send"
+      bindconfirm="sendComment"
+      adjust-position="{{true}}"
+      cursor-spacing="10"
+      maxlength="500"
+    />
+    <view class="comment-send-btn {{commentText ? 'active' : ''}}" bindtap="sendComment">发送</view>
   </view>
 </view>

@@ -16,7 +16,7 @@
         <input class="form-input" value="{{userInfo.name}}" bindinput="onInput" data-field="name" />
       </view>
       <view class="form-item">
-        <text class="form-label">宿舍号</text>
+        <text class="form-label">公寓/房间号</text>
         <input class="form-input" value="{{userInfo.dormitory}}" bindinput="onInput" data-field="dormitory" />
       </view>
       <view class="form-item">

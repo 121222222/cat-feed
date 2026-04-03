@@ -422,6 +422,29 @@
       <view class="btn-primary" bindtap="batchAddRooms">批量添加</view>
     </view>
 
+    <!-- 单个添加房间号 -->
+    <view class="settings-card">
+      <view class="settings-header">
+        <text class="settings-title">🏠 添加单个房间号</text>
+      </view>
+      <view class="single-room-form">
+        <view class="form-group">
+          <text class="form-label">选择楼栋</text>
+          <picker class="building-select" mode="selector" range="{{buildingOptions}}" value="{{singleBuildingIndex}}" bindchange="onSingleBuildingChange">
+            <view class="picker-box">
+              {{singleBuildingIndex >= 0 ? buildingOptions[singleBuildingIndex] : '请选择楼栋'}}
+              <text class="picker-arrow">▼</text>
+            </view>
+          </picker>
+        </view>
+        <view class="form-group">
+          <text class="form-label">房间号</text>
+          <input class="form-input" type="number" placeholder="请输入房间号，如：801" value="{{singleRoomNumber}}" bindinput="onSingleRoomInput" maxlength="10" />
+        </view>
+        <view class="btn-primary" bindtap="addSingleRoom">添加房间号</view>
+      </view>
+    </view>
+
     <!-- 房间号列表 -->
     <view class="settings-card">
       <view class="settings-header">
