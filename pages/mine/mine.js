@@ -12,14 +12,27 @@ Page({
     postCount: 0,
     likeCount: 0,
     isAdmin: false,
-    draftCount: 0
+    draftCount: 0,
+    isLoggedIn: false
   },
 
   onShow() {
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 3 });
     }
-    this.loadData();
+    
+    // 检查登录状态
+    const isLoggedIn = app.globalData.isLoggedIn;
+    this.setData({ isLoggedIn });
+    
+    if (isLoggedIn) {
+      this.loadData();
+    }
+  },
+
+  // 跳转登录
+  goLogin() {
+    wx.navigateTo({ url: '/pages/login/login' });
   },
 
   async loadData() {

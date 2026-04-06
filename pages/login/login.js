@@ -63,7 +63,13 @@ Page({
         wx.hideLoading();
         wx.showToast({ title: '登录成功', icon: 'success' });
         setTimeout(() => {
-          wx.switchTab({ url: '/pages/index/index' });
+          // 返回上一页，如果没有上一页则跳转首页
+          const pages = getCurrentPages();
+          if (pages.length > 1) {
+            wx.navigateBack();
+          } else {
+            wx.switchTab({ url: '/pages/index/index' });
+          }
         }, 1000);
       } else {
         // 没有账号，将 openid 存入缓存，跳转注册页

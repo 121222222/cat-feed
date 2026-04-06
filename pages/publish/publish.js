@@ -14,6 +14,7 @@ Page({
     },
     mediaType: 'image',  // 'image' 或 'video'
     photos: [],
+    livePhotos: [],  // 实况照片（预留）
     video: {
       tempFilePath: '',
       duration: 0,
@@ -31,7 +32,9 @@ Page({
       { name: '新手养猫', checked: false },
       { name: '猫咪趣事', checked: false },
       { name: '晒猫狂魔', checked: false }
-    ]
+    ],
+    showCustomTopic: false,
+    customTopicValue: ''
   },
 
   onLoad(options) {
@@ -512,14 +515,35 @@ Page({
               // 上传普通照片
               for (let i = 0; i < photos.length; i++) {
                 wx.showLoading({ title: `上传图片 ${i + 1}/${photos.length}`, mask: true });
-                const fileID = await db.uploadImage(photos[i], `posts/${Date.now()}-${i}.jpg`);
-                if (fileID) mediaUrls.push(fileID);
+                try {
+                  const fileID = await db.uploadImage(photos[i], `posts/${Date.now()}_${i}.jpg`);
+                  if (fileID) {
+                    mediaUrls.push(fileID);
+                  } else {
+                    console.error(`图片 ${i + 1} 上传返回空`);
+                  }
+                } catch (uploadErr) {
+                  console.error(`图片 ${i + 1} 上传异常:`, uploadErr);
+                }
               }
 
               if (mediaUrls.length === 0) {
                 wx.hideLoading();
-                wx.showToast({ title: '图片上传失败', icon: 'none' });
+                wx.showModal({
+                  title: '上传失败',
+                  content: '图片上传失败，请检查网络连接或稍后重试。如果问题持续，请联系管理员检查云存储权限。',
+                  showCancel: false
+                });
                 return;
+              }
+              
+              // 如果部分图片上传失败，提示用户
+              if (mediaUrls.length < photos.length) {
+                wx.showToast({ 
+                  title: `${photos.length - mediaUrls.length}张图片上传失败`, 
+                  icon: 'none',
+                  duration: 2000
+                });
               }
             } else if (mediaType === 'live') {
               // 上传实况照片

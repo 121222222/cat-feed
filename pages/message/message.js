@@ -39,9 +39,15 @@ Page({
         return (b.sortTime || 0) - (a.sortTime || 0);
       });
       
-      // 计算未读数
-      const chatUnread = chatMessages.filter(m => m.unread).length;
+      // 计算未读数（统计所有未读消息的数量，而不是会话数）
+      let chatUnread = 0;
+      chatMessages.forEach(m => {
+        chatUnread += m.unreadCount || (m.unread ? 1 : 0);
+      });
       const sysUnread = systemMessages.filter(m => m.unread).length;
+      
+      // 计算总未读数并更新TabBar
+      const totalUnread = chatUnread + sysUnread;
       
       this.setData({
         allMessages: allMessages,
@@ -49,6 +55,11 @@ Page({
         sysUnread,
         loading: false
       });
+      
+      // 更新TabBar的消息数量显示
+      if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+        this.getTabBar().setData({ msgCount: totalUnread });
+      }
       
       this.filterMessages(this.data.activeTab);
     } catch (err) {
@@ -61,7 +72,7 @@ Page({
     }
   },
 
-  // 从云数据库加载聊天会话
+  // 从云数据库加载聊天会话（优先使用云函数）
   async loadCloudConversations() {
     try {
       const currentUser = app.globalData.userInfo;
@@ -70,8 +81,26 @@ Page({
       const currentUserId = currentUser._id || currentUser.openid || '';
       if (!currentUserId) return [];
       
-      // 从云数据库获取会话列表
-      const conversations = await db.getMyConversations(currentUserId);
+      // 优先使用云函数获取会话（解决权限问题）
+      let conversations = [];
+      try {
+        const res = await wx.cloud.callFunction({
+          name: 'chatService',
+          data: {
+            action: 'getConversations',
+            data: { userId: currentUserId }
+          }
+        });
+        if (res.result && res.result.success) {
+          conversations = res.result.data || [];
+        } else {
+          // 云函数失败，降级使用本地方法
+          conversations = await db.getMyConversations(currentUserId);
+        }
+      } catch (cfErr) {
+        console.warn('云函数调用失败，使用本地方法:', cfErr);
+        conversations = await db.getMyConversations(currentUserId);
+      }
       
       return conversations.map(conv => {
         // 判断对方是谁
@@ -80,11 +109,14 @@ Page({
         
         // 获取对方的信息
         const targetInfo = conv.participantsInfo ? conv.participantsInfo[targetId] : null;
-        const targetName = targetInfo ? targetInfo.name : '用户';
+        const targetName = targetInfo && targetInfo.name ? targetInfo.name : '微信用户';
         const targetAvatar = targetInfo ? targetInfo.avatar : '';
         
         // 获取未读数
         const unreadCount = conv.unreadCount ? (conv.unreadCount[currentUserId] || 0) : 0;
+        
+        // 格式化最后一条消息的预览
+        const preview = conv.lastMessage || '暂无消息';
         
         return {
           id: conv._id,
@@ -94,7 +126,7 @@ Page({
           avatarBg: '#FFE0D6',
           title: targetName,
           avatar: targetAvatar,
-          preview: conv.lastMessage || '暂无消息',
+          preview: preview,
           time: this.formatTime(conv.lastMessageTime),
           unread: unreadCount > 0,
           unreadCount: unreadCount,
@@ -226,22 +258,41 @@ Page({
     });
     
     // 重新计算未读数
-    const chatUnread = allMessages.filter(m => m.type === 'chat' && m.unread).length;
+    let chatUnread = 0;
+    allMessages.filter(m => m.type === 'chat').forEach(m => {
+      chatUnread += m.unreadCount || (m.unread ? 1 : 0);
+    });
     const sysUnread = allMessages.filter(m => m.type === 'system' && m.unread).length;
+    const totalUnread = chatUnread + sysUnread;
     
     this.setData({ allMessages, chatUnread, sysUnread });
     this.filterMessages(this.data.activeTab);
+    
+    // 更新TabBar显示
+    if (typeof this.getTabBar === 'function' && this.getTabBar()) {
+      this.getTabBar().setData({ msgCount: totalUnread });
+    }
     
     // 更新云数据库
     const currentUser = app.globalData.userInfo;
     const currentUserId = currentUser ? (currentUser._id || currentUser.openid || '') : '';
     
     if (item.type === 'chat' && item.conversationId) {
-      // 聊天消息：更新云数据库的未读数
+      // 聊天消息：使用云函数更新未读状态（确保权限）
       try {
+        await wx.cloud.callFunction({
+          name: 'chatService',
+          data: {
+            action: 'markRead',
+            data: {
+              conversationId: item.conversationId,
+              userId: currentUserId
+            }
+          }
+        });
+      } catch (cfErr) {
+        console.warn('云函数标记已读失败，使用本地方法:', cfErr);
         await db.markConversationRead(item.conversationId, currentUserId);
-      } catch (err) {
-        console.error('更新会话已读状态失败:', err);
       }
     } else if (item.type === 'system') {
       // 系统消息：更新数据库

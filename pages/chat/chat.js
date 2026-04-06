@@ -77,8 +77,22 @@ Page({
         // 加载聊天记录
         await this.loadCloudMessages();
         
-        // 标记已读
-        await db.markConversationRead(conversation._id, currentUserId);
+        // 标记已读（使用云函数确保权限）
+        try {
+          await wx.cloud.callFunction({
+            name: 'chatService',
+            data: {
+              action: 'markRead',
+              data: {
+                conversationId: conversation._id,
+                userId: currentUserId
+              }
+            }
+          });
+        } catch (cfErr) {
+          console.warn('云函数标记已读失败，使用本地方法:', cfErr);
+          await db.markConversationRead(conversation._id, currentUserId);
+        }
       } else {
         this.setData({ loading: false });
         wx.showToast({ title: '会话初始化失败', icon: 'none' });
@@ -90,13 +104,52 @@ Page({
     }
   },
 
-  // 从云数据库加载消息
+  // 从云数据库加载消息（通过云函数绕过权限限制）
   async loadCloudMessages() {
     const { conversationId, currentUserId } = this.data;
-    if (!conversationId) return;
+    if (!conversationId) {
+      console.log('loadCloudMessages: conversationId 为空');
+      return;
+    }
+    
+    console.log('开始加载消息, conversationId:', conversationId, 'userId:', currentUserId);
     
     try {
-      const cloudMessages = await db.getChatMessages(conversationId);
+      // 优先使用云函数获取消息（解决权限问题）
+      let cloudMessages = [];
+      let useCloudFunction = false;
+      
+      try {
+        console.log('尝试调用云函数 chatService...');
+        const res = await wx.cloud.callFunction({
+          name: 'chatService',
+          data: {
+            action: 'getChatMessages',
+            data: {
+              conversationId: conversationId,
+              userId: currentUserId
+            }
+          }
+        });
+        console.log('云函数返回:', res);
+        
+        if (res.result && res.result.success) {
+          cloudMessages = res.result.data || [];
+          useCloudFunction = true;
+          console.log('云函数获取消息成功，数量:', cloudMessages.length);
+        } else {
+          console.warn('云函数返回失败:', res.result);
+          // 云函数失败，降级使用本地方法
+          cloudMessages = await db.getChatMessages(conversationId);
+          console.log('降级使用本地方法，获取消息数量:', cloudMessages.length);
+        }
+      } catch (cfErr) {
+        console.warn('云函数调用失败，使用本地方法:', cfErr.message || cfErr);
+        cloudMessages = await db.getChatMessages(conversationId);
+        console.log('本地方法获取消息数量:', cloudMessages.length);
+      }
+      
+      console.log('获取到的原始消息:', cloudMessages);
       
       // 转换消息格式
       const messages = cloudMessages.map(msg => ({
@@ -106,6 +159,8 @@ Page({
         time: this.formatTime(msg.createTime),
         createTime: msg.createTime ? new Date(msg.createTime).getTime() : 0
       }));
+      
+      console.log('转换后的消息:', messages);
       
       this.setData({ messages });
       

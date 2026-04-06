@@ -17,11 +17,7 @@ Page({
   },
 
   onLoad() {
-    // 检查登录状态
-    if (!app.globalData.isLoggedIn) {
-      wx.redirectTo({ url: '/pages/login/login' });
-      return;
-    }
+    // 不再强制跳转登录，允许用户先浏览
     this.loadData();
     this.loadBanners();
   },
@@ -31,10 +27,8 @@ Page({
       this.getTabBar().setData({ selected: 0 });
     }
     // 刷新数据
-    if (app.globalData.isLoggedIn) {
-      this.loadData();
-      this.loadBanners();
-    }
+    this.loadData();
+    this.loadBanners();
   },
 
   // 加载轮播图
@@ -110,7 +104,18 @@ Page({
         }
       }
       
-      // 替换图片链接
+      // 获取用户已点赞的帖子列表
+      let likedPostIds = [];
+      if (currentUserId && postsRaw.length > 0) {
+        try {
+          const postIds = postsRaw.map(p => p._id);
+          likedPostIds = await db.checkUserLikedPosts(postIds, currentUserId);
+        } catch (e) {
+          console.error('获取点赞状态失败:', e);
+        }
+      }
+      
+      // 替换图片链接并设置点赞状态
       let posts = postsRaw.map(p => {
         // 格式化视频时长
         let videoDurationText = '';
@@ -123,6 +128,10 @@ Page({
             `0:${seconds.toString().padStart(2, '0')}`;
         }
         
+        // 检查用户是否已点赞（通过 likedBy 数组或批量查询结果）
+        const isLiked = likedPostIds.includes(p._id) || 
+                        (p.likedBy && p.likedBy.includes(currentUserId));
+        
         return {
           ...p,
           id: p._id,
@@ -133,7 +142,8 @@ Page({
           videoCover: fileUrlMap[p.videoCover] || p.videoCover || '',
           videoDuration: p.videoDuration || 0,
           videoDurationText: videoDurationText,
-          userAvatar: fileUrlMap[p.userAvatar] || p.userAvatar || ''
+          userAvatar: fileUrlMap[p.userAvatar] || p.userAvatar || '',
+          liked: isLiked // 使用真实的点赞状态
         };
       });
       
@@ -203,6 +213,21 @@ Page({
   },
 
   goPublish() {
+    // 发帖需要登录
+    if (!app.globalData.isLoggedIn) {
+      wx.showModal({
+        title: '请先登录',
+        content: '登录后即可发布动态',
+        confirmText: '去登录',
+        confirmColor: '#FFBAA3',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({ url: '/pages/login/login' });
+          }
+        }
+      });
+      return;
+    }
     wx.navigateTo({ url: '/pages/publish/publish' });
   },
 
@@ -212,7 +237,39 @@ Page({
   },
 
   async onLike(e) {
+    // 点赞需要登录
+    if (!app.globalData.isLoggedIn) {
+      wx.showModal({
+        title: '请先登录',
+        content: '登录后即可点赞',
+        confirmText: '去登录',
+        confirmColor: '#FFBAA3',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({ url: '/pages/login/login' });
+          }
+        }
+      });
+      return;
+    }
+
     const id = e.currentTarget.dataset.id;
+    const userInfo = app.globalData.userInfo || {};
+    const currentUserId = userInfo._id || '';
+    
+    if (!currentUserId) {
+      wx.showToast({ title: '请先登录', icon: 'none' });
+      return;
+    }
+    
+    // 找到当前帖子
+    let currentPost = this.data.leftPosts.find(p => p.id === id) || 
+                      this.data.rightPosts.find(p => p.id === id);
+    
+    if (!currentPost) return;
+    
+    // 切换点赞状态
+    const newLikedState = !currentPost.liked;
     
     // 在本地先更新状态
     const updatePosts = (posts) => {
@@ -220,8 +277,8 @@ Page({
         if (p.id === id) {
           return {
             ...p,
-            liked: !p.liked,
-            likes: p.liked ? (p.likes || 1) - 1 : (p.likes || 0) + 1
+            liked: newLikedState,
+            likes: newLikedState ? (p.likes || 0) + 1 : Math.max((p.likes || 1) - 1, 0)
           };
         }
         return p;
@@ -233,14 +290,16 @@ Page({
       rightPosts: updatePosts(this.data.rightPosts)
     });
 
-    // 异步更新数据库
+    // 异步更新数据库（传递用户ID）
     try {
-      const post = [...this.data.leftPosts, ...this.data.rightPosts].find(p => p.id === id);
-      if (post) {
-        await db.togglePostLike(id, post.liked);
-      }
+      await db.togglePostLike(id, newLikedState, currentUserId);
     } catch (err) {
       console.error('点赞失败:', err);
+      // 失败时回滚状态
+      this.setData({
+        leftPosts: updatePosts(this.data.leftPosts),
+        rightPosts: updatePosts(this.data.rightPosts)
+      });
     }
   },
 

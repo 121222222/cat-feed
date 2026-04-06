@@ -394,18 +394,58 @@ module.exports = {
     }
   },
 
-  /** 点赞/取消点赞 */
-  async togglePostLike(postId, isLiked) {
+  /** 点赞/取消点赞（记录用户点赞状态） */
+  async togglePostLike(postId, isLiked, userId) {
     try {
-      await postsCol.doc(postId).update({
-        data: {
-          likes: isLiked ? _.inc(1) : _.inc(-1)
-        }
-      });
+      if (isLiked) {
+        // 点赞：将用户ID添加到帖子的 likedBy 数组
+        await postsCol.doc(postId).update({
+          data: {
+            likes: _.inc(1),
+            likedBy: _.addToSet(userId) // 使用 addToSet 避免重复
+          }
+        });
+      } else {
+        // 取消点赞：从 likedBy 数组移除用户ID
+        await postsCol.doc(postId).update({
+          data: {
+            likes: _.inc(-1),
+            likedBy: _.pull(userId)
+          }
+        });
+      }
       return true;
     } catch (err) {
       console.error('togglePostLike 失败:', err);
       return false;
+    }
+  },
+
+  /** 检查用户是否已点赞某帖子 */
+  async checkUserLiked(postId, userId) {
+    try {
+      const res = await postsCol.where({
+        _id: postId,
+        likedBy: userId
+      }).count();
+      return res.total > 0;
+    } catch (err) {
+      console.error('checkUserLiked 失败:', err);
+      return false;
+    }
+  },
+
+  /** 批量检查用户是否已点赞多个帖子 */
+  async checkUserLikedPosts(postIds, userId) {
+    try {
+      const res = await postsCol.where({
+        _id: _.in(postIds),
+        likedBy: userId
+      }).field({ _id: true }).get();
+      return res.data.map(p => p._id);
+    } catch (err) {
+      console.error('checkUserLikedPosts 失败:', err);
+      return [];
     }
   },
 
@@ -1205,13 +1245,30 @@ module.exports = {
   /** 上传图片到云存储 */
   async uploadImage(filePath, cloudPath) {
     try {
+      // 确保 filePath 有效
+      if (!filePath) {
+        console.error('uploadImage: filePath 为空');
+        return null;
+      }
+      
+      // 生成云存储路径（确保唯一性和合法性）
+      const finalPath = cloudPath || `images/${Date.now()}_${Math.random().toString(36).substring(2, 10)}.jpg`;
+      
+      console.log('开始上传图片:', filePath, '->', finalPath);
+      
       const res = await wx.cloud.uploadFile({
-        cloudPath: cloudPath || `images/${Date.now()}-${Math.random().toString(36).substr(2)}.jpg`,
-        filePath
+        cloudPath: finalPath,
+        filePath: filePath
       });
+      
+      console.log('图片上传成功:', res.fileID);
       return res.fileID;
     } catch (err) {
       console.error('uploadImage 失败:', err);
+      // 如果是存储空间权限问题，显示提示
+      if (err.errCode === -502007 || (err.errMsg && err.errMsg.includes('permission'))) {
+        console.error('云存储权限不足，请检查云开发控制台的存储权限设置');
+      }
       return null;
     }
   },
@@ -1219,10 +1276,23 @@ module.exports = {
   /** 上传视频到云存储 */
   async uploadVideo(filePath, cloudPath) {
     try {
+      // 确保 filePath 有效
+      if (!filePath) {
+        console.error('uploadVideo: filePath 为空');
+        return null;
+      }
+      
+      // 生成云存储路径
+      const finalPath = cloudPath || `videos/${Date.now()}_${Math.random().toString(36).substring(2, 10)}.mp4`;
+      
+      console.log('开始上传视频:', filePath, '->', finalPath);
+      
       const res = await wx.cloud.uploadFile({
-        cloudPath: cloudPath || `videos/${Date.now()}-${Math.random().toString(36).substr(2)}.mp4`,
-        filePath
+        cloudPath: finalPath,
+        filePath: filePath
       });
+      
+      console.log('视频上传成功:', res.fileID);
       return res.fileID;
     } catch (err) {
       console.error('uploadVideo 失败:', err);

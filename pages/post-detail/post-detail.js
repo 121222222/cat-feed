@@ -8,6 +8,7 @@ Page({
     commentText: '',
     currentIndex: 0,
     isOwner: false,
+    currentUserId: '',
     swiperHeight: 375,
     showActionSheet: false,
     showCommentInput: false,
@@ -58,7 +59,11 @@ Page({
         
         // 判断是否是自己发布的
         const userInfo = app.globalData.userInfo || {};
-        const isOwner = userInfo._id && post.userId && userInfo._id === post.userId;
+        const currentUserId = userInfo._id || '';
+        const isOwner = currentUserId && post.userId && currentUserId === post.userId;
+        
+        // 检查用户是否已点赞
+        const isLiked = post.likedBy && post.likedBy.includes(currentUserId);
         
         this.setData({
           post: { 
@@ -67,9 +72,11 @@ Page({
             images,
             videoUrl,
             videoCover,
-            videoDurationText
+            videoDurationText,
+            liked: isLiked // 设置正确的点赞状态
           },
-          isOwner: isOwner
+          isOwner: isOwner,
+          currentUserId: currentUserId
         });
       }
     } catch (err) {
@@ -106,18 +113,49 @@ Page({
   },
 
   async onLike() {
+    // 点赞需要登录
+    if (!app.globalData.isLoggedIn) {
+      wx.showModal({
+        title: '请先登录',
+        content: '登录后即可点赞',
+        confirmText: '去登录',
+        confirmColor: '#FFBAA3',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({ url: '/pages/login/login' });
+          }
+        }
+      });
+      return;
+    }
+
     const post = this.data.post;
+    const userInfo = app.globalData.userInfo || {};
+    const currentUserId = userInfo._id || '';
+    
+    if (!currentUserId) {
+      wx.showToast({ title: '请先登录', icon: 'none' });
+      return;
+    }
+    
     const newLiked = !post.liked;
     
+    // 本地先更新状态
     this.setData({
       'post.liked': newLiked,
-      'post.likes': newLiked ? (post.likes || 0) + 1 : (post.likes || 1) - 1
+      'post.likes': newLiked ? (post.likes || 0) + 1 : Math.max((post.likes || 1) - 1, 0)
     });
 
+    // 异步更新数据库（传递用户ID）
     try {
-      await db.togglePostLike(post.id, newLiked);
+      await db.togglePostLike(post.id, newLiked, currentUserId);
     } catch (err) {
       console.error('点赞失败:', err);
+      // 失败时回滚状态
+      this.setData({
+        'post.liked': !newLiked,
+        'post.likes': newLiked ? (post.likes || 1) - 1 : (post.likes || 0) + 1
+      });
     }
   },
 
@@ -222,6 +260,21 @@ Page({
 
   // 显示评论输入框
   showCommentPanel() {
+    // 评论需要登录
+    if (!app.globalData.isLoggedIn) {
+      wx.showModal({
+        title: '请先登录',
+        content: '登录后即可发表评论',
+        confirmText: '去登录',
+        confirmColor: '#FFBAA3',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({ url: '/pages/login/login' });
+          }
+        }
+      });
+      return;
+    }
     this.setData({ showCommentInput: true });
   },
 

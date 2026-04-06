@@ -476,6 +476,7 @@
 .btn-draft {
   flex: 1;
   height: 88rpx;
+  line-height: 88rpx;
   border-radius: 44rpx;
   background: #F5F5F5;
   color: #666;
@@ -483,11 +484,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
 }
 
 .btn-publish {
   flex: 2;
   height: 88rpx;
+  line-height: 88rpx;
   border-radius: 44rpx;
   background: linear-gradient(135deg, #FF8A6B, #FF6B4A);
   color: #FFFFFF;
@@ -496,6 +499,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
 }
 
 .btn-publish:active {

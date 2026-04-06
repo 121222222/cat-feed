@@ -4,7 +4,27 @@
     <view class="profile-bg">
       <image class="profile-bg-img" src="/assets/images/mine-header-bg-new.jpg" mode="aspectFill"></image>
     </view>
-    <view class="profile-info">
+    
+    <!-- 未登录状态 -->
+    <view class="profile-info" wx:if="{{!isLoggedIn}}">
+      <view class="profile-avatar-wrap" bindtap="goLogin">
+        <view class="avatar avatar-xl">
+          <text class="avatar-placeholder">🐱</text>
+        </view>
+      </view>
+      <view class="profile-detail">
+        <view class="profile-name-row">
+          <text class="profile-name">点击登录</text>
+        </view>
+        <text class="profile-dorm">登录后解锁更多功能</text>
+        <view class="login-btn-wrap">
+          <view class="login-btn" bindtap="goLogin">登录 / 注册</view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 已登录状态 -->
+    <view class="profile-info" wx:else>
       <view class="profile-avatar-wrap" bindtap="onChangeAvatar">
         <view class="avatar avatar-xl">
           <image src="{{userInfo.avatar}}" mode="aspectFill"></image>
@@ -36,101 +56,112 @@
     </view>
   </view>
 
-  <!-- 我的猫咪 -->
-  <view class="section">
-    <view class="section-header">
-      <text class="section-title">🐱 我的猫咪</text>
-      <text class="section-more" bindtap="goMyCats">管理 ›</text>
-    </view>
-    <scroll-view scroll-x class="cat-scroll">
-      <view class="cat-card" wx:for="{{cats}}" wx:key="id">
-        <view class="cat-card-avatar">
-          <image src="{{item.avatar}}" mode="aspectFill"></image>
-          <view class="cat-card-placeholder" wx:if="{{!item.avatar}}">🐱</view>
+  <!-- 已登录才显示的内容 -->
+  <block wx:if="{{isLoggedIn}}">
+    <!-- 我的猫咪 -->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">🐱 我的猫咪</text>
+        <text class="section-more" bindtap="goMyCats">管理 ›</text>
+      </view>
+      <scroll-view scroll-x class="cat-scroll">
+        <view class="cat-card" wx:for="{{cats}}" wx:key="id">
+          <view class="cat-card-avatar">
+            <image src="{{item.avatar}}" mode="aspectFill"></image>
+            <view class="cat-card-placeholder" wx:if="{{!item.avatar}}">🐱</view>
+          </view>
+          <text class="cat-card-name">{{item.name}}</text>
+          <text class="cat-card-info">{{item.breed || '未设置'}} · {{item.age || '未设置'}}</text>
         </view>
-        <text class="cat-card-name">{{item.name}}</text>
-        <text class="cat-card-info">{{item.breed || '未设置'}} · {{item.age || '未设置'}}</text>
-      </view>
-      <view class="cat-card add-cat" bindtap="goAddCat">
-        <text class="add-icon">+</text>
-        <text class="add-text">添加猫咪</text>
-      </view>
-    </scroll-view>
-  </view>
+        <view class="cat-card add-cat" bindtap="goAddCat">
+          <text class="add-icon">+</text>
+          <text class="add-text">添加猫咪</text>
+        </view>
+      </scroll-view>
+    </view>
 
-  <!-- 我的内容 -->
-  <view class="section">
-    <view class="section-header">
-      <text class="section-title">📝 我的内容</text>
+    <!-- 我的内容 -->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">📝 我的内容</text>
+      </view>
+      <view class="menu-group">
+        <view class="menu-item" bindtap="goMyPosts">
+          <view class="menu-icon-wrap" style="background:#FFF2E6;">
+            <text class="menu-icon">📷</text>
+          </view>
+          <text class="menu-text">我的动态</text>
+          <text class="menu-arrow">›</text>
+        </view>
+        <view class="menu-item" bindtap="goMyDrafts">
+          <view class="menu-icon-wrap" style="background:#FFF8E6;">
+            <text class="menu-icon">📝</text>
+          </view>
+          <text class="menu-text">我的草稿</text>
+          <view class="draft-badge" wx:if="{{draftCount > 0}}">{{draftCount}}</view>
+          <text class="menu-arrow">›</text>
+        </view>
+        <view class="menu-item" bindtap="goMyHelps">
+          <view class="menu-icon-wrap" style="background:#E8F8E8;">
+            <text class="menu-icon">🤝</text>
+          </view>
+          <text class="menu-text">我的互助</text>
+          <text class="menu-arrow">›</text>
+        </view>
+      </view>
     </view>
-    <view class="menu-group">
-      <view class="menu-item" bindtap="goMyPosts">
-        <view class="menu-icon-wrap" style="background:#FFF2E6;">
-          <text class="menu-icon">📷</text>
-        </view>
-        <text class="menu-text">我的动态</text>
-        <text class="menu-arrow">›</text>
-      </view>
-      <view class="menu-item" bindtap="goMyDrafts">
-        <view class="menu-icon-wrap" style="background:#FFF8E6;">
-          <text class="menu-icon">📝</text>
-        </view>
-        <text class="menu-text">我的草稿</text>
-        <view class="draft-badge" wx:if="{{draftCount > 0}}">{{draftCount}}</view>
-        <text class="menu-arrow">›</text>
-      </view>
-      <view class="menu-item" bindtap="goMyHelps">
-        <view class="menu-icon-wrap" style="background:#E8F8E8;">
-          <text class="menu-icon">🤝</text>
-        </view>
-        <text class="menu-text">我的互助</text>
-        <text class="menu-arrow">›</text>
-      </view>
-    </view>
-  </view>
 
-  <!-- 设置 -->
-  <view class="section">
-    <view class="section-header">
-      <text class="section-title">⚙️ 设置</text>
+    <!-- 设置 -->
+    <view class="section">
+      <view class="section-header">
+        <text class="section-title">⚙️ 设置</text>
+      </view>
+      <view class="menu-group">
+        <view class="menu-item" bindtap="goProfile">
+          <view class="menu-icon-wrap" style="background:#FFF2E6;">
+            <text class="menu-icon">✏️</text>
+          </view>
+          <text class="menu-text">编辑资料</text>
+          <text class="menu-arrow">›</text>
+        </view>
+        <view class="menu-item" bindtap="goSettings">
+          <view class="menu-icon-wrap" style="background:#E6F7FF;">
+            <text class="menu-icon">🔐</text>
+          </view>
+          <text class="menu-text">账号安全</text>
+          <text class="menu-arrow">›</text>
+        </view>
+        <view class="menu-item" bindtap="goHelp">
+          <view class="menu-icon-wrap" style="background:#FFF2F0;">
+            <text class="menu-icon">❓</text>
+          </view>
+          <text class="menu-text">帮助中心</text>
+          <text class="menu-arrow">›</text>
+        </view>
+        <!-- 管理员入口 -->
+        <view class="menu-item" wx:if="{{isAdmin}}" bindtap="goAdmin">
+          <view class="menu-icon-wrap" style="background:#E8F8E8;">
+            <text class="menu-icon">👑</text>
+          </view>
+          <text class="menu-text">管理员后台</text>
+          <view class="admin-tag">管理</view>
+          <text class="menu-arrow">›</text>
+        </view>
+      </view>
     </view>
-    <view class="menu-group">
-      <view class="menu-item" bindtap="goProfile">
-        <view class="menu-icon-wrap" style="background:#FFF2E6;">
-          <text class="menu-icon">✏️</text>
-        </view>
-        <text class="menu-text">编辑资料</text>
-        <text class="menu-arrow">›</text>
-      </view>
-      <view class="menu-item" bindtap="goSettings">
-        <view class="menu-icon-wrap" style="background:#E6F7FF;">
-          <text class="menu-icon">🔐</text>
-        </view>
-        <text class="menu-text">账号安全</text>
-        <text class="menu-arrow">›</text>
-      </view>
-      <view class="menu-item" bindtap="goHelp">
-        <view class="menu-icon-wrap" style="background:#FFF2F0;">
-          <text class="menu-icon">❓</text>
-        </view>
-        <text class="menu-text">帮助中心</text>
-        <text class="menu-arrow">›</text>
-      </view>
-      <!-- 管理员入口 -->
-      <view class="menu-item" wx:if="{{isAdmin}}" bindtap="goAdmin">
-        <view class="menu-icon-wrap" style="background:#E8F8E8;">
-          <text class="menu-icon">👑</text>
-        </view>
-        <text class="menu-text">管理员后台</text>
-        <view class="admin-tag">管理</view>
-        <text class="menu-arrow">›</text>
-      </view>
-    </view>
-  </view>
 
-  <!-- 退出登录 -->
-  <view class="section">
-    <view class="logout-btn" bindtap="onLogout">退出登录</view>
+    <!-- 退出登录 -->
+    <view class="section">
+      <view class="logout-btn" bindtap="onLogout">退出登录</view>
+    </view>
+  </block>
+
+  <!-- 未登录时的引导 -->
+  <view class="section" wx:if="{{!isLoggedIn}}">
+    <view class="not-logged-tip">
+      <text class="tip-icon">🐾</text>
+      <text class="tip-text">登录后可以发布动态、管理猫咪、参与互助</text>
+    </view>
   </view>
 
   <view style="height: 140rpx;"></view>
