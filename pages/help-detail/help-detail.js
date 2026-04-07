@@ -3,7 +3,8 @@ const db = require('../../utils/db.js');
 
 Page({
   data: {
-    help: {}
+    help: {},
+    isOwner: false  // 是否是自己发布的
   },
 
   onLoad(options) {
@@ -17,8 +18,20 @@ Page({
     try {
       const help = await db.getHelpById(helpId);
       if (help) {
+        // 判断是否是自己发布的
+        const userInfo = app.globalData.userInfo || {};
+        const currentUserId = userInfo._id || '';
+        const isOwner = currentUserId && help.userId && currentUserId === help.userId;
+        
+        // 如果是自己发布的，使用当前最新的用户昵称和头像
+        if (isOwner) {
+          help.userName = userInfo.name || help.userName || '微信用户';
+          help.userAvatar = userInfo.avatar || help.userAvatar || '';
+        }
+        
         this.setData({
-          help: { ...help, id: help._id }
+          help: { ...help, id: help._id },
+          isOwner: isOwner
         });
       }
     } catch (err) {
@@ -109,5 +122,35 @@ Page({
       title: this.data.help.title,
       path: `/pages/help-detail/help-detail?id=${this.data.help.id}`
     };
+  },
+
+  // 删除自己发布的互助
+  onDeleteHelp() {
+    const that = this;
+    wx.showModal({
+      title: '确认删除',
+      content: '删除后不可恢复，确定要删除这条互助信息吗？',
+      confirmColor: '#FF6B6B',
+      success: async (res) => {
+        if (res.confirm) {
+          wx.showLoading({ title: '删除中...' });
+          try {
+            const success = await db.deleteHelp(that.data.help._id);
+            if (success) {
+              wx.showToast({ title: '已删除', icon: 'success' });
+              setTimeout(() => {
+                wx.navigateBack();
+              }, 1500);
+            } else {
+              wx.showToast({ title: '删除失败', icon: 'none' });
+            }
+          } catch (err) {
+            console.error('删除失败:', err);
+            wx.showToast({ title: '删除失败', icon: 'none' });
+          }
+          wx.hideLoading();
+        }
+      }
+    });
   }
 });

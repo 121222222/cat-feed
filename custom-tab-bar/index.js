@@ -3,7 +3,7 @@ Component({
     selected: 0,
     color: "#999999",
     selectedColor: "#FFBAA3",
-    msgCount: 3,
+    msgCount: 0,
     list: [
       {
         pagePath: "/pages/index/index",

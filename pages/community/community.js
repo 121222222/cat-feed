@@ -41,6 +41,8 @@ Page({
   onShow() {
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 2 });
+      // 更新 TabBar 未读消息数
+      app.updateTabBarMsgCount(this.getTabBar());
     }
     // 刷新互助列表
     if (this.data.activeTab === 0) {
@@ -54,10 +56,25 @@ Page({
     try {
       const filter = this.data.helpFilter === 'all' ? null : this.data.helpFilter;
       const helpsRaw = await db.getHelps(filter);
-      const helpList = helpsRaw.map(h => ({
-        ...h,
-        id: h._id
-      }));
+      
+      // 获取当前用户信息
+      const userInfo = app.globalData.userInfo || {};
+      const currentUserId = userInfo._id || '';
+      
+      const helpList = helpsRaw.map(h => {
+        const item = {
+          ...h,
+          id: h._id
+        };
+        
+        // 如果是自己发布的，使用当前最新的用户昵称和头像
+        if (currentUserId && h.userId === currentUserId) {
+          item.userName = userInfo.name || h.userName || '微信用户';
+          item.userAvatar = userInfo.avatar || h.userAvatar || '';
+        }
+        
+        return item;
+      });
       this.setData({ helpList });
     } catch (err) {
       console.error('加载互助列表失败:', err);
@@ -189,22 +206,45 @@ Page({
   },
 
   async onLike(e) {
+    // 点赞需要登录
+    if (!app.globalData.isLoggedIn) {
+      wx.showModal({
+        title: '请先登录',
+        content: '登录后即可点赞',
+        confirmText: '去登录',
+        confirmColor: '#FFBAA3',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({ url: '/pages/login/login' });
+          }
+        }
+      });
+      return;
+    }
+
     const id = e.currentTarget.dataset.id;
+    const userInfo = app.globalData.userInfo || {};
+    const currentUserId = userInfo._id || '';
+    
+    if (!currentUserId) {
+      wx.showToast({ title: '请先登录', icon: 'none' });
+      return;
+    }
     
     // 本地先更新状态
     const posts = this.data.posts.map(p => {
       if (p.id === id) {
-        return { ...p, liked: !p.liked, likes: p.liked ? p.likes - 1 : p.likes + 1 };
+        return { ...p, liked: !p.liked, likes: p.liked ? Math.max(p.likes - 1, 0) : p.likes + 1 };
       }
       return p;
     });
     this.setData({ posts });
     
-    // 异步更新数据库
+    // 异步更新数据库（传递用户ID）
     try {
       const post = posts.find(p => p.id === id);
       if (post) {
-        await db.togglePostLike(id, post.liked);
+        await db.togglePostLike(id, post.liked, currentUserId);
       }
     } catch (err) {
       console.error('点赞失败:', err);
@@ -212,6 +252,21 @@ Page({
   },
 
   onNewPost() {
+    // 发帖需要登录
+    if (!app.globalData.isLoggedIn) {
+      wx.showModal({
+        title: '请先登录',
+        content: '登录后即可发布交流帖',
+        confirmText: '去登录',
+        confirmColor: '#FFBAA3',
+        success: (res) => {
+          if (res.confirm) {
+            wx.navigateTo({ url: '/pages/login/login' });
+          }
+        }
+      });
+      return;
+    }
     wx.navigateTo({ url: '/pages/publish-talk/publish-talk' });
   },
 

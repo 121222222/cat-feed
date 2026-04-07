@@ -65,6 +65,20 @@
   color: #BBB;
 }
 
+/* 删除按钮 */
+.delete-btn {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 16rpx;
+}
+
+.delete-icon {
+  font-size: 36rpx;
+}
+
 /* 内容区域 */
 .content-section {
   background: #FFFFFF;

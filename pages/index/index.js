@@ -25,6 +25,8 @@ Page({
   onShow() {
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 0 });
+      // 更新 TabBar 未读消息数
+      app.updateTabBarMsgCount(this.getTabBar());
     }
     // 刷新数据
     this.loadData();

@@ -19,6 +19,8 @@ Page({
   onShow() {
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({ selected: 3 });
+      // 更新 TabBar 未读消息数
+      app.updateTabBarMsgCount(this.getTabBar());
     }
     
     // 检查登录状态
@@ -136,12 +138,13 @@ Page({
           app.globalData.isLoggedIn = false;
           app.globalData.userInfo = null;
           wx.removeStorageSync('isLoggedIn');
+          wx.removeStorageSync('userInfo');
           
           wx.showToast({ title: '已退出登录', icon: 'success' });
           
-          // 跳转到登录页
+          // 退出后跳转到首页（而非登录页），用户可以继续浏览
           setTimeout(() => {
-            wx.reLaunch({ url: '/pages/login/login' });
+            wx.switchTab({ url: '/pages/index/index' });
           }, 1500);
         }
       }

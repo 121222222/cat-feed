@@ -6,12 +6,16 @@
 
   <!-- 发布者信息 -->
   <view class="user-section">
-    <image class="user-avatar" src="{{help.userAvatar}}" mode="aspectFill"></image>
+    <image class="user-avatar" src="{{help.userAvatar || '/assets/images/default-avatar.png'}}" mode="aspectFill"></image>
     <view class="user-info">
       <text class="user-name">{{help.userName}}</text>
       <text class="user-location" wx:if="{{help.location}}">📍 {{help.location}}</text>
     </view>
     <text class="post-time">{{help.time || '刚刚'}}</text>
+    <!-- 删除按钮（仅发布者可见） -->
+    <view class="delete-btn" wx:if="{{isOwner}}" bindtap="onDeleteHelp">
+      <text class="delete-icon">🗑️</text>
+    </view>
   </view>
 
   <!-- 主要内容 -->

@@ -141,7 +141,7 @@
           <text class="post-title">{{item.title}}</text>
           <view class="post-footer">
             <view class="post-user">
-              <image class="user-avatar" src="{{item.userAvatar}}" mode="aspectFill"></image>
+              <image class="user-avatar" src="{{item.userAvatar || '/assets/images/default-avatar.png'}}" mode="aspectFill"></image>
               <text class="user-name">{{item.userName}}</text>
             </view>
             <view class="post-like {{item.liked ? 'liked' : ''}}" catchtap="onLike" data-id="{{item.id}}">

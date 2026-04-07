@@ -106,5 +106,73 @@ App({
     this.globalData.isLoggedIn = true;
     this.globalData.userInfo = user;
     wx.setStorageSync('isLoggedIn', true);
+  },
+
+  // 更新 TabBar 的未读消息数（供各页面调用）
+  async updateTabBarMsgCount(tabBar) {
+    if (!this.globalData.isLoggedIn || !this.globalData.userInfo) {
+      if (tabBar) {
+        tabBar.setData({ msgCount: 0 });
+      }
+      return;
+    }
+
+    try {
+      const db = require('./utils/db.js');
+      const currentUser = this.globalData.userInfo;
+      const currentUserId = currentUser._id || currentUser.openid || '';
+      
+      if (!currentUserId) {
+        if (tabBar) tabBar.setData({ msgCount: 0 });
+        return;
+      }
+
+      // 获取聊天会话未读数
+      let chatUnread = 0;
+      try {
+        const res = await wx.cloud.callFunction({
+          name: 'chatService',
+          data: {
+            action: 'getConversations',
+            data: { userId: currentUserId }
+          }
+        });
+        if (res.result && res.result.success) {
+          const conversations = res.result.data || [];
+          conversations.forEach(conv => {
+            const unreadCount = conv.unreadCount ? (conv.unreadCount[currentUserId] || 0) : 0;
+            chatUnread += unreadCount;
+          });
+        }
+      } catch (err) {
+        // 降级方案：使用本地方法
+        const conversations = await db.getMyConversations(currentUserId);
+        conversations.forEach(conv => {
+          const unreadCount = conv.unreadCount ? (conv.unreadCount[currentUserId] || 0) : 0;
+          chatUnread += unreadCount;
+        });
+      }
+
+      // 获取系统消息未读数
+      let sysUnread = 0;
+      try {
+        const messages = await db.getMyMessages();
+        sysUnread = messages.filter(msg => (msg.type === 'system' || !msg.type) && !msg.read).length;
+      } catch (err) {
+        console.error('获取系统消息失败:', err);
+      }
+
+      const totalUnread = chatUnread + sysUnread;
+      
+      if (tabBar) {
+        tabBar.setData({ msgCount: totalUnread });
+      }
+      
+      // 同时存到全局变量，便于其他地方使用
+      this.globalData.unreadMsgCount = totalUnread;
+    } catch (err) {
+      console.error('更新未读消息数失败:', err);
+      if (tabBar) tabBar.setData({ msgCount: 0 });
+    }
   }
 });

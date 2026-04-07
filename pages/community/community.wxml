@@ -49,7 +49,7 @@
           <text class="help-item-time">{{item.time}}</text>
         </view>
         <view class="help-item-user">
-          <image class="help-user-avatar" src="{{item.userAvatar}}" mode="aspectFill"></image>
+          <image class="help-user-avatar" src="{{item.userAvatar || '/assets/images/default-avatar.png'}}" mode="aspectFill"></image>
           <text class="help-user-name">{{item.userName}}</text>
           <text class="help-user-loc" wx:if="{{item.location}}">📍{{item.location}}</text>
         </view>
@@ -92,7 +92,7 @@
         <view class="post-header">
           <view class="post-user">
             <view class="avatar avatar-sm">
-              <image src="{{item.avatar}}" mode="aspectFill"></image>
+              <image src="{{item.avatar || '/assets/images/default-avatar.png'}}" mode="aspectFill"></image>
             </view>
             <view class="post-user-info">
               <text class="post-username">{{item.userName}}</text>

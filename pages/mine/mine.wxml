@@ -18,7 +18,7 @@
         </view>
         <text class="profile-dorm">登录后解锁更多功能</text>
         <view class="login-btn-wrap">
-          <view class="login-btn" bindtap="goLogin">登录 / 注册</view>
+          <view class="login-btn" bindtap="goLogin">登录</view>
         </view>
       </view>
     </view>
@@ -27,7 +27,7 @@
     <view class="profile-info" wx:else>
       <view class="profile-avatar-wrap" bindtap="onChangeAvatar">
         <view class="avatar avatar-xl">
-          <image src="{{userInfo.avatar}}" mode="aspectFill"></image>
+          <image src="{{userInfo.avatar || '/assets/images/default-avatar.png'}}" mode="aspectFill"></image>
         </view>
         <view class="avatar-edit-icon">📷</view>
       </view>

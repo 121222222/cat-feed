@@ -2,41 +2,35 @@
   <!-- 筛选Tab -->
   <view class="filter-tabs">
     <view class="filter-tab {{filterStatus === '' ? 'active' : ''}}" bindtap="onFilter" data-status="">全部</view>
-    <view class="filter-tab {{filterStatus === 'pending' ? 'active' : ''}}" bindtap="onFilter" data-status="pending">待接单</view>
-    <view class="filter-tab {{filterStatus === 'accepted' ? 'active' : ''}}" bindtap="onFilter" data-status="accepted">已接单</view>
-    <view class="filter-tab {{filterStatus === 'completed' ? 'active' : ''}}" bindtap="onFilter" data-status="completed">已完成</view>
-    <view class="filter-tab {{filterStatus === 'cancelled' ? 'active' : ''}}" bindtap="onFilter" data-status="cancelled">已取消</view>
+    <view class="filter-tab {{filterStatus === 'open' ? 'active' : ''}}" bindtap="onFilter" data-status="open">进行中</view>
+    <view class="filter-tab {{filterStatus === 'closed' ? 'active' : ''}}" bindtap="onFilter" data-status="closed">已结束</view>
   </view>
 
-  <!-- 需求列表 -->
+  <!-- 互助列表 -->
   <view class="list-container">
-    <view class="order-card" wx:for="{{filteredNeeds}}" wx:key="id" bindtap="goDetail" data-id="{{item.id}}">
-      <view class="order-header">
-        <text class="order-id">订单 #{{item.id}}</text>
+    <view class="help-card" wx:for="{{filteredHelps}}" wx:key="id">
+      <view class="help-header" bindtap="goDetail" data-id="{{item.id}}">
+        <view class="type-tag {{item.type === 'need' ? 'need-tag' : 'offer-tag'}}">{{item.typeText}}</view>
         <view class="status-badge status-{{item.status}}">{{item.statusText}}</view>
       </view>
-      <view class="order-body">
-        <view class="cat-mini-avatar">
-          <image src="{{item.catAvatar}}" mode="aspectFill"></image>
+      <view class="help-body" bindtap="goDetail" data-id="{{item.id}}">
+        <text class="help-title">{{item.title}}</text>
+        <text class="help-desc" wx:if="{{item.description}}">{{item.description}}</text>
+        <view class="help-meta">
+          <text class="help-location" wx:if="{{item.location}}">📍 {{item.location}}</text>
+          <text class="help-time" wx:if="{{item.dateRange}}">📅 {{item.dateRange}}</text>
         </view>
-        <view class="order-info">
-          <text class="order-cat-name">🐱 {{item.catName}} · {{item.catCount}}只</text>
-          <text class="order-date">📅 {{item.startDate}} ~ {{item.endDate}}</text>
-          <text class="order-dorm">📍 {{item.dormitory}}</text>
-        </view>
-        <text class="order-reward">{{item.reward}}</text>
       </view>
-      <view class="order-footer">
-        <view class="order-tags">
-          <text class="mini-tag" wx:for="{{item.services}}" wx:for-item="s" wx:key="*this">{{s}}</text>
-        </view>
-        <text class="order-time">{{item.createTime}}</text>
+      <view class="help-actions">
+        <view class="action-btn close-btn" wx:if="{{item.status === 'open'}}" catchtap="closeHelp" data-id="{{item.id}}">结束</view>
+        <view class="action-btn delete-btn" catchtap="deleteHelp" data-id="{{item.id}}">删除</view>
       </view>
     </view>
 
-    <view class="empty-state" wx:if="{{filteredNeeds.length === 0}}">
-      <text class="empty-icon">📋</text>
-      <text class="empty-text">暂无相关需求</text>
+    <view class="empty-state" wx:if="{{filteredHelps.length === 0}}">
+      <text class="empty-icon">🤝</text>
+      <text class="empty-text">暂无互助信息</text>
+      <view class="empty-btn" bindtap="goPublish">发布互助</view>
     </view>
   </view>
 

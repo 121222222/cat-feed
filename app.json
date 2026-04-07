@@ -22,7 +22,8 @@
     "pages/my-drafts/my-drafts",
     "pages/register/register",
     "pages/bind-room/bind-room",
-    "pages/chat/chat"
+    "pages/chat/chat",
+    "pages/my-needs/my-needs"
   ],
   "window": {
     "backgroundTextStyle": "light",
